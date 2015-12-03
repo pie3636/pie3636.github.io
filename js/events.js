@@ -19,10 +19,14 @@
  * previous
  * BUTTON ==============
  * r                    radius
+ * held                 boolean (false)
+ * trigger              function (Object this)
  * TEXT ================
  * thickness
  * text
  * font
+ * sier                 overrides font
+ * wrap                 boolean (false)
  * TEXTINPUT ===========
  * barPos               relative, in px
  * nBarPos              relative, before char
@@ -34,7 +38,7 @@
 function eventHandler(e, type) {
     var O, o, k, f = objects[focus];
     oldFocus = focus;
-    if (type < 4) { // Click
+    if (type == 2) { // Click
         candidates = [];
         searchFocus(e, objectsTree[screen], candidates);
         if (candidates.length == 1) {
@@ -42,13 +46,29 @@ function eventHandler(e, type) {
         } else {
             // TODO : search max z-index
         }
+        f = objects[focus];
+        if (f.type == "button") {
+            f.held = true;
+        }
     }
-    if (type > 3 && type < 7) { // Move
+    if (type == 3) {
+        if (f.type == "button") {
+            f.held = false;
+            focus = "root" + screen;
+            if (insideRect(e, f.loc.x, f.loc.y, f.loc.w, f.loc.h)) {
+                f.trigger(f);
+            }
+        }
+    }
+    if (type >= 4 && type <= 6) { // Move
         for (i in objectsTree[screen].children) {
             O = objectsTree[screen].children[i];
             if (O.overColor && O.name != focus) {
                 applyRecursive(O, "currentColor", insideRect(e, O.loc.x, O.loc.y, O.loc.w, O.loc.h) ? O.color.over : O.color.standard);
             }
+        }
+        if (f.type == "button" && f.clickColor) {
+            applyRecursive(f, "currentColor", insideRect(e, f.loc.x, f.loc.y, f.loc.w, f.loc.h) ? f.color.focus : f.color.standard);
         }
     }
     if (type > 6) { // Key
@@ -153,11 +173,15 @@ function addObject(c, o, parent) {
         o.align = set(o.align, "center");
         o.valign = set(o.valign, "middle");
         o.font = set(o.font, "Arial");
+        o.wrap = set(o.wrap, false);
     } else if (o.type == "textinput") {
         o.text = set(o.text, "");
+        o.font = set(o.font, "Arial");
         o.barPos = 0;
         o.nBarPos = 0;
-        o.font = set(o.font, "Arial");
+    } else if (o.type == "button") {
+        o.held = false;
+        o.trigger = set(o.trigger, function(e){});
     }
     o.currentColor = findInheritance(o, "color", "standard"); // TODO : Upgrade findInheritance(o, "color.standard"), splice, for loop sur les [], etc.
     if (o.name == focus) {
@@ -177,10 +201,36 @@ function recursiveDraw(O) {
     if (O.type == "button") {
         button(O.ctx, O.loc.x, O.loc.y, O.loc.w, O.loc.h, O.r, O.currentColor, O.thickness);
     } else if (O.type == "text") {
-        text(O.ctx, O.loc.x, O.loc.y, O.loc.w, O.loc.h, O.text, O.font, O.currentColor, O.align, O.valign);
+        if (O.wrap) {
+            words = O.text.split(' ');
+            cline = '';
+            y = O.loc.y;
+            O.ctx.font = O.size + "pt " + O.font;
+            for (n = 0; n < words.length; n++) {
+                testLine = cline + words[n] + ' ';
+                wi = O.ctx.measureText(testLine).width;
+                console.log(testLine);
+                console.log(wi, W(O.loc.w));
+                if ((wi > W(O.loc.w) || ~words[n].indexOf('\n'))) {
+                    if (~words[n].indexOf('\n')) {
+                        cline += words[n].split('\n')[0];
+                        words[n] = words[n].split('\n')[1];
+                    }
+                    text(O.ctx, O.loc.x, y, O.loc.w, O.size/h, cline, O.font, O.currentColor, "left", "top");
+                    cline = words[n] + ' ';
+                    y += (1.5 * O.size)/h;
+                }
+                else {
+                    cline = testLine;
+                }
+            }
+            text(O.ctx, O.loc.x, y, O.loc.w, O.size/h, cline, O.font, O.currentColor, "top", "top");
+        } else {
+            text(O.ctx, O.loc.x, O.loc.y, O.loc.w, O.size ? O.size/h : O.loc.h, O.text, O.font, O.currentColor, O.align, O.valign);
+        }
     } else if (O.type == "textinput") {
         button(O.ctx, O.loc.x, O.loc.y, O.loc.w, O.loc.h, O.r, O.currentColor, O.thickness);
-        text(O.ctx, O.loc.x + .01 * O.loc.w, O.loc.y + .075 * O.loc.h, .98 * O.loc.w, .6 * O.loc.h, O.text, O.font, O.currentColor, "middle", "left");
+        text(O.ctx, O.loc.x + .01 * O.loc.w, O.loc.y + .075 * O.loc.h, .98 * O.loc.w, .6 * O.loc.h, O.text, O.font, O.currentColor, "left", "top");
         if (focus == O.name) {
             line(O.ctx, O.loc.x + .03 * O.loc.w + O.barPos/w, O.loc.y + .15 * O.loc.h, 0, O.loc.h * .7, O.currentColor, O.thickness - 1);
         }

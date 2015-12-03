@@ -80,9 +80,9 @@ function line(ctx, x, y, dx, dy, strokeColor, thickness) {
     ctx.stroke();
 }
 
-function measuretext(o, scale, index) {
+function measuretext(o, scale) {
     dh = set(scale, 1) * H(o.loc.h);
     o.ctx.font = dh + "pt " + o.font;
-    return o.ctx.measureText(o.text.slice(0, index)).width;
+    return o.ctx.measureText(o.text).width;
 }
 
