@@ -209,8 +209,6 @@ function recursiveDraw(O) {
             for (n = 0; n < words.length; n++) {
                 testLine = cline + words[n] + ' ';
                 wi = O.ctx.measureText(testLine).width;
-                console.log(testLine);
-                console.log(wi, W(O.loc.w));
                 if ((wi > W(O.loc.w) || ~words[n].indexOf('\n'))) {
                     if (~words[n].indexOf('\n')) {
                         cline += words[n].split('\n')[0];

@@ -86,7 +86,7 @@ function _serverConnection() {
     }
     clear();
     drawAll();
-    //requestAnimationFrame(_serverConnection);
+    requestAnimationFrame(_serverConnection);
     // console.log(performance.now() - p);
 }
 
