@@ -79,7 +79,7 @@ function _serverConnection() {
             "Pour Antoine (d'ici que j'ai un numéro de version propre et tout):\n" +
             "- (02/12) Ajouté support clavier extensible (tab/shift-tab)\n" +
             "- (03/12) Ajouté zones de texte (normalement foolproof, à tester, déplacement du curseur etc)\n" +
-            "- (03/12) Word wrapping, actions des boutons (normalement foolproof, à tester, déplacement du curseur etc)",
+            "- (03/12) Word wrapping, actions des boutons",
             font: "Arial", noFocus: true, align:"left", valign:"top", wrap: true, size: 14});
         
         init = false;
