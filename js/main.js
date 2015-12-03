@@ -55,8 +55,6 @@ function resize() {
     var c;
     for (var i = 0; i < layers; i++) {
         c = document.getElementById("canvas" + i);
-        // c.width = 1024;
-        // c.height = 768;
         c.width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) - 20;
         c.height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 20;
     }
