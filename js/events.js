@@ -55,11 +55,15 @@ function eventHandler(e, type) {
                 mapKeys[k] = true;
             }
             if (keys[0] == 9) {
-                focus = objects[focus].next.name;
+                do {
+                    focus = objects[focus].next.name;
+                } while (objects[focus].noFocus);
                 e.preventDefault();
             }
             if (keys[0] == 16 && keys[1] == 9) {
-                focus = objects[focus].previous.name;
+                do {
+                    focus = objects[focus].previous.name;
+                } while (objects[focus].noFocus);
                 e.preventDefault();
             }
         }
@@ -118,8 +122,12 @@ function addObject(c, o, parent) {
     if (o.type == "button" || o.type == "text" && o.parent.type == "button" || o.type == "textinput") {
         o.overColor = set(o.overColor, true);
         o.clickColor = set(o.clickColor, true);
-        o.currentColor = findInheritance(o, "color", "standard"); // TODO : Upgrade findInheritance(o, "color.standard"), splice, for loop sur les [], etc.
     }
+    if (o.type == "text") {
+        o.align = set(o.align, "center");
+        o.valign = set(o.valign, "middle");
+    }
+    o.currentColor = findInheritance(o, "color", "standard"); // TODO : Upgrade findInheritance(o, "color.standard"), splice, for loop sur les [], etc.
     if (o.name == focus) {
         o.currentColor = o.color.focus;
     }
@@ -137,7 +145,7 @@ function recursiveDraw(O) {
     if (O.type == "button") {
         button(O.ctx, O.loc.x, O.loc.y, O.loc.w, O.loc.h, O.r, O.currentColor, O.thickness);
     } else if (O.type == "text") {
-        text(O.ctx, O.loc.x, O.loc.y, O.loc.w, O.loc.h, O.text, O.font, O.currentColor);
+        text(O.ctx, O.loc.x, O.loc.y, O.loc.w, O.loc.h, O.text, O.font, O.currentColor, O.align, O.valign);
     } else if (O.type == "textinput") {
         button(O.ctx, O.loc.x, O.loc.y, O.loc.w, O.loc.h, O.r, O.currentColor, O.thickness);
         if (focus == O.name) {

@@ -56,12 +56,12 @@ function button(ctx, x, y, w, h, r, strokeColor, thickness, fillColor, fill) {
     }
 }
 
-function text(ctx, x, y, w, h, text, font, fillColor, strokeColor, stroke, align, valign) {
+function text(ctx, x, y, w, h, text, font, fillColor, align, valign, strokeColor, stroke) {
     x = W(x), y = H(y), w = W(w), h = H(h);
     ctx.font = h + "pt " + font;
     ctx.fillStyle = fillColor;
-    ctx.textAlign = align ? align : "center";
-    ctx.textBaseline = valign ? valign : "middle";
+    ctx.textAlign = align;
+    ctx.textBaseline = valign;
     ctx.fillText(text, x, y, w);
     if (stroke) {
         ctx.strokeStyle = strokeColor;
