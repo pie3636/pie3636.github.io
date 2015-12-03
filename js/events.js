@@ -23,12 +23,16 @@
  * thickness
  * text
  * font
+ * TEXTINPUT ===========
+ * barPos               relative, in px
+ * nBarPos              relative, before char
+ * text
  */
 
 "use strict;"
 
 function eventHandler(e, type) {
-    var O, o, k;
+    var O, o, k, f = objects[focus];
     oldFocus = focus;
     if (type < 4) { // Click
         candidates = [];
@@ -49,6 +53,9 @@ function eventHandler(e, type) {
     }
     if (type > 6) { // Key
         k = e.keyCode;
+        if (k == 8) {
+            e.preventDefault();
+        }
         if (type == 7) {
             if(!mapKeys[k]){
                 keys.push(k);
@@ -56,18 +63,42 @@ function eventHandler(e, type) {
             }
             if (keys[0] == 9) {
                 do {
-                    focus = objects[focus].next.name;
-                } while (objects[focus].noFocus);
+                    focus = f.next.name;
+                    f = objects[focus];
+                } while (f.noFocus);
                 e.preventDefault();
-            }
-            if (keys[0] == 16 && keys[1] == 9) {
+            } else if (keys[0] == 16 && keys[1] == 9) {
                 do {
-                    focus = objects[focus].previous.name;
-                } while (objects[focus].noFocus);
+                    focus = f.previous.name;
+                    f = objects[focus];
+                } while (f.noFocus);
                 e.preventDefault();
+            } else if (mapKeys[8]) {
+                n = f.nBarPos;
+                t = f.text;
+                f.text = t.slice(0, n - 1) + t.slice(n, t.length);
+                f.nBarPos = Math.max(n - 1, 0);
+                f.barPos = Math.min(Math.floor(measuretext(f, .6, f.nBarPos)), .96 * W(f.loc.w));
+            } else if (k >= 35 && k <= 40) {
+                switch (k) {
+                    case 35:
+                        f.nBarPos = f.text.length;
+                        break;
+                    case 36:
+                        f.nBarPos = 0;
+                        break;
+                    case 37:
+                        f.nBarPos = Math.max(f.nBarPos - 1, 0);
+                        break;
+                    case 39:
+                        f.nBarPos = Math.min(f.nBarPos + 1, f.text.length);
+                        break;
+                    default:
+                        break;
+                }
+                f.barPos = Math.min(Math.floor(measuretext(f, .6, f.nBarPos)), .96 * W(f.loc.w));
             }
-        }
-        if (type == 8) {
+        } else if (type == 8) {
             mapKeys[k] = false;
             newKeys = [];
             for (i in keys) {
@@ -76,6 +107,17 @@ function eventHandler(e, type) {
                 }
             }
             keys = newKeys;
+        } else if (f.type == "textinput") {
+            i = e.which;
+            if (i !== 0 && !e.ctrlKey && !e.metaKey && !e.altKey && i != 127 && i != 13) {
+                f.text += String.fromCharCode(i);
+                f.nBarPos++;
+                f.barPos = Math.min(Math.floor(measuretext(f, .6, f.nBarPos)), .96 * W(f.loc.w));
+            } else if (i == 127) {
+                n = f.nBarPos;
+                t = f.text;
+                f.text = t.slice(0, n) + t.slice(n + 1, t.length);
+            }
         }
     }
     if (oldFocus != focus) {
@@ -83,20 +125,6 @@ function eventHandler(e, type) {
         removeFocus(e);
     }
 }
-/*
-$(document).keydown(function(e) {
-    if(!map[e.keyCode]){
-        down.push(e.keyCode);
-        if(down[0] === 68 && down[1] === 69 && down[2] === 86) {
-            console.log('D + E + V was pressed');
-        } 
-    }
-    map[e.keyCode] = true;
-}).keyup(function(e) {
-    map[e.keyCode] = false;
-    down.length = 0;
-});
-*/
 
 function addObject(c, o, parent) {
     objects[o.name] = o;
@@ -119,13 +147,17 @@ function addObject(c, o, parent) {
     }
     o.children = [];
     o.ctx = ctx[c];
-    if (o.type == "button" || o.type == "text" && o.parent.type == "button" || o.type == "textinput") {
-        o.overColor = set(o.overColor, true);
-        o.clickColor = set(o.clickColor, true);
-    }
+    o.overColor = set(o.overColor, true);
+    o.clickColor = set(o.clickColor, true);
     if (o.type == "text") {
         o.align = set(o.align, "center");
         o.valign = set(o.valign, "middle");
+        o.font = set(o.font, "Arial");
+    } else if (o.type == "textinput") {
+        o.text = set(o.text, "");
+        o.barPos = 0;
+        o.nBarPos = 0;
+        o.font = set(o.font, "Arial");
     }
     o.currentColor = findInheritance(o, "color", "standard"); // TODO : Upgrade findInheritance(o, "color.standard"), splice, for loop sur les [], etc.
     if (o.name == focus) {
@@ -148,8 +180,9 @@ function recursiveDraw(O) {
         text(O.ctx, O.loc.x, O.loc.y, O.loc.w, O.loc.h, O.text, O.font, O.currentColor, O.align, O.valign);
     } else if (O.type == "textinput") {
         button(O.ctx, O.loc.x, O.loc.y, O.loc.w, O.loc.h, O.r, O.currentColor, O.thickness);
+        text(O.ctx, O.loc.x + .01 * O.loc.w, O.loc.y + .075 * O.loc.h, .98 * O.loc.w, .6 * O.loc.h, O.text, O.font, O.currentColor, "middle", "left");
         if (focus == O.name) {
-            line(O.ctx, O.loc.x + .03 * O.loc.w, O.loc.y + .15 * O.loc.h, 0, O.loc.h * .7, O.currentColor, O.thickness - 1);
+            line(O.ctx, O.loc.x + .03 * O.loc.w + O.barPos/w, O.loc.y + .15 * O.loc.h, 0, O.loc.h * .7, O.currentColor, O.thickness - 1);
         }
     }
     if (O.children) {
