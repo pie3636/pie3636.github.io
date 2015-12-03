@@ -3,11 +3,34 @@
  * Full legal stuff at https://creativecommons.org/licenses/by-sa/3.0/legalcode
  */
 
+/* member Fields of class Object :
+ * type                 textinput   button      text
+ * name
+ * ctx
+ * loc                  {x, y, w, h}
+ * nofocus              boolean (false)
+ * color                {over, standard, focus} (parent)
+ * currentColor
+ * clickColor           boolean (true)
+ * overColor            boolean (true)
+ * parent               Object
+ * children             [Objects]
+ * next
+ * previous
+ * BUTTON ==============
+ * r                    radius
+ * TEXT ================
+ * thickness
+ * text
+ * font
+ */
+
 "use strict;"
 
 function eventHandler(e, type) {
-    var O, o, oldFocus = focus;
-    if (type <= 3) {
+    var O, o, k;
+    oldFocus = focus;
+    if (type < 4) { // Click
         candidates = [];
         searchFocus(e, objectsTree[screen], candidates);
         if (candidates.length == 1) {
@@ -16,22 +39,60 @@ function eventHandler(e, type) {
             // TODO : search max z-index
         }
     }
-    for (i in objectsTree[screen].children) {
-        O = objectsTree[screen].children[i];
-        if (type > 3) {
-            if (O.param_over && O.name != focus) {
+    if (type > 3 && type < 7) { // Move
+        for (i in objectsTree[screen].children) {
+            O = objectsTree[screen].children[i];
+            if (O.overColor && O.name != focus) {
                 applyRecursive(O, "currentColor", insideRect(e, O.loc.x, O.loc.y, O.loc.w, O.loc.h) ? O.color.over : O.color.standard);
-            }   
+            }
         }
     }
-    if (oldFocus != focus || initFocus) {
-        o = objects[oldFocus];
-        applyRecursive(o, "currentColor", insideRect(e, o.loc.x, o.loc.y, o.loc.w, o.loc.h) ? o.color.over : o.color.standard);
-        o = objects[focus];
-        applyRecursive(o, "currentColor", o.color.focus);
-        initFocus = false;
+    if (type > 6) { // Key
+        k = e.keyCode;
+        if (type == 7) {
+            if(!mapKeys[k]){
+                keys.push(k);
+                mapKeys[k] = true;
+            }
+            if (keys[0] == 9) {
+                focus = objects[focus].next.name;
+                e.preventDefault();
+            }
+            if (keys[0] == 16 && keys[1] == 9) {
+                focus = objects[focus].previous.name;
+                e.preventDefault();
+            }
+        }
+        if (type == 8) {
+            mapKeys[k] = false;
+            newKeys = [];
+            for (i in keys) {
+                if (keys[i] != k) {
+                    newKeys.push(keys[i]);
+                }
+            }
+            keys = newKeys;
+        }
+    }
+    if (oldFocus != focus) {
+        setFocus();
+        removeFocus(e);
     }
 }
+/*
+$(document).keydown(function(e) {
+    if(!map[e.keyCode]){
+        down.push(e.keyCode);
+        if(down[0] === 68 && down[1] === 69 && down[2] === 86) {
+            console.log('D + E + V was pressed');
+        } 
+    }
+    map[e.keyCode] = true;
+}).keyup(function(e) {
+    map[e.keyCode] = false;
+    down.length = 0;
+});
+*/
 
 function addObject(c, o, parent) {
     objects[o.name] = o;
@@ -43,10 +104,20 @@ function addObject(c, o, parent) {
         objects[parent].children.push(o);
         o.parent = objects[parent];
     }
+    ch = o.parent.children;
+    o.next = o;
+    o.previous = o;
+    if (ch.length > 1) {
+        o.previous = ch[o.parent.children.length - 2];
+        o.previous.next = o;
+        o.next = ch[0];
+        ch[0].previous = o;
+    }
     o.children = [];
     o.ctx = ctx[c];
     if (o.type == "button" || o.type == "text" && o.parent.type == "button" || o.type == "textinput") {
-        o.param_over = true;
+        o.overColor = set(o.overColor, true);
+        o.clickColor = set(o.clickColor, true);
         o.currentColor = findInheritance(o, "color", "standard"); // TODO : Upgrade findInheritance(o, "color.standard"), splice, for loop sur les [], etc.
     }
     if (o.name == focus) {
@@ -55,7 +126,11 @@ function addObject(c, o, parent) {
 }
 
 function drawAll() {
-    recursiveDraw(objectsTree[screen])
+    recursiveDraw(objectsTree[screen]);
+    if (initFocus) {
+        setFocus();
+        initFocus = false;
+    }
 }
 
 function recursiveDraw(O) {
@@ -89,7 +164,7 @@ function applyRecursive(O, property, value) {
 function searchFocus(e, O, candidates) {
     for (i in O.children) {
         O = objectsTree[screen].children[i];
-        if (O.param_over && insideRect(e, O.loc.x, O.loc.y, O.loc.w, O.loc.h)) {
+        if (!O.noFocus && insideRect(e, O.loc.x, O.loc.y, O.loc.w, O.loc.h)) {
             candidates.push(O);
         }
         if (O.children) {
@@ -105,4 +180,18 @@ function findInheritance(o, property, value) {
         console.log("No parent contained " + property + "." + value + "!");
     }
     return o[property][value] ? o[property][value] : findInheritance(o.parent, property, value);
+}
+
+function setFocus() {
+    o = objects[focus];
+    if (o.clickColor) {
+        applyRecursive(o, "currentColor", o.color.focus);
+    }
+}
+
+function removeFocus(e) {
+    o = objects[oldFocus];
+    if (o.overColor) {
+        applyRecursive(o, "currentColor", insideRect(e, o.loc.x, o.loc.y, o.loc.w, o.loc.h) ? o.color.over : o.color.standard);
+    }
 }

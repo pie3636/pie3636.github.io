@@ -8,12 +8,14 @@
 // Layer canvas (z-index)
 // Avoid text rendering, shadowBlur
 // performance.now();
+// Cache properties in loops
+// Store DOM elements
 
 "use strict;"
 
-var layers = 1, frame = 0, _0, w, h, screen = 0, focus;
+var layers = 1, frame = 0, _0, w, h, screen = 0, focus, oldFocus;
 var init = true, initFocus = true;
-var _ = [], ctx = [], objects = {}, objectsTree = [[]];
+var _ = [], ctx = [], objects = {}, objectsTree = [[]], keys = [], mapKeys = [];
 var MAX_SCREEN = 0;
 
 
@@ -36,11 +38,11 @@ window.onload = function() {
     _[0].ondblclick     = function(e) { eventHandler(e, 1); }
     _[0].onmousedown    = function(e) { eventHandler(e, 2); }
     _[0].onmouseup      = function(e) { eventHandler(e, 3); }
-    _[0].onmouseenter   = function(e) { eventHandler(e, 4); }
-    _[0].onmouseleave   = function(e) { eventHandler(e, 5); }
+    _[0].onmouseenter   = function(e) { eventHandler(e, 4); } // Canvas
+    _[0].onmouseleave   = function(e) { eventHandler(e, 5); } // Canvas
     _[0].onmousemove    = function(e) { eventHandler(e, 6); }
-    _[0].onmouseover    = function(e) { eventHandler(e, 7); }
-    _[0].onmouseout     = function(e) { eventHandler(e, 8); }
+    window.onkeydown    = function(e) { eventHandler(e, 7); }
+    window.onkeyup      = function(e) { eventHandler(e, 8); }
     requestAnimationFrame(draw);
     setInterval(computeFPS, 1000);
     _serverConnection();
@@ -56,9 +58,9 @@ function resize() {
         c.width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) - 20;
         c.height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 20;
     }
-    w = document.getElementById("canvas0").width,
+    w = document.getElementById("canvas0").width;
     h = document.getElementById("canvas0").height;
-    drawAll();
+    recursiveDraw(objectsTree[screen]);
 }
 
 function _serverConnection() {
@@ -68,7 +70,7 @@ function _serverConnection() {
         addObject(0, {type: "textinput", name: "id", loc: {x: .42, y: .55, w: .16, h: .05}, r: 5, color: {standard: "grey", over: "peru", focus: "wheat"}, thickness: 2});
         addObject(0, {type: "textinput", name: "pw", loc: {x: .42, y: .62, w: .16, h: .05}, r: 5, color: {standard: "grey", over: "peru", focus: "wheat"}, thickness: 2});
         addObject(0, {type: "button", name: "connect", loc: {x: .45, y: .7, w: .1, h: .08}, r: 5, color: {standard: "grey", over: "peru", focus: "wheat"}, thickness: 2});
-        addObject(0, {type: "text", name: "connecttxt", loc: {x: .5, y: .74, w: .1, h: .03}, color: {}, text: "Connect", font: "Arial"}, "connect");
+        addObject(0, {type: "text", name: "connecttxt", loc: {x: .5, y: .74, w: .1, h: .03}, color: {}, text: "Connect", font: "Arial", noFocus: true}, "connect");
         init = false;
     }
     clear();
