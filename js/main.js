@@ -13,10 +13,9 @@
 
 "use strict;"
 
-var layers = 1, frame = 0, _0, w, h, screen = 0, focus, oldFocus;
-var init = true, initFocus = true;
-var _ = [], ctx = [], objects = {}, objectsTree = [[]], keys = [], mapKeys = [];
-var MAX_SCREEN = 0;
+var layers = 1, frame = 0, _0, w, h, screen = 0, nextScreen = 0, focus, oldFocus;
+var init = true, initFocus = true, stayOnScreen = true;
+var _ = [], ctx = [], objects = {}, objectsTree = [[]], keys = [], mapKeys = [], screens = [_serverConnection, _mainMenu];
 
 
 window.onload = function() {
@@ -30,7 +29,7 @@ window.onload = function() {
             ctx[i] = _[i].offscreen.getContext("2d");
         }
     }
-    for (var i = 0; i <= MAX_SCREEN; i++) {
+    for (var i = 0; i <= layers; i++) {
         objectsTree[i] = {type: "root", name: "root" + i, children: []};
         objects["root" + i] = objectsTree[i];
     }
@@ -70,21 +69,38 @@ function _serverConnection() {
         addObject(0, {type: "textinput", name: "id", loc: {x: .42, y: .55, w: .16, h: .05}, r: 5, color: {standard: "grey", over: "peru", focus: "wheat"}, thickness: 2});
         addObject(0, {type: "textinput", name: "pw", loc: {x: .42, y: .62, w: .16, h: .05}, r: 5, color: {standard: "grey", over: "peru", focus: "wheat"}, thickness: 2});
         addObject(0, {type: "button", name: "connect", loc: {x: .45, y: .7, w: .1, h: .08}, r: 5, color: {standard: "grey", over: "peru", focus: "wheat"}, thickness: 2, trigger:
-            function(e) { alert("connect()\nid: " + objects.id.text + "\npw: " + objects.pw.text); } });
+            function(e) { stayOnScreen = false; nextScreen = 1; alert("connect()\nid: " + objects.id.text + "\npw: " + objects.pw.text); } });
         addObject(0, {type: "text", name: "connecttxt", loc: {x: .5, y: .74, w: .09, h: .03}, color: {}, text: "Connect", noFocus: true}, "connect");
         
         addObject(0, {type: "text", name: "versiontxt", loc: {x: .01, y: .01, w: 1, h: .02}, color: {standard: "white"}, overColor: false, clickColor: false, text:
             "Pour Antoine (d'ici que j'ai un numéro de version propre et tout):\n" +
             "- (02/12) Ajouté support clavier extensible (tab/shift-tab)\n" +
             "- (03/12) Ajouté zones de texte (normalement foolproof, à tester, déplacement du curseur etc)\n" +
-            "- (03/12) Word wrapping, actions des boutons",
-            font: "Arial", noFocus: true, align:"left", valign:"top", wrap: true, size: 14});
-        
+            "- (03/12) Word wrapping, actions des boutons\n" +
+            "- (04/12) Ajout d'un \"écran\" supplémentaire, bugfixes de curseur, affichage contracté, boutons validés par Entrée\n" +
+            "[Note : Une fois que tu as lu un des trucs, préviens-moi pour que je les enlève]",
+            font: "Arial", noFocus: true, align:"left", valign:"top", wrap: true, size: 16});
         init = false;
     }
     clear();
     drawAll();
-    requestAnimationFrame(_serverConnection);
+    checkNext(_serverConnection);
+    // console.log(performance.now() - p);
+}
+
+function _mainMenu() {
+    // p = performance.now();
+    if (init) {
+        focus = "inp";
+        addObject(0, {type: "textinput", name: "inp", loc: {x: .32, y: .55, w: .36, h: .05}, r: 5, color: {standard: "grey", over: "peru", focus: "wheat"}, text:"Grenoble INP'ut", thickness: 2});
+        addObject(0, {type: "button", name: "lol", loc: {x: .35, y: .7, w: .3, h: .08}, r: 5, color: {standard: "red", over: "peru", focus: "wheat"}, thickness: 2, trigger:
+            function(e) { stayOnScreen = false; nextScreen = 0;} });
+        addObject(0, {type: "text", name: "loltxt", loc: {x: .5, y: .74, w: .27, h: .03}, color: {}, text: "It worked. Go back.", noFocus: true}, "lol");
+        init = false;
+    }
+    clear();
+    drawAll();
+    checkNext(_mainMenu)
     // console.log(performance.now() - p);
 }
 

@@ -58,7 +58,7 @@ function button(ctx, x, y, w, h, r, strokeColor, thickness, fillColor, fill) {
 
 function text(ctx, x, y, w, h, text, font, fillColor, align, valign, strokeColor, stroke) {
     x = W(x), y = H(y), w = W(w), h = H(h);
-    ctx.font = h + "pt " + font;
+    ctx.font = h + "px " + font;
     ctx.fillStyle = fillColor;
     ctx.textAlign = align;
     ctx.textBaseline = valign;
@@ -82,8 +82,8 @@ function line(ctx, x, y, dx, dy, strokeColor, thickness) {
 
 function measuretext(o, scale, index) {
     dh = set(scale, 1) * H(o.loc.h);
-    o.ctx.font = dh + "pt " + o.font;
-    return o.ctx.measureText(o.text.slice(0, index) ).width;
+    o.ctx.font = dh + "px " + o.font;
+    return o.ctx.measureText(o.text.slice(0, index)).width;
 }
 
 function drawAll() {
@@ -102,7 +102,7 @@ function recursiveDraw(O) {
             words = O.text.split(' ');
             cline = '';
             y = O.loc.y;
-            O.ctx.font = O.size + "pt " + O.font;
+            O.ctx.font = O.size + "px " + O.font;
             for (n = 0; n < words.length; n++) {
                 testLine = cline + words[n] + ' ';
                 wi = O.ctx.measureText(testLine).width;
@@ -111,7 +111,7 @@ function recursiveDraw(O) {
                         cline += words[n].split('\n')[0];
                         words[n] = words[n].split('\n')[1];
                     }
-                    text(O.ctx, O.loc.x, y, O.loc.w, O.size/h, cline, O.font, O.currentColor, "left", "top");
+                    text(O.ctx, O.loc.x, y, O.loc.w, O.size/h, cline, O.font, O.currentColor, O.align, O.valign);
                     cline = words[n] + ' ';
                     y += (1.5 * O.size)/h;
                 }
@@ -119,15 +119,15 @@ function recursiveDraw(O) {
                     cline = testLine;
                 }
             }
-            text(O.ctx, O.loc.x, y, O.loc.w, O.size/h, cline, O.font, O.currentColor, "top", "top");
+            text(O.ctx, O.loc.x, y, O.loc.w, O.size/h, cline, O.font, O.currentColor, O.align, O.valign);
         } else {
             text(O.ctx, O.loc.x, O.loc.y, O.loc.w, O.size ? O.size/h : O.loc.h, O.text, O.font, O.currentColor, O.align, O.valign);
         }
     } else if (O.type == "textinput") {
         button(O.ctx, O.loc.x, O.loc.y, O.loc.w, O.loc.h, O.r, O.currentColor, O.thickness);
-        text(O.ctx, O.loc.x + .01 * O.loc.w, O.loc.y + .075 * O.loc.h, .98 * O.loc.w, .6 * O.loc.h, O.text, O.font, O.currentColor, "left", "top");
+        text(O.ctx, O.loc.x + 5/w, O.loc.y + .075 * O.loc.h, O.loc.w - 10/w, .8 * O.loc.h, O.text, O.font, O.currentColor, "left", "top");
         if (focus == O.name) {
-            line(O.ctx, O.loc.x + .03 * O.loc.w + O.barPos/w, O.loc.y + .15 * O.loc.h, 0, O.loc.h * .7, O.currentColor, O.thickness - 1);
+            line(O.ctx, O.loc.x + 5/w + O.barPos/w, O.loc.y + .15 * O.loc.h, 0, O.loc.h * .7, O.currentColor, O.thickness - 1);
         }
     }
     if (O.children) {
