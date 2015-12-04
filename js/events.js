@@ -21,6 +21,8 @@
  * r                    radius
  * held                 boolean (false)
  * trigger              function (Object this)
+ * groupTrigger         boolean (false), on Enter (other Object). Only 1/tree node
+ * text
  * TEXT ================
  * thickness
  * text
@@ -31,6 +33,7 @@
  * barPos               relative, in px
  * nBarPos              relative, before char
  * text
+ * editable             boolean (true)
  */
 
 "use strict;"
@@ -41,7 +44,9 @@ function eventHandler(e, type) {
     if (typeof f !== "undefined") {
         if (type == 2) { // Click
             candidates = [];
-            searchFocus(e, objectsTree[screen], candidates);
+            for (var i = layers - 1; i >= 0; i--) {
+                searchFocus(e, objectsTree[i], candidates);
+            }
             if (candidates.length == 1) {
                 focus = candidates[0].name;
             } else {
@@ -55,17 +60,19 @@ function eventHandler(e, type) {
         if (type == 3) {
             if (f.type == "button") {
                 f.held = false;
-                focus = "root" + screen;
+                focus = "root" + f.layer;
                 if (insideRect(e, f.loc.x, f.loc.y, f.loc.w, f.loc.h)) {
                     f.trigger(f);
                 }
             }
         }
         if (type >= 4 && type <= 6) { // Move
-            for (i in objectsTree[screen].children) {
-                O = objectsTree[screen].children[i];
-                if (O.overColor && O.name != focus) {
-                    applyRecursive(O, "currentColor", insideRect(e, O.loc.x, O.loc.y, O.loc.w, O.loc.h) ? O.color.over : O.color.standard);
+            for (var j = 0; j < layers; j++) {
+                for (var i in objectsTree[j].children) {
+                    O = objectsTree[j].children[i];
+                    if (O.overColor && O.name != focus) {
+                        applyRecursive(O, "currentColor", insideRect(e, O.loc.x, O.loc.y, O.loc.w, O.loc.h) ? O.color.over : O.color.standard);
+                    }
                 }
             }
             if (f.type == "button" && f.clickColor) {
@@ -82,11 +89,13 @@ function eventHandler(e, type) {
                     keys.push(k);
                     mapKeys[k] = true;
                 }
-                if (keys[0] == 9) {
-                    do {
-                        focus = f.next.name;
-                        f = objects[focus];
-                    } while (f.noFocus);
+                if (mapKeys[9]) {
+                    if (k == 9) {
+                        do {
+                            focus = f.next.name;
+                            f = objects[focus];
+                        } while (f.noFocus);
+                    }
                     e.preventDefault();
                 } else if (keys[0] == 16 && keys[1] == 9) {
                     do {
@@ -94,47 +103,57 @@ function eventHandler(e, type) {
                         f = objects[focus];
                     } while (f.noFocus);
                     e.preventDefault();
-                } else if (mapKeys[8]) {
-                    if (f.nBarPos != 0) {
-                        n = f.nBarPos;
-                        t = f.text;
-                        f.text = t.slice(0, n - 1) + t.slice(n, t.length);
-                        f.nBarPos = Math.max(n - 1, 0);
-                        setBar(f);
-                    }
-                } else if (keys[0] = 13) {
+                } else if (keys[0] == 13) {
                     if (f.type == "button") {
                         f.trigger(f);
+                    } else {
+                        c = f.parent.children;
+                        for (var i in c) {
+                            if (c[i].groupTrigger) {
+                                c[i].trigger(c[i]);
+                                break;
+                            }
+                        }
                     }
-                } else if (k >= 35 && k <= 40) {
-                    switch (k) {
-                        case 35:
-                            f.nBarPos = f.text.length;
-                            break;
-                        case 36:
-                            f.nBarPos = 0;
-                            break;
-                        case 37:
-                            f.nBarPos = Math.max(f.nBarPos - 1, 0);
-                            break;
-                        case 39:
-                            f.nBarPos = Math.min(f.nBarPos + 1, f.text.length);
-                            break;
-                        default:
-                            break;
+                } else if (f.type == "textinput") {
+                    if (mapKeys[8] && f.editable) {
+                        if (f.nBarPos != 0) {
+                            n = f.nBarPos;
+                            t = f.text;
+                            f.text = t.slice(0, n - 1) + t.slice(n, t.length);
+                            f.nBarPos = Math.max(n - 1, 0);
+                            setBar(f);
+                        }
+                    } else if (k >= 35 && k <= 40) {
+                        switch (k) {
+                            case 35:
+                                f.nBarPos = f.text.length;
+                                break;
+                            case 36:
+                                f.nBarPos = 0;
+                                break;
+                            case 37:
+                                f.nBarPos = Math.max(f.nBarPos - 1, 0);
+                                break;
+                            case 39:
+                                f.nBarPos = Math.min(f.nBarPos + 1, f.text.length);
+                                break;
+                            default:
+                                break;
+                        }
+                        setBar(f);
                     }
-                    setBar(f)
                 }
             } else if (type == 8) {
                 mapKeys[k] = false;
                 newKeys = [];
-                for (i in keys) {
+                for (var i in keys) {
                     if (keys[i] != k) {
                         newKeys.push(keys[i]);
                     }
                 }
                 keys = newKeys;
-            } else if (f.type == "textinput") {
+            } else if (f.type == "textinput" && f.editable) {
                 i = e.which;
                 t = f.text;
                 if (i !== 0 && !e.ctrlKey && !e.metaKey && !e.altKey && i != 127 && i != 13) {
@@ -156,10 +175,11 @@ function eventHandler(e, type) {
 
 function addObject(c, o, parent) {
     objects[o.name] = o;
+    o.layer = c;
     o.children = [];
     if (typeof parent === 'undefined') {
-        objectsTree[screen].children.push(o);
-        o.parent = objectsTree[screen];
+        objectsTree[o.layer].children.push(o);
+        o.parent = objectsTree[o.layer];
     } else {
         objects[parent].children.push(o);
         o.parent = objects[parent];
@@ -177,6 +197,7 @@ function addObject(c, o, parent) {
     o.ctx = ctx[c];
     o.overColor = set(o.overColor, true);
     o.clickColor = set(o.clickColor, true);
+    o.color = set(o.color, {});
     if (o.type == "text") {
         o.align = set(o.align, "center");
         o.valign = set(o.valign, "middle");
@@ -185,21 +206,27 @@ function addObject(c, o, parent) {
     } else if (o.type == "textinput") {
         o.text = set(o.text, "");
         o.font = set(o.font, "Arial");
+        o.editable = set(o.editable, true);
         o.barPos = 0;
         o.nBarPos = 0;
     } else if (o.type == "button") {
-        o.held = false;
+        o.groupTrigger = set(o.groupTrigger, false);
         o.trigger = set(o.trigger, function(e){});
+        o.texth = set(o.texth, .03);
+        o.held = false;
     }
     o.currentColor = findInheritance(o, "color", "standard"); // TODO : Upgrade findInheritance(o, "color.standard"), splice, for loop sur les [], etc.
     if (o.name == focus) {
         o.currentColor = o.color.focus;
     }
+    if (o.type == "button" && o.text) {
+        addObject(o.layer, {type: "text", name: o.name + "txt", loc: {x: o.loc.x + o.loc.w/2, y: o.loc.y + o.loc.h/2, w: .9 * o.loc.w, h: o.texth}, text: o.text, noFocus: true}, o.name);
+    }
 }
 
 function clearTree(O) {
     if (O.children) {
-        for (i in O.children) {
+        for (var i in O.children) {
             clearTree(O.children[i]);
             delete O.children[i];
         }
@@ -211,20 +238,20 @@ function clearTree(O) {
 function applyRecursive(O, property, value) {
     O[property] = value;
     if (O.children) {
-        for (i in O.children) {
+        for (var i in O.children) {
             applyRecursive(O.children[i], property, value);
         }
     }
 }
 
 function searchFocus(e, O, candidates) {
-    for (i in O.children) {
-        O = objectsTree[screen].children[i];
+    for (var i in O.children) {
+        O = objectsTree[O.layer].children[i];
         if (!O.noFocus && insideRect(e, O.loc.x, O.loc.y, O.loc.w, O.loc.h)) {
             candidates.push(O);
         }
         if (O.children) {
-            for (i in O.children) {
+            for (var i in O.children) {
                 searchFocus(e, O.children[i], candidates);
             }
         }

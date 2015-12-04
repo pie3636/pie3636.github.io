@@ -26,9 +26,9 @@ function checkNext(f) {
     init = true;
     for (var i = 0; i < layers; i++) {
         clearTree(objects["root" + i]);
-        objectsTree[i] = {type: "root", name: "root" + i, children: []};
+        objectsTree[i] = {type: "root", name: "root" + i, children: [], layer: i};
     }
-    for (i in objects) {
+    for (var i in objects) {
         delete objects[i];
     }
     objects = [];
@@ -37,6 +37,7 @@ function checkNext(f) {
     }
     screen = nextScreen;
     requestAnimationFrame(screens[screen]);
+        
 }
 
 function setBar(f) {

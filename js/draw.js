@@ -87,10 +87,12 @@ function measuretext(o, scale, index) {
 }
 
 function drawAll() {
-    recursiveDraw(objectsTree[screen]);
-    if (initFocus) {
-        setFocus();
-        initFocus = false;
+    for (var i = 0; i < layers; i++) {
+        recursiveDraw(objectsTree[i]);
+        if (initFocus) {
+            setFocus();
+            initFocus = false;
+        }
     }
 }
 
@@ -103,7 +105,7 @@ function recursiveDraw(O) {
             cline = '';
             y = O.loc.y;
             O.ctx.font = O.size + "px " + O.font;
-            for (n = 0; n < words.length; n++) {
+            for (var n = 0; n < words.length; n++) {
                 testLine = cline + words[n] + ' ';
                 wi = O.ctx.measureText(testLine).width;
                 if ((wi > W(O.loc.w) || ~words[n].indexOf('\n'))) {
