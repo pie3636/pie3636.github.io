@@ -37,7 +37,7 @@ function updateKeys(player, keycode, value) {
 }
 
 function sendClient(socket, command) {
-    socket.sendText(command + ";");
+    socket.write(command + ";", 'utf8');
 }
 
 function update(player) {
@@ -186,30 +186,18 @@ function deleteUser(data, usersModel, socket) {
     }
 }
                 
-function dump(fs, collection, file) {
+function dump(collection) {
     var query = collection.find();
     query.exec(function (err, results) {
         if (err) { throw err; }
         for (var i = 0; i < results.length; i++) {
-            logger(fs, "===========================".red, file);
-            logger(fs, "nick : ".cyan.bold + results[i].nickname.cyan, file);
-            logger(fs, "pass : ".cyan.bold + results[i].password.cyan, file);
-            logger(fs, "mail : ".cyan.bold + results[i].email.cyan, file);
+            console.log("===========================".red);
+            console.log("nick : ".cyan.bold + results[i].nickname.cyan);
+            console.log("pass : ".cyan.bold + results[i].password.cyan);
+            console.log("mail : ".cyan.bold + results[i].email.cyan);
         }
-        logger(fs, "======END OF DATABASE======".red, file);
+        console.log("======END OF DATABASE======".red);
     });
-}
-
-function logger(fs, str, file, noreturn) {
-    if (file) {
-        fs.appendFile(file, str + (noreturn ? "" : "\n"), function(e) {
-            if(e) {
-                return console.log("Couldn't write to [" + file + "] : " + e);
-            }
-        });
-    } else {
-        console.log(str);
-    }
 }
 
 module.exports.beautify3 = beautify3;
@@ -222,5 +210,3 @@ module.exports.registerUser = registerUser;
 module.exports.updateUser = updateUser;
 module.exports.deleteUser = deleteUser;
 module.exports.dump = dump;
-module.exports.logger = logger;
-

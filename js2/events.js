@@ -38,7 +38,6 @@
 
 "use strict;"
 
-/*
 function eventHandler(e, type) {
     var O, o, k, f = objects[focus];
     oldFocus = focus;
@@ -279,4 +278,3 @@ function removeFocus(e) {
         applyRecursive(o, "currentColor", insideRect(e, o.loc.x, o.loc.y, o.loc.w, o.loc.h) ? o.color.over : o.color.standard);
     }
 }
-*/

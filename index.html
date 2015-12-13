@@ -9,27 +9,36 @@
     <title>Color Madness</title>
     <!--<link rel="shortcut icon" type="image/png" href="favicon.png"/>TODO-->
     <link href="css/style.css" rel="stylesheet">
-    <script type="text/javascript" src="js/events.js"></script>
-    <script type="text/javascript" src="js/draw.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>-->
+    <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="js/utilities.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body role="document">
-    <canvas id="canvas0">
+<body class="container">
+    <div class="vertical-center-row">
+        <button class="btn btn-default col-xs-2 col-xs-offset-6" id="play" title="Start game">Play</button>
+    </div>
+    <canvas id="canvas0" style="display:none">
         <h1 class="text-center">Oops!</h1>
-        <h2 class="text-center">Sorry, your browser does not support the JavaScript canvas.<br/>Please upgrade to a more recent version and try again.</h2><br/>
+        <h2 class="text-center">Sorry, your browser does not support the JavaScript canvas or the WebSocket technology.<br/>Please upgrade to a more recent version and try again.</h2><br/>
         <h1 class="text-center">Oups !</h1>
-        <h2 class="text-center">Désolé, votre navigateur ne prend pas en charge le canevas JavaScript.<br/>Veuillez le mettre à jour et rééssayer.</h2><br/>
-        <h1 class="text-center">Ups !</h1>
-        <h2 class="text-center">Entschuldigung, Ihr Internetbrowser unterstützt kein JavaScript Leinwand.<br/>Bitte aktualisieren Sie es und versuchen Sie es erneut.</h2><br/>
+        <h2 class="text-center">Désolé, votre navigateur ne prend pas en charge le canevas JavaScript ou la technologie WebSocket.<br/>Veuillez le mettre à jour et réessayer.</h2><br/>
+        <h1 class="text-center">Ups!</h1>
+        <h2 class="text-center">Entschuldigung, Ihr Internetbrowser unterstützt kein JavaScript Leinwand oder die WebSocket Technologie.<br/>Bitte aktualisieren Sie es und versuchen Sie es erneut.</h2><br/>
         <h1 class="text-center">¡Vaya!</h1>
-        <h2 class="text-center">Lo sentimos, su explorador Web no soporta JavaScript marco.<br/>Por favor, actualice y vuelva a intentarlo.</h2><br/>
+        <h2 class="text-center">Lo sentimos, su explorador Web no soporta JavaScript marcoo la WebSocket tecnología.<br/>Por favor, actualice y vuelva a intentarlo.</h2><br/>
     </canvas>
+    <div class="commander">
+        <button class="btn btn-default" id="send" title="Send to server" style="display:none">Send</button>
+        <div class="stretch"><input class="form-control" style="display:none" placeholder="Input server command here..." id="command"></textarea></div>
+    </div>
+    <textarea readonly class="form-control" style="display:none" id="logger"></textarea>
 </body>
 <!--TODO Content-->
 <!--TODO Google Analytics-->

@@ -1,12 +1,17 @@
-var net = require('net');
+// https://www.npmjs.com/package/nodejs-websocket
+// https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
+
+var ws = require('nodejs-websocket');
 var fs = require('fs');
 var util = require('util');
 var sys = require('sys');
 var mongoose = require('mongoose');
 var colors = require('colors');
 var tools = require('./tools.js');
+var StringDecoder = require('string_decoder').StringDecoder;
+var decoder = new StringDecoder('utf8');
 
-const PACKET_SEPARATOR = 59 // ;
+const PACKET_SEPARATOR = '\u1234';
 var maxAcceleration = 3;
 var players = {};
 var logfile = fs.createWriteStream(__dirname + '/debug.log', {flags : 'a'});
@@ -89,14 +94,14 @@ function stdinProcessor(data) {
         case "dump":
         case "dumpdb":
         case "dumpdatabase":
-            tools.dump(usersModel);
+            tools.dump(fs, usersModel, data.split(" ")[1]);
             break;
         case "":
             break;
         case "help":
         case "?":
         default:
-            console.log("CLEARLOGS\nSTOP\nREGISTER [name] [pass] [email]\nUPDATE [mail/user] [newpass] [newmail] (newuser)\nDELETE [mail/user] (pass)\nDUMPDB".red);
+            console.log("CLEARLOGS\nSTOP\nREGISTER [name] [pass] [email]\nUPDATE [mail/user] [newpass] [newmail] (newuser)\nDELETE [mail/user] (pass)\nDUMPDB".bold.red);
             break;
     }
 }
@@ -121,129 +126,110 @@ function onQuit() { // Server
 
 function endSocket(socket) {
     // Send client sth
-    if (socket.isOnline) { // If in game
+    if (socket && socket.isOnline) { // If in game
         players[socket.player].socket = null;
         clearInterval(players[socket.player].updateInterval);
         socket.isOnline = false; // Player logged in
     }
-    socket.end();
+    socket.close();
     console.log("Socket ended.");
 }
     
 function onConnect(socket) {
     function killSocket(had_error) { // Close client connection on request
-        console.log("KILL".red.bold);
         if(had_error) {
-            console.log("had_error " + had_error);
+            console.log("KILL ".red.bold + had_error);
             endSocket(socket);
         }
     }
     
-    console.log("Connected to Flash");
     function dataHandler(command) {
-        cmd = command.split(";")[0];
-        if (command[command.length - 1] != String.fromCharCode(PACKET_SEPARATOR) && command != command == "<policy-file-request/>\0") {
-            console.log("SEPARATOR : [" + PACKET_SEPARATOR + "], last : [" + command[command.length - 1] + "]");
-            console.log("CAUGHT EXCEPTION : WRONG PACKET FORMAT : [" + command + "] LENGTH [" + command.length + "]");
-            //throw error
-        }
-        if (cmd == "EXIT") {
-            console.log("Received exit request from " + socket.address().address + ":" + socket.address().port + " (" + socket.address().family + "). Ending connection...");
-        socket.end();
-        }
-        else if (command == "<policy-file-request/>\0") {
-            socket.write('<cross-domain-policy>\n<allow-access-from domain="*" to-ports="*" />\n</cross-domain-policy>\0', 'utf8');
-            console.log("Policy file sent to " + socket.address().address + ":" + socket.address().port + " (" + socket.address().family + ").");
-        }
-        else {
-            command = command.split(";")[0];
-            var now = new Date();
-            if ((command.substring(0, 4) == "KEYD" || command.substring(0, 4) == "KEYU") && socket.isOnline) {
-                currentPlayer = players[socket.player];
-                currentPlayer.keysPressed = tools.updateKeys(currentPlayer, command.split(" ")[1], (command[3] == "D"));
-                if (currentPlayer.keysPressed.Right) {
-                    currentPlayer.pxacceleration += 0.2;
-                }
-                if (currentPlayer.keysPressed.Left) {
-                    currentPlayer.pxacceleration -= 0.2;
-                }
-                if (currentPlayer.keysPressed.Down) {
-                    currentPlayer.pyacceleration += 0.2;
-                }
-                if (currentPlayer.keysPressed.Up) {
-                    currentPlayer.pyacceleration -= 0.2;
-                }
-                currentPlayer.pxacceleration = Math.min(currentPlayer.pxacceleration, maxAcceleration);
-                currentPlayer.pyacceleration = Math.min(currentPlayer.pyacceleration, maxAcceleration);
+        var now = new Date();
+        if (command == "EXIT") {
+            console.log("Received exit request from " + socket.socket.address().address + ":" + socket.socket.address().port + " (" + socket.socket.address().family + "). Ending connection...");
+        socket.close();
+        } else if (command.substring(0, 3) == "GET") {
+            var i = command.indexOf("Sec-WebSocket-Key: ") + 19;
+            var str = "";
+            while (command.charAt(i) != "\n") {
+                str += command.charAt(i++);
+            }
+            tools.sendClient(socket, "HTTP/1.1 101 Switching Protocols\nUpgrade: websocket\nConnection: Upgrade\nSec-WebSocket-Accept: " + tools.b64encode(tools.sha1(str + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11")));
+        } else if ((command.substring(0, 4) == "KEYD" || command.substring(0, 4) == "KEYU") && socket.isOnline) {
+            currentPlayer = players[socket.player];
+            currentPlayer.keysPressed = tools.updateKeys(currentPlayer, command.split(" ")[1], (command[3] == "D"));
+            if (currentPlayer.keysPressed.Right) {
+                currentPlayer.pxacceleration += 0.2;
+            }
+            if (currentPlayer.keysPressed.Left) {
+                currentPlayer.pxacceleration -= 0.2;
+            }
+            if (currentPlayer.keysPressed.Down) {
+                currentPlayer.pyacceleration += 0.2;
+            }
+            if (currentPlayer.keysPressed.Up) {
+                currentPlayer.pyacceleration -= 0.2;
+            }
+            currentPlayer.pxacceleration = Math.min(currentPlayer.pxacceleration, maxAcceleration);
+            currentPlayer.pyacceleration = Math.min(currentPlayer.pyacceleration, maxAcceleration);
 
-                //console.log(currentPlayer.pxacceleration + "___" + currentPlayer.pyacceleration);
-            }
-            else if (command.substring(0, 4) == "LOGN") {
-                if (command.split(" ").length != 3) {
-                    console.log("Wrong login syntax!".bold.red);
-                    tools.sendClient(socket, "SYNT");
-                } else {
-                    var nick = command.split(" ")[1];
-                    var pass = command.split(" ")[2];
-                    var query = usersModel.find({$or : [{nickname: nick}, {email: nick}]});
-                    query.where({password : pass});
-                    query.exec(function (err, data) {
-                        if (err) { throw err; }
-                        if (data.length) {
-                            console.log("User logged in".green);
-                            tools.sendClient(socket, "SUCC");
-                            players = tools.init(players, nick, socket);
-                        }
-                        else {
-                            console.log("Wrong credentials!".red);
-                            tools.sendClient(socket, "CRED");
-                        }
-                    });
-                }
-            }
-            else if (command.substring(0, 4) == "REGR") {
-                tools.registerUser(command.split(" "), usersModel, socket);
-            }
-            else if (command.substring(0, 4) == "UPDT" && socket.isOnline) {
-                tools.updateUser(command.split(" "), usersModel, socket);
-            }
-            else if (command.substring(0, 4) == "DELE" && socket.isOnline) {
-                tools.deleteUser(command.split(" "), usersModel, socket);
-            }
-            else if (command.substring(0, 4) == "LOGT" && socket.isOnline) {
-                // TODO : Save player data?
-                tools.sendClient(socket, "SUCL");
-                endSocket(socket);
-                delete players[socket.player];
-                socket.isOnline = false;
-            }   
-            else {
-                console.log("Got [" + command.red + "] at " + now.getSeconds() + "." + now.getMilliseconds() + " from " + socket.address().address + ":" + socket.address().port + " (" + socket.address().family + ")");
+            //console.log(currentPlayer.pxacceleration + "___" + currentPlayer.pyacceleration);
+        } else if (command.substring(0, 4) == "LOGN") {
+            if (command.split(" ").length != 3) {
+                console.log("Wrong login syntax!".bold.red);
                 tools.sendClient(socket, "SYNT");
+            } else {
+                var nick = command.split(" ")[1];
+                var pass = command.split(" ")[2];
+                var query = usersModel.find({$or : [{nickname: nick}, {email: nick}]});
+                query.where({password : pass});
+                query.exec(function (err, data) {
+                    if (err) { throw err; }
+                    if (data.length) {
+                        console.log("User logged in".green);
+                        tools.sendClient(socket, "SUCC");
+                        players = tools.init(players, nick, socket);
+                    }
+                    else {
+                        console.log("Wrong credentials!".red);
+                        tools.sendClient(socket, "CRED");
+                    }
+                });
             }
+        } else if (command.substring(0, 4) == "REGR") {
+            tools.registerUser(command.split(" "), usersModel, socket);
+        } else if (command.substring(0, 4) == "UPDT" && socket.isOnline) {
+            tools.updateUser(command.split(" "), usersModel, socket);
+        } else if (command.substring(0, 4) == "DELE" && socket.isOnline) {
+            tools.deleteUser(command.split(" "), usersModel, socket);
+        } else if (command.substring(0, 4) == "LOGT" && socket.isOnline) {
+            // TODO : Save player data?
+            tools.sendClient(socket, "SUCL");
+            endSocket(socket);
+            delete players[socket.player];
+            socket.isOnline = false;
+        } else {
+            console.log("Got [" + command.red + "] at " + now.getSeconds() + "." + now.getMilliseconds() + " from " + socket.socket.address().address + ":" + socket.socket.address().port + " (" + socket.socket.address().family + ")");
+            tools.sendClient(socket, "SYNT");
         }
     }
 
     function onData(d) {
-        var command = "";
-        //var imin = (d[0] == 0 ? 2 : 0);
-        var imin = 0; // 2 premiers octets = longueur pour WriteUTF
-        for (i=imin; i <= d.length - 1; i++) {
-            command += String.fromCharCode(d[i]);
-            if (d[i] == PACKET_SEPARATOR || i == d.length - 1 && command == "<policy-file-request/>\0") {
-                dataHandler(command);
-                command = "";
-            }
+        var command = decoder.write(d).split(PACKET_SEPARATOR);
+        for (i in command) {
+            dataHandler(command[i].replace(String.fromCharCode(13), "").replace(String.fromCharCode(10), ""));
         }
     }
     
+    console.log("Connected to client");
     socket.isOnline = false; //Init
-    socket.on("data", onData);
+    socket.on("text", onData);
     socket.on("error", killSocket); //To improve...
     socket.on("close", killSocket);
+    // binary, connect, pong
 }
 
-var server = net.createServer(onConnect);
+var server = ws.createServer(onConnect);
 
 logfile.write('\n\n=== NEW INSTANCE ===\n\n');
 console.log("ColorMadness server version ".bold.blue + "0.2.1.4".magenta.italic);
@@ -255,4 +241,4 @@ function main() {
     process.on('SIGINT', onQuit);
 }
 
-// EXST LOGN LOGT REGR UPDT DELE CRED SYNT UPOK UPFL DELK DELF SUCC SUCR SUCL + add envoi direct depuis client et update socket.isOnline
+// [GET] EXST LOGN LOGT REGR UPDT DELE CRED SYNT UPOK UPFL DELK DELF SUCC SUCR SUCL + add envoi direct depuis client et update socket.isOnline

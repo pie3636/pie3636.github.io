@@ -5,7 +5,6 @@
 
 "use strict;"
 
-/*
 function set(x, val) {
         return (typeof x === 'undefined' ? val : x);
 }
@@ -49,31 +48,3 @@ function setBar(f) {
         f.barPos *= (z - 10) / d;
     }
 }
-*/
-
-function log(str) {
-    var d = new Date;
-    var date = "[" + prettify(d.getHours(), 2) + ":" + prettify(d.getMinutes(), 2) + ":" + prettify(d.getSeconds(), 2) + "." + prettify(d.getMilliseconds(), 3) + "] ";
-   $("#logger").html(date + str + "\n" + $("#logger").html());
-    CM.logCount++;
-    if (CM.logCount > CM.logMaxCount) {
-        $("#logger").html($("#logger").html().split("\n").splice(0, CM.logMaxCount).join("\n")); // Remove last lines
-        CM.logCount = CM.logMaxCount;
-    }
-}
-
-function prettify(input, before) {
-    var str = "";
-    for (var i = 1; i < before; i++) {
-        if(input < Math.pow(10, i)) {
-            str += "0";
-        }
-    }
-    return str + input.toFixed(0);
-}
-
-function clearFullLogs() {
-    $("#logger").html("");
-    CM.logCount = 0;
-}
-

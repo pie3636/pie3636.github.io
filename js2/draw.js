@@ -5,7 +5,6 @@
 
 "use strict;"
 
-/*
 function draw() {
     var c;
     for (var i = 0; i < layers; i++) {
@@ -140,4 +139,4 @@ function recursiveDraw(O) {
         }
     }
 }
-*/
+
