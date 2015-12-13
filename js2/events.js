@@ -27,7 +27,7 @@
  * thickness
  * text
  * font
- * sier                 overrides font
+ * size                 overrides font
  * wrap                 boolean (false)
  * TEXTINPUT ===========
  * barPos               relative, in px

@@ -30,11 +30,6 @@ function clear() {
     }
 }
 
-function insideRect(e, x0, y0, w, h) {
-    x0 = W(x0), y0 = H(y0), w = W(w), h = H(h);
-    return x0 <= e.offsetX && e.offsetX <= x0 + w && y0 <= e.offsetY && e.offsetY <= y0 + h;
-}
-
 function button(ctx, x, y, w, h, r, strokeColor, thickness, fillColor, fill) {
     x = W(x), y = H(y), w = W(w), h = H(h);
     ctx.beginPath();
@@ -90,16 +85,12 @@ function measuretext(o, scale, index) {
 function drawAll() {
     for (var i = 0; i < layers; i++) {
         recursiveDraw(objectsTree[i]);
-        if (initFocus) {
-            setFocus();
-            initFocus = false;
-        }
     }
 }
 
 function recursiveDraw(O) {
     if (O.type == "button") {
-        button(O.ctx, O.loc.x, O.loc.y, O.loc.w, O.loc.h, O.r, O.currentColor, O.thickness);
+        button(O.ctx, O.loc.x, O.loc.y, O.loc.w, O.loc.h, O.r, O.color, O.thickness);
     } else if (O.type == "text") {
         if (O.wrap) {
             words = O.text.split(' ');
@@ -114,7 +105,7 @@ function recursiveDraw(O) {
                         cline += words[n].split('\n')[0];
                         words[n] = words[n].split('\n')[1];
                     }
-                    text(O.ctx, O.loc.x, y, O.loc.w, O.size/h, cline, O.font, O.currentColor, O.align, O.valign);
+                    text(O.ctx, O.loc.x, y, O.loc.w, O.size/h, cline, O.font, O.color, O.align, O.valign);
                     cline = words[n] + ' ';
                     y += (1.5 * O.size)/h;
                 }
@@ -122,15 +113,9 @@ function recursiveDraw(O) {
                     cline = testLine;
                 }
             }
-            text(O.ctx, O.loc.x, y, O.loc.w, O.size/h, cline, O.font, O.currentColor, O.align, O.valign);
+            text(O.ctx, O.loc.x, y, O.loc.w, O.size/h, cline, O.font, O.color, O.align, O.valign);
         } else {
-            text(O.ctx, O.loc.x, O.loc.y, O.loc.w, O.size ? O.size/h : O.loc.h, O.text, O.font, O.currentColor, O.align, O.valign);
-        }
-    } else if (O.type == "textinput") {
-        button(O.ctx, O.loc.x, O.loc.y, O.loc.w, O.loc.h, O.r, O.currentColor, O.thickness);
-        text(O.ctx, O.loc.x + 5/w, O.loc.y + .075 * O.loc.h, O.loc.w - 10/w, .8 * O.loc.h, O.text, O.font, O.currentColor, "left", "top");
-        if (focus == O.name) {
-            line(O.ctx, O.loc.x + 5/w + O.barPos/w, O.loc.y + .15 * O.loc.h, 0, O.loc.h * .7, O.currentColor, O.thickness - 1);
+            text(O.ctx, O.loc.x, O.loc.y, O.loc.w, O.size ? O.size/h : O.loc.h, O.text, O.font, O.color, O.align, O.valign);
         }
     }
     if (O.children) {

@@ -40,15 +40,6 @@ function checkNext(f) {
     requestAnimationFrame(screens[screen]);
         
 }
-
-function setBar(f) {
-    f.barPos = Math.floor(measuretext(f, .8, f.nBarPos));
-    d = Math.floor(measuretext(f, .8, f.text.length));
-    z = W(f.loc.w);
-    if (d > z - 10) {
-        f.barPos *= (z - 10) / d;
-    }
-}
 */
 
 function log(str) {
