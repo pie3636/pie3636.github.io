@@ -209,8 +209,12 @@ function onConnect(socket) {
             delete players[socket.player];
             socket.isOnline = false;
         } else {
-            console.log("Got [" + command.red + "] at " + now.getSeconds() + "." + now.getMilliseconds() + " from " + socket.socket.address().address + ":" + socket.socket.address().port + " (" + socket.socket.address().family + ")");
-            tools.sendClient(socket, "SYNT");
+            if (socket.isOnline) {
+                console.log("Got [" + command.red + "] at " + now.getSeconds() + "." + now.getMilliseconds() + " from " + socket.socket.address().address + ":" + socket.socket.address().port + " (" + socket.socket.address().family + ")");
+                tools.sendClient(socket, "SYNT");
+            } else {
+                tools.sendClient(socket, "OFLN");
+            }
         }
     }
 
@@ -241,4 +245,4 @@ function main() {
     process.on('SIGINT', onQuit);
 }
 
-// [GET] EXST LOGN LOGT REGR UPDT DELE CRED SYNT UPOK UPFL DELK DELF SUCC SUCR SUCL + add envoi direct depuis client et update socket.isOnline
+// [GET] EXST LOGN LOGT REGR UPDT DELE CRED SYNT UPOK UPFL DELK DELF SUCC SUCR SUCL OFLN + add envoi direct depuis client et update socket.isOnline
