@@ -1,11 +1,11 @@
+var server = require('./server.js');
+
 function beautify3(sec) {
     if (sec < 10) {
         return "00" + sec;
-    }
-    else if (sec <100) {
+    } else if (sec <100) {
         return "0" + sec;
-    }
-    else {
+    } else {
         return sec;
     }
 }
@@ -52,7 +52,7 @@ function update(player) {
     return player;
 }
 
-function init(players, nick, socket) {
+function init(players, nick, socket, data) {
     players[nick] = {
         keysPressed : {Left : false, Up : false, Right : false, Down : false },
         socket : socket,
@@ -60,6 +60,7 @@ function init(players, nick, socket) {
         pyacceleration : 0,
         x : 200,
         y : 200,
+        model : data,
         updateInterval : setInterval(function(){
             players[nick] = update(players[nick]);
         }, 500)
@@ -78,40 +79,38 @@ function logThrow(isOp, stringOp, stringClient, errClient, socket, isConcat) {
     } else if (!isOp) {
         if (stringClient.length) {
             console.log(stringClient);
-        }
-        if (errClient.length) {
+        } if (errClient.length) {
             sendClient(socket, errClient);
         }
     }
 }
 
-function registerUser(data, usersModel, socket) {
+function registerUser(data, usersModel, players, socket) {
     var isOp = (typeof socket === 'undefined');
-    if (data.length != 4) {
-        logThrow(isOp, "REGISTER [user] [pass] [email]".bold.red, "Wrong registering syntax!".bold.red, "SYNT", socket);
-    }
-    else {
+    if (data.length != 4 && data.length != 5) {
+        logThrow(isOp, "REGISTER [user] [pass] [email] (privilegeLevel)".bold.red, "Wrong registering syntax!".bold.red, "SYNT", socket);
+    } else {
         var nick = data[1];
         var pass = data[2];
         var mail = data[3];
+        var privileges = (isOp && data.length == 5 ? data[4] : 0);
         var query = usersModel.find({$or : [{nickname: nick}, {email: mail}]});
         query.exec(function (err, data) {
             if (err) { throw err; }
             var disp;
             if (data.length) {
                 logThrow(isOp, "[OP] ".red, "Tried to override existing user".red, "EXST", socket, true);
-            }
-            else {
-                var myUser = new usersModel({ nickname : nick, email : mail, password : pass });
+            } else {
+                var myUser = new usersModel({ nickname : nick, email : mail, password : pass, privilegeLevel : privileges });
                 myUser.elo = 1000;
                 myUser.save(function (err) {
                     if (err) {
-                        console.log("ValidationError".bold.red + "\n" + err	);
-                    }
-                    else {
+                        console.log("ValidationError".bold.red + "\n" + err );
+                    } else {
                         logThrow(isOp, "[OP] ".green, "New user registered".green, "SUCR", socket, true);
                         if (!isOp) {
-                            players = init(players, nick, socket);
+                            console.log("INIT REGISTER");
+                            players = init(players, nick, socket, myUser);
                         }
                     }
                 });
@@ -120,7 +119,7 @@ function registerUser(data, usersModel, socket) {
     }
 }
 
-function updateUser(data, usersModel, socket) {
+function updateUser(data, usersModel, players, socket) {
     var isOp = (typeof socket === 'undefined');
     if (data.length != 4 && (!isOp || data.length != 5)) {
         logThrow(isOp, "UPDATE [user/mail] [newpass] [newemail] (newuser)".bold.red, "Wrong update syntax!".bold.red, "SYNT", socket);
@@ -140,18 +139,18 @@ function updateUser(data, usersModel, socket) {
                     }
                 });
                 logThrow(isOp, "[OP] ".green, "Updated user".green, "UPOK", socket, true);
-            }
-            else {
-                logThrow(isOp, "[OP] Non-existing user".red.bold, "User not found... Wtf?".red.bold.italic.underline, "UPFL", socket);
                 if (!isOp) {
-                    players = init(players, nick, socket);
+                    console.log("INIT UPDATE");
+                    players = init(players, newnick, socket, results[0]);
                 }
+            } else {
+                logThrow(isOp, "[OP] ".green + "Non-existing user".red.bold, "User not found... Wtf?".red.bold.italic.underline, "UPFL", socket);
             }
         });
     }
 }
 
-function deleteUser(data, usersModel, socket) {
+function deleteUser(data, usersModel, players, socket) {
     var isOp = (typeof socket === 'undefined');
     if (data.length != 3 && (!isOp || data.length != 2)) {
         logThrow(isOp, "DELETE [user/mail] (pass)".bold.red, "Wrong delete syntax!".bold.red, "SYNT", socket);
@@ -173,19 +172,41 @@ function deleteUser(data, usersModel, socket) {
                 }
                 logThrow(isOp, "[OP] ".green, "Deleted user".green, "DELK", socket, true);
                 if (typeof socket !== 'undefined') {
-                    socket.isOnline = false;
+                    server.endSocket(socket);
                 }
-            }
-            else {
+            } else {
                 logThrow(isOp, "[OP] ".red.bold.italic.underline, "Delete request failed (password?)".red.bold.italic.underline, "DELF", socket, true);
-                if (!isOp) {
-                    players = init(players, nick, socket);
-                }
             }
         });
     }
 }
-                
+
+function updatePrivileges(data, usersModel, players) {
+    if (data.length != 3) {
+        console.log("UPDATE [user/mail] [privilegeLevel]".bold.red);
+    } else {
+        var nickOrMail = data[1];
+        var query = usersModel.find({$or : [{nickname: nickOrMail}, {email: nickOrMail}]});
+        query.exec(function (err, results) {
+            if (err) { throw err; }
+            if (results.length) {
+                usersModel.update({nickname : results[0].nickname}, {privilegeLevel : data[2]}, {multi : false}, function (err) {
+                    if(err) {
+                        throw err; // improve
+                    }
+                });
+                console.log("[OP] ".green + "Updated user privileges".green);
+                if (!isOp) {
+                    console.log("INIT PRIVILEGES");
+                    players = init(players, nick, socket, resutlts[0]);
+                }
+            } else {
+                console.log("[OP] ".green + "Non-existing user".red.bold);
+            }
+        });
+    }
+}
+
 function dump(fs, collection, file) {
     var query = collection.find();
     query.exec(function (err, results) {
@@ -195,6 +216,9 @@ function dump(fs, collection, file) {
             logger(fs, "nick : ".cyan.bold + results[i].nickname.cyan, file);
             logger(fs, "pass : ".cyan.bold + results[i].password.cyan, file);
             logger(fs, "mail : ".cyan.bold + results[i].email.cyan, file);
+            logger(fs, "date : ".cyan.bold + results[i].registerDate.toString().cyan, file);
+            logger(fs, "elo  : ".cyan.bold + (String)(results[i].elo).cyan, file);
+            logger(fs, "priv : ".cyan.bold + (String)(results[i].privilegeLevel).cyan, file);
         }
         logger(fs, "======END OF DATABASE======".red, file);
     });
@@ -221,6 +245,7 @@ module.exports.init = init;
 module.exports.registerUser = registerUser;
 module.exports.updateUser = updateUser;
 module.exports.deleteUser = deleteUser;
+module.exports.updatePrivileges = updatePrivileges;
 module.exports.dump = dump;
 module.exports.logger = logger;
 

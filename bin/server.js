@@ -12,6 +12,7 @@ var StringDecoder = require('string_decoder').StringDecoder;
 var decoder = new StringDecoder('utf8');
 
 const PACKET_SEPARATOR = '\u1234';
+var version = "0.1.2.5";
 var maxAcceleration = 3;
 var players = {};
 var logfile = fs.createWriteStream(__dirname + '/debug.log', {flags : 'a'});
@@ -29,13 +30,14 @@ mongoose.connection.once('open', main);
 
 var users = new mongoose.Schema({
     nickname : {type : String, match : /^[a-zA-Z0-9-_]{4,20}$/ },
-    elo : {type : Number, degault : 1000},
+    elo : {type : Number, default : 1000},
     registerDate : {type : Date, default : Date.now},
     password : {type : String, match : /^.{6,}$/},
-    email : {type : String, match : /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/}
+    email : {type : String, match : /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/},
+    privilegeLevel : {type : Number, min : 0, max : 10}
 });
 
-var usersModel = mongoose.model('Users', users); 
+var usersModel = mongoose.model('Users', users);
 
 
 /* ================================================== CONSOLE I/O ================================================== */
@@ -77,31 +79,38 @@ function stdinProcessor(data) {
         case "newplayer":
         case "registeruser":
         case "registerplayer":
-            tools.registerUser(data.split(" "), usersModel);
+            tools.registerUser(data.split(" "), usersModel, players);
             break;
         case "updt":
         case "update":
         case "updateuser":
         case "updateplayer":
-            tools.updateUser(data.split(" "), usersModel);
+            tools.updateUser(data.split(" "), usersModel, players);
             break;
         case "dele":
         case "delete":
         case "deleteuser":
         case "deleteplayer":
-            tools.deleteUser(data.split(" "), usersModel);
+            tools.deleteUser(data.split(" "), usersModel, players);
             break;
         case "dump":
         case "dumpdb":
         case "dumpdatabase":
             tools.dump(fs, usersModel, data.split(" ")[1]);
             break;
+        case "updateprivileges":
+        case "privileges":
+        case "op":
+        case "promote":
+        case "demote":
+            tools.updatePrivileges(data.split(" "), usersModel, players);
+            break;
         case "":
             break;
         case "help":
         case "?":
         default:
-            console.log("CLEARLOGS\nSTOP\nREGISTER [name] [pass] [email]\nUPDATE [mail/user] [newpass] [newmail] (newuser)\nDELETE [mail/user] (pass)\nDUMPDB".bold.red);
+            console.log("CLEARLOGS\nSTOP\nREGISTER [name] [pass] [email]\nUPDATE [mail/user] [newpass] [newmail] (newuser)\nPROMOTE [mail/user] [privilegeLevel]\nDELETE [mail/user] (pass)\nDUMPDB".bold.red);
             break;
     }
 }
@@ -131,10 +140,12 @@ function endSocket(socket) {
         clearInterval(players[socket.player].updateInterval);
         socket.isOnline = false; // Player logged in
     }
-    socket.close();
-    console.log("Socket ended.");
+    if (socket) {
+        socket.close();
+        console.log("Socket ended.");
+    }
 }
-    
+
 function onConnect(socket) {
     function killSocket(had_error) { // Close client connection on request
         if(had_error) {
@@ -142,20 +153,22 @@ function onConnect(socket) {
             endSocket(socket);
         }
     }
-    
+
     function dataHandler(command) {
         var now = new Date();
+        var command3 = command.substring(0, 3);
+        var command4 = command.substring(0, 4);
         if (command == "EXIT") {
             console.log("Received exit request from " + socket.socket.address().address + ":" + socket.socket.address().port + " (" + socket.socket.address().family + "). Ending connection...");
-        socket.close();
-        } else if (command.substring(0, 3) == "GET") {
+            socket.close();
+        } else if (command3 == "GET") {
             var i = command.indexOf("Sec-WebSocket-Key: ") + 19;
             var str = "";
             while (command.charAt(i) != "\n") {
                 str += command.charAt(i++);
             }
             tools.sendClient(socket, "HTTP/1.1 101 Switching Protocols\nUpgrade: websocket\nConnection: Upgrade\nSec-WebSocket-Accept: " + tools.b64encode(tools.sha1(str + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11")));
-        } else if ((command.substring(0, 4) == "KEYD" || command.substring(0, 4) == "KEYU") && socket.isOnline) {
+        } else if ((command4 == "KEYD" || command4 == "KEYU") && socket.isOnline) {
             currentPlayer = players[socket.player];
             currentPlayer.keysPressed = tools.updateKeys(currentPlayer, command.split(" ")[1], (command[3] == "D"));
             if (currentPlayer.keysPressed.Right) {
@@ -174,7 +187,7 @@ function onConnect(socket) {
             currentPlayer.pyacceleration = Math.min(currentPlayer.pyacceleration, maxAcceleration);
 
             //console.log(currentPlayer.pxacceleration + "___" + currentPlayer.pyacceleration);
-        } else if (command.substring(0, 4) == "LOGN") {
+        } else if (command4 == "LOGN") {
             if (command.split(" ").length != 3) {
                 console.log("Wrong login syntax!".bold.red);
                 tools.sendClient(socket, "SYNT");
@@ -188,21 +201,21 @@ function onConnect(socket) {
                     if (data.length) {
                         console.log("User logged in".green);
                         tools.sendClient(socket, "SUCC");
-                        players = tools.init(players, nick, socket);
-                    }
-                    else {
+                        console.log("TOOLS.INIT");
+                        players = tools.init(players, nick, socket, data);
+                    } else {
                         console.log("Wrong credentials!".red);
                         tools.sendClient(socket, "CRED");
                     }
                 });
             }
-        } else if (command.substring(0, 4) == "REGR") {
-            tools.registerUser(command.split(" "), usersModel, socket);
-        } else if (command.substring(0, 4) == "UPDT" && socket.isOnline) {
-            tools.updateUser(command.split(" "), usersModel, socket);
-        } else if (command.substring(0, 4) == "DELE" && socket.isOnline) {
-            tools.deleteUser(command.split(" "), usersModel, socket);
-        } else if (command.substring(0, 4) == "LOGT" && socket.isOnline) {
+        } else if (command4 == "REGR") {
+            tools.registerUser(command.split(" "), usersModel, players, socket);
+        } else if (command4 == "UPDT" && socket.isOnline) {
+            tools.updateUser(command.split(" "), usersModel, players, socket);
+        } else if (command4 == "DELE" && socket.isOnline) {
+            tools.deleteUser(command.split(" "), usersModel, players, socket);
+        } else if (command4 == "LOGT" && socket.isOnline) {
             // TODO : Save player data?
             tools.sendClient(socket, "SUCL");
             endSocket(socket);
@@ -224,7 +237,7 @@ function onConnect(socket) {
             dataHandler(command[i].replace(String.fromCharCode(13), "").replace(String.fromCharCode(10), ""));
         }
     }
-    
+
     console.log("Connected to client");
     socket.isOnline = false; //Init
     socket.on("text", onData);
@@ -236,7 +249,7 @@ function onConnect(socket) {
 var server = ws.createServer(onConnect);
 
 logfile.write('\n\n=== NEW INSTANCE ===\n\n');
-console.log("ColorMadness server version ".bold.blue + "0.2.1.4".magenta.italic);
+console.log("ColorMadness server version ".bold.blue + version.magenta.italic);
 console.log("Ready. Waiting for incoming connections".magenta);
 
 function main() {
@@ -245,4 +258,7 @@ function main() {
     process.on('SIGINT', onQuit);
 }
 
-// [GET] EXST LOGN LOGT REGR UPDT DELE CRED SYNT UPOK UPFL DELK DELF SUCC SUCR SUCL OFLN + add envoi direct depuis client et update socket.isOnline
+module.exports.endSocket = endSocket;
+
+// [GET] EXST LOGN LOGT REGR UPDT DELE CRED SYNT UPOK UPFL DELK DELF SUCC SUCR SUCL OFLN + update socket.isOnline
+// Gestion SIGKILL
