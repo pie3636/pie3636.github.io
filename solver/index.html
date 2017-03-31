@@ -1,0 +1,103 @@
+﻿<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Count solver</title>
+        <meta name="description" content="/r/Counting count solver">
+        <meta name="author" content="pie3636">
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <script src="math.js"></script>
+        <script src="main.js"></script>
+        
+        <textarea class="reduced" id=data>
+// count:          The number to solve for. Current maximum: ${max}.
+// initial_values: The values to use, in order. Examples: [4, 4, 4, 4], [1, 2, 3, 4, 5]
+
+{
+  count: 1234,
+  initial_values: [4, 4, 4, 4]
+};
+        </textarea>
+        <textarea class="reduced" disabled id=err></textarea><br/><br/>
+        <button onclick="solve(data.value)" id=solveBtn>Solve</button><br/><br/>
+        <textarea class="full" id=cost>
+/*
+ * Edit to your will, and click on 'Evaluate' to update the costs with your custom values.
+ * All the functions and operators used here are as defined in the pastebin.
+ * Pastebin link : http://pastebin.com/raw/9pYSr1hq
+ * 
+ * This text area also works as a JavaScript console,
+ * with all console.log() outputs redirected to the box on the right.
+ */
+
+cost = {            /* Defines the cost of each function and operator. The lower = the more elegant. */
+  DIGIT: 0,         /* Any single digit (1-5) */
+  PLUS: 1,
+  MINUS: 1,
+  TIMES: 1,
+  DIVIDE: 1,
+  POWER: 1,
+  PARENTHESIS: 2,   /* Value for a pair of parenthesis */
+  KNUTH_ARROW: 4,
+  FACTORIAL: 3,
+  DOUBLE_FACTORIAL: 4,
+  SUPERFACTORIAL: 5,
+  HYPERGEOM: 5,
+  GAMMA: 4,
+  CONCAT: 5,        /* Any concatenation of 2 or more digits, explicit (a & b) or not (ab)*/
+  SINE: 5,
+  COSINE: 5,
+  TANGENT: 5,
+  SECANT: 5,
+  COSECANT: 5,
+  COTANGENT: 5,
+  ARC_SINE: 5,
+  ARC_COSINE: 5,
+  ARC_TANGENT: 5,
+  ARC_SECANT: 5,
+  ARC_COSECANT: 5,
+  ARC_COTANGENT: 5,
+  EXPONENTIAL: 6,
+  LOGARITHM: 6,
+  SQUARE_ROOT: 3,
+  ABSOLUTE_VALUE: 3,
+  FLOOR: 6,
+  CEIL: 6,
+  ACKERMANN: 4,
+  BACKWARDS: 6,
+  PARTITION: 4,
+  MOBIUS: 5,
+  SIGN: 4,
+  FIBONACCI: 4,
+  TRIBONACCI: 1,
+  BINARYBEANSTALK: 7,
+  SIGMA: 4,
+  MULTISIGMADIGIT: 5,
+  DIVISOR_SUM: 4,
+  DIVISOR_COUNT: 4,
+  CATALAN: 4,
+  PRIME_COUNT: 5,
+  PRIME_NUMBER: 5,
+  NONPRIME: 7,
+  EULER_TOTIENT: 4,
+  TOTIENT_SUM: 6,
+  SMALL_OMEGA: 4,
+  BIG_OMEGA: 4,
+  PRIMORIAL: 4,
+  DECIMAL_SEPARATOR: 3,
+  REPEATING_DECIMAL: 3,
+  PERCENT: 5
+};
+</textarea>
+        <textarea class="full" disabled id=err2></textarea><br/><br/>
+        <button id=evaluate>Evaluate</button>
+        <button id=clear>Clear console</button>
+        <input placeholder="Savefile (alphanumeric characters only)" style="min-width:300px" id="savefile"></input>
+        <button id=save>Save costs to file</button>
+        <button id=load style="margin-right: 10px">Load costs from file</button>
+        <span id="saved" style="color: red"></span>&nbsp; Storage is persistent through refreshes.<a href="../elegance/index.html" style="float: right; margin-right: 2%">Go to the elegance calculator</a>
+    </body>
+</html>
