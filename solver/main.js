@@ -3,21 +3,24 @@ var MAX_SIZE = 10000, currentVersion = "0.1";
 var err2, costfield;
 var operators = {
     None: {str: ''},
-    DIGIT: {str: ''},
-    SQUARE_ROOT: {str: '√'},
-    DOUBLE_FACTORIAL: {str: '!!'},
-    PRIME_NUMBER: {str: 'P'},
-    SIGMA: {str: 'σ'},
-    DIVISOR_COUNT: {str: 'd'},
-    PARTITION: {str: 'p'},
-    GAMMA: {str: 'Γ'},
-    HYPERGEOM: {str: 'H'},
-    CATALAN: {str: 'C'},
-    PLUS: {str: ' + ', priority: 1},
-    TIMES: {str: ' * ', priority: 2},
-    DIVIDE: {str: ' / ', priority: 2},
-    POWER: {str: '^', priority: 3},
+    DIGIT: {str: '', arity: 1},
+    SQUARE_ROOT: {str: '√', arity: 1},
+    DOUBLE_FACTORIAL: {str: '!!', arity: 1},
+    FACTORIAL: {str: '!', arity: 1},
+    PRIME_NUMBER: {str: 'P', arity: 1},
+    SIGMA: {str: 'σ', arity: 1},
+    DIVISOR_COUNT: {str: 'd', arity: 1},
+    PARTITION: {str: 'p', arity: 1},
+    GAMMA: {str: 'Γ', arity: 1},
+    HYPERGEOM: {str: 'H', arity: 1},
+    CATALAN: {str: 'C', arity: 1},
+    SUPERFACTORIAL: {str: 'sf', arity: 1},
+    PLUS: {str: ' + ', priority: 1, arity: 2},
+    TIMES: {str: ' * ', priority: 2, arity: 2},
+    DIVIDE: {str: ' / ', priority: 2, arity: 2},
+    POWER: {str: '^', priority: 3, arity: 2}
 };
+var globalTarget, globalSolution, globalCost;
 
 document.addEventListener("DOMContentLoaded", function(e) {
     err2 = document.getElementById('err2');
@@ -84,13 +87,27 @@ function solve(str) {
             return;
         }
         
+        /*
         console.log('Finding heuristic.');
         var bound = heuristics(countData);
         bound.cost = evaluateCost(bound.solution);
         console.log('Found [' + display(bound.solution) + '], with a cost of ' + bound.cost);
+        */
         
-        var result = treeSearch(bound, countData);
-        document.getElementById('err').value = display(result.solution) + "\nCost : " + result.cost;
+        console.log('Running tree search');
+        // var result = treeSearch(bound, countData);
+        var trees = [], currentCost = 0;
+        globalCost = 0;
+        for (var i in initial_values) {
+            trees.push(_1(initial_values[i]))
+            currentCost += cost[initial_values[i].type];
+        }
+        globalTarget = countData.count;
+        globalSolution = {};
+        globalCost = Number.MAX_SAFE_INTEGER;
+        var result = treeSearch(trees, currentCost);
+        console.log('Done. Outputting solution.');
+        document.getElementById('err').value = display(result[0]) + "\nCost : " + result[1];
     } catch (e) {
         console.log('Error parsing code : ' + e);
     }
@@ -124,18 +141,30 @@ function evaluateCost(tree) {
 function heuristics(data) {
     bound = { solution: { type: 'None' }, cost: Infinity };
     var n = data.count, factor, factors = [];
-    // sorted([2**i * 3**j for i in range(14) for j in range(10) if (2**i) * (3**j) < 10000])
-    // 2, 3, 4, 6, 8, 9, 12, 16, 18, 24, 27, 32, 36, 48, 54, 64, 72, 81, 96, 108, 128, 144, 162, 192, 216, 243, 256, 288, 324, 384, 432, 486, 512, 576, 648, 729, 768, 864, 972, 1024, 1152, 1296, 1458, 1536, 1728, 1944, 2048, 2187, 2304, 2592, 2916, 3072, 3456, 3888, 4096, 4374, 4608, 5184
-    // Eliminate powers of 2 and 3. Ideally this can be automated later on.
-    if (n % 9216 == 0) { bound.solution = __('TIMES', __('PLUS', _4, _5), __('POWER', _4, _5)); return bound; } // (10, 2) Future: 2*48²
-    if (n % 8748 == 0) { bound.solution = __('TIMES', _('HYPERGEOM', _3), __('POWER', _3, _4)); return bound; } // (2, 7)
-    if (n % 8192 == 0) { bound.solution = __('POWER', _2, __('PLUS', _8, _5)); return bound; }                  // (13, 0)
-    if (n % 7776 == 0) { bound.solution = __('POWER', _6, _5); return bound; }                                  // (5, 5)
-    if (n % 6912 == 0) { bound.solution = __('DIVIDE', _('HYPERGEOM', _4), _4); return bound; }                 // (8, 3)
-    if (n % 6561 == 0) { bound.solution = __('POWER', _3, _8); return bound; }                                  // (0, 8)
-    if (n % 6144 == 0) { bound.solution = __('TIMES', _6, __('POWER', _4, _5)); return bound; }                 // (11, 1)
-    if (n % 5832 == 0) { bound.solution = __('POWER', __('PLUS', _('CATALAN', _4), _4), _3); return bound; }    // (3, 6)
-    if (n % 5184 == 0) { bound.solution = __('DIVIDE', __('POWER', __('TIMES', _4, _3), _4), _4); return bound; }    // (6, 4) 2^6 * 3^4  12^4 / 4
+    /*
+     * sorted([2**i * 3**j for i in range(14) for j in range(10) if (2**i) * (3**j) < 10000])
+     * Eliminate powers of 2 and 3. Ideally this can be automated later on.
+     * Needs to be updated in case of upper limit raise
+     */
+    // 2, 3, 4, 6, 8, 9, 12, 16, 18, 24, 27, 32, 36, 48, 54, 64, 72, 81, 96, 108, 128, 144, 162, 192, 216, 243, 256, 288, 324, 384, 432, 486, 512, 576, 648, 729, 768, 864, 972, 1024, 1152, 1296, 1458, 1536, 1728, 1944, 2048, 2187, 2304, 2592
+    // Max 4
+    if (n % 9216 == 0) { bound.solution = __('TIMES', __('PLUS', _4, _5), __('POWER', _4, _5)); return bound; }         // (10, 2) - Future: 2*48²
+    if (n % 8748 == 0) { bound.solution = __('TIMES', _('HYPERGEOM', _3), __('POWER', _3, _4)); return bound; }         // (2, 7)
+    if (n % 8192 == 0) { bound.solution = __('POWER', _2, __('PLUS', __('PLUS', _4, _4), _5)); return bound; }          // (13, 0)
+    if (n % 7776 == 0) { bound.solution = __('POWER', _6, _5); return bound; }                                          // (5, 5)
+    if (n % 6912 == 0) { bound.solution = __('DIVIDE', _('HYPERGEOM', _4), _4); return bound; }                         // (8, 3)
+    if (n % 6561 == 0) { bound.solution = __('POWER', _3, __('PLUS', _4, _4)); return bound; }                          // (0, 8)
+    if (n % 6144 == 0) { bound.solution = __('TIMES', _6, __('POWER', _4, _5)); return bound; }                         // (11, 1)
+    if (n % 5832 == 0) { bound.solution = __('POWER', __('PLUS', _('CATALAN', _4), _4), _3); return bound; }            // (3, 6)
+    if (n % 5184 == 0) { bound.solution = __('DIVIDE', __('POWER', __('TIMES', _4, _3), _4), _4); return bound; }       // (6, 4)
+    if (n % 4608 == 0) { bound.solution = __('TIMES', _('SUPERFACTORIAL', _4), __('TIMES', _4, _4)); return bound; }    // (9, 2)
+    if (n % 4374 == 0) { bound.solution = __('TIMES', _6, __('POWER', _3, _6)); return bound; }                         // (1, 7)
+    if (n % 4096 == 0) { bound.solution = __('TIMES', _4, _6); return bound; }                                          // (12, 0)
+    if (n % 3888 == 0) { bound.solution = __('DIVIDE', __('POWER', _6, _5), _2); return bound; }                        // (4, 5)
+    if (n % 3456 == 0) { bound.solution = __('DIVIDE', _('HYPERGEOM', _4), __('PLUS', _4, _4)); return bound; }         // (7, 3)
+    if (n % 3072 == 0) { bound.solution = __('TIMES', _3, __('POWER', _4, _5)); return bound; }                         // (10, 1)
+    if (n % 2916 == 0) { bound.solution = __('TIMES', _('SUPERFACTORIAL', _4), __('POWER', _3, _3)); return bound; }    // (2, 6)
+        
     while (n != 1) {
         factor = naivePrimeFactor(n);
         n /= factor;
@@ -176,11 +205,9 @@ _6 = _('GAMMA', _1(4));
 _7 = _('SIGMA', _1(4));
 _8 = _('DOUBLE_FACTORIAL', _1(4));
 
-function treeSearch(bound, data) {
-    console.log('Running tree search');
+function treeSearch(trees, currentCost) {
     console.log('[Not implemented yet]'); // TODO
-    console.log('Done. Outputting solution.');
-    return bound;
+    return [trees, currentCost];
 }
 
 function isBinary(tree) {
@@ -195,7 +222,7 @@ function isUnary(tree) {
 // Unary is ambiguous if strictly prefix or postfix -> op(op(a)) isn't, but op(op a) or op(a op) is. Ex. H(3)! isn't (H isn't strictly prefix or postfix), but (3!)! is (! is strictly postfix)
 function parenDisplay(tree, parent) {
     return isBinary(tree) && operators[tree.type].priority < operators[parent.type].priority
-    || isUnary(parent) && (parent.type == 'FACTORIAL' || parent.type == 'DOUBLE_FACTORIAL' || parent.type == 'SQUARE_ROOT')
+    || isUnary(tree) && (parent.type == 'FACTORIAL' || parent.type == 'DOUBLE_FACTORIAL' || parent.type == 'SQUARE_ROOT')
     ? '(' + display(tree) + ')' : display(tree);
 }
 
@@ -206,9 +233,10 @@ function display(tree) {
         case 'DIGIT':
             return tree.value;
         case 'SQUARE_ROOT':
-            return operators[tree.type].str + parenDisplay(tree.child);
+            return operators[tree.type].str + parenDisplay(tree.child, tree);
         case 'DOUBLE_FACTORIAL':
-            return parenDisplay(tree.child) + operators[tree.type].str;
+        case 'FACTORIAL':
+            return parenDisplay(tree.child, tree) + operators[tree.type].str;
         // Pre and postfix unary
         case 'PRIME_NUMBER':
         case 'SIGMA':
@@ -217,6 +245,7 @@ function display(tree) {
         case 'GAMMA':
         case 'HYPERGEOM':
         case 'CATALAN':
+        case 'SUPERFACTORIAL':
             return operators[tree.type].str + '(' + display(tree.child) + ')';
         // Infix binary
         case 'PLUS':
@@ -227,8 +256,6 @@ function display(tree) {
         /*
           MINUS: 1,
           KNUTH_ARROW: 4,
-          FACTORIAL: 3,
-          SUPERFACTORIAL: 5,
           CONCAT: 5,
           SINE: 5,
           COSINE: 5,
