@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Tug of War statistics">
+<meta name="author" content="pie3636">
+<title>Tug of War statistics</title>
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-theme.css" rel="stylesheet">
+<link href="bootstrap-update.css" rel="stylesheet">
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body role="document">
+<nav class="navbar navbar-default navbar-fixed-top navbar-inverse" id="navbar">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <span class="navbar-brand" id="version"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Tug of War statistics - </span>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-left">
+                <li class="active"><a id="nav_charts" href="#" onclick="changeTab('charts')">Charts</a></li>
+                <li><a href="#" id="nav_counts" onclick="changeTab('counts')">Counts</a></li>
+                <li><a href="#" id="nav_gets" onclick="changeTab('gets')">Gets</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#" id="nav_help" onclick="changeTab('help')">Help</a></li>
+                <li><a href="#" id="nav_changelog" onclick="changeTab('changelog')">Changelog</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid" role="main" id="main">
+    <div class="alert alert-info" id="updateAnnouncement" style="display: none">
+    <button type="button" class="close" id="updateAnnouncementClose">x</button>
+    <b>Update</b> (<span id="updateAnnouncementVersion"></span>):<br />
+        - Switched to the web version! This allows me to make for a clearer display of stats (because Reddit formatting can only go so far)<br />
+        You can also check the <a href="#" class="alert-link" onclick="changeTab('changelog')">changelog</a> for more information.
+    </div>
+    
+    <noscript><h1 class="text-center">Oops! The page doesn't seem to load... If your connection is being slow, you can wait some more. Otherwise, please make sure JavaScript is enabled, and try again. If you are using an add-on like NoScript, please whitelist <u>pie3636.github.io</u> in order to access this page.</h1></noscript>
+    <h1 class="text-center" id="loading">Loading...</h1>
+    
+    <div class="row" id="charts">
+        <div class="panel panel-primary" id="comment-panel" style="display:none">
+            <div class="panel-heading">Stats in a nutshell</div>
+            <div class="panel-body" id="comment"></div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <h1 class="text-center">Historical chart</h1>
+                <a target="_blank" id="charts-link-temporal" class="large-img"><img id="charts-img-temporal" title="Value of the count over number of counts (click to open in a new tab)"></img></a>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <h1 class="text-center">Temporal chart</h1>
+                <a target="_blank" id="charts-link-historical" class="large-img"><img id="charts-img-historical" title="Value of the count over time. Subdivisions are every 7 and 28 days (click to open in a new tab)"></img></a>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <h1 class="text-center">Frequency chart</h1>
+                <a target="_blank" id="charts-link-frequency" class="large-img"><img id="charts-img-frequency" title="Number of times each number has been counted, on a logarithmic scale (click to open in a new tab)"></img></a>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="row" id="counts" style="display:none">
+        <br />
+        <div class="col-md-12">Note: Values between parenthesis are variations since the last time I posted those stats.</div><br />
+        <div class="panel panel-info">
+            <div class="panel-body row">
+                <h2 class="text-center">General</h2>
+                There are <b><span id="total-counts"></span><span id="total-counts-variation"></span></b> total counts.
+                <br /><br />
+                Counts are ranging from <b><span id="min-count"></span><span id="min-count-variation"></span></b>
+                to <b><span id="max-count"></span><span id="max-count-variation"></span></b>,
+                making a total range of <b><span id="count-range"></span><span id="count-range-variation"></span></b>,
+                which is <b>1/<span id="of-max-count-range"></span></b> of the maximum possible range with that many counts.
+                <br /><br />
+                The average count value is <b><span id="avg-count"></span><span id="avg-count-variation"></span></b>,
+                and the median count value is <b><span id="med-count"></span><span id="med-count-variation"></span></b>.
+                <br /><br />
+                <div class="col-md-6 table-left">
+                    <table class="table table-hover">
+                        <thead>
+                            <h4 class="text-center">Most common counts</h4>
+                            <tr>
+                                <th>The number ...</th>
+                                <th>was counted ... times</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="most-common-counts"></tbody>
+                    </table>
+                </div>
+                <div class="col-md-6 table-right">
+                    <table class="table table-hover">
+                        <thead>
+                            <h4 class="text-center">Least common counts</h4>
+                            <tr>
+                                <th>The number ...</th>
+                                <th>was counted ... times</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="least-common-counts"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 panel-left">
+                <div class="panel panel-info">
+                    <div class="panel-body">
+                        <h2 class="text-center">Reply time</h2>
+                        The first Tug of War count was counted <b><span id="started"></span> <span id="started-unit"></span><span id="started-variation"></span></b> ago,
+                        on <b>2015-11-05 17:13:39 UTC</b>.
+                        <br /><br />
+                        Since then, the time between two consecutive counts has ranged from <b><span id="fastest-count"></span> <span id="fastest-count-unit"></span><span id="fastest-count-variation"></span></b>
+                        to <b><span id="slowest-count"></span> <span id="slowest-count-unit"></span><span id="slowest-count-variation"></span></b>.
+                        <br /><br />
+                        The average reply time is <b><span id="avg-time"></span> <span id="avg-time-unit"></span><span id="avg-time-variation"></span></b>.
+                        The median reply time is <b><span id="med-time"></span> <span id="med-time-unit"></span><span id="med-time-variation"></span></b>.
+                    </div>
+                </div>
+                <div class="panel panel-info panel-low">
+                    <div class="panel-body">
+                        <h2 class="text-center">Count direction</h2>
+                        The longest increasing streak lasted <b><span id="max-up-streak"></span><span id="max-up-streak-variation"></span></b> counts.
+                        This is <b><span id="max-up-streak-percent"></span><span id="max-up-streak-percent-variation"></span></b> of the entire range. 
+                        <br /><br />
+                        This streak went up from <b><span id="max-up-streak-begin"></span></b> to <b><span id="max-up-streak-end"></span></b>.
+                        <br /><br />
+                        The longest decreasing streak lasted <b><span id="max-down-streak"></span><span id="max-down-streak-variation"></span></b> counts.
+                        This is <b><span id="max-down-streak-percent"></span><span id="max-down-streak-percent-variation"></span></b> of the entire range. 
+                        <br /><br />
+                        This streak went down from <b><span id="max-down-streak-begin"></span></b> to <b><span id="max-down-streak-end"></span></b>.
+                        <br /><br />
+                        On average, the count changes direction every <b><span id="avg-streak"></span><span id="avg-streak-variation"></span></b> counts.
+                        <br /><br />
+                        On average, increasing streaks last <b><span id="pos-neg-asym"></span><span id="pos-neg-asym-variation"></span></b> counts longer than decreasing ones.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 panel-right">
+                <div class="panel panel-info">
+                    <div class="panel-body">
+                        <h2 class="text-center">Count sign</h2>
+                        Out of all the counts, <b><span id="pos-counts"></span><span id="pos-counts-variation"></span></b> are strictly positive,
+                        while <b><span id="neg-counts"></span><span id="neg-counts-variation"></span></b> are strictly negative.
+                        <br /><br />
+                        This means <b><span id="pos-counts-percent"></span><span id="pos-counts-percent-variation"></b> of all counts are strictly positive,
+                        and <b><span id="neg-counts-percent"></span><span id="neg-counts-percent-variation"></span></b> are strictly negative.
+                        <br /><br />
+                        Zero was counted <b><span id="zero-counts"></span><span id="zero-counts-variation"></span></b> times,
+                        which is <b>1 count in <span id="of-counts-zero"></span></b>.
+                        <br /><br />
+                        The longest positive streak lasted <b><span id="max-pos-streak"></span><span id="max-pos-streak-variation"></span></b> counts.
+                        <br /><br />
+                        The longest negative streak lasted <b><span id="max-neg-streak"></span><span id="max-neg-streak-variation"></span></b> counts.
+                    </div>
+                </div>
+                <div class="panel panel-info panel-low">
+                    <div class="panel-body">
+                        <h2 class="text-center">Other</h2>
+                        There were <b><span id="deleted-counts"></span><span id="deleted-counts-variation"></span></b> deleted or otherwise unreadable counts that I had to interpolate based on what seemed more likely.
+                        <br /><br />
+                        We have forked <b><span id="forks"></span><span id="forks-variation"></span></b> times off the oldest count.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-body row">
+                <h2 class="text-center">Stalemates</h2>
+                The counts that were reached the most consecutives times in a row are:
+                <br /><br />
+                <div class="col-md-6 table-left">
+                    <table class="table table-hover">
+                        <thead>
+                            <h4 class="text-center">One-value stalemates</h4>
+                            <tr>
+                                <th>The number ...</th>
+                                <th>was counted ... consecutives times</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="one-stalemates"></tbody>
+                    </table>
+                </div>
+                <div class="col-md-6 table-right">
+                    <table class="table table-hover">
+                        <thead>
+                            <h4 class="text-center">Two-value stalemates</h4>
+                            <tr>
+                                <th>The numbers ...</th>
+                                <th>were counted for ... comments in a row</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="two-stalemates"></tbody>
+                    </table>
+                </div>
+                Note that here, "consecutive" means that the value was reached every other count, due to how Tug of War works.
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="row" id="gets" style="display:none">
+        <br />
+        <div class="col-md-12">Note: Values between parenthesis are variations since the last time I posted those stats.</div><br />
+        <div class="panel panel-info">
+            <div class="panel-body row">    
+                <h2 class="text-center">General</h2>
+                There are <b><span id="total-gets"></span><span id="total-gets-variation"></span></b> total gets.
+                <br /><br />
+                The average get value is <b><span id="avg-get"></span><span id="avg-get-variation"></span></b>,
+                and the median get value is <b><span id="med-get"></span><span id="med-get-variation"></span></b>.
+                <br /><br />
+                <div class="col-md-6 table-left">
+                    <table class="table table-hover">
+                        <thead>
+                            <h4 class="text-center">Most common gets</h4>
+                            <tr>
+                                <th>The get ...</th>
+                                <th>was reached ... times</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="most-common-gets"></tbody>
+                    </table>
+                </div>
+                <div class="col-md-6 table-right">
+                    <table class="table table-hover">
+                        <thead>
+                            <h4 class="text-center">Least common gets</h4>
+                            <tr>
+                                <th>The get ...</th>
+                                <th>was reached ... times</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="least-common-gets"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 panel-left">
+                <div class="panel panel-info">
+                    <div class="panel-body">
+                        <h2 class="text-center">Get time</h2>
+                        The fastest get lasted <b><span id="fastest-get"></span> <span id="fastest-get-unit"></span><span id="fastest-get-variation"></span></b>,
+                        and went <span id="fastest-get-direction"></span> from <b><span id="fastest-get-begin"></span></b>
+                        to <b><span id="fastest-get-end"></span></b>.
+                        <br /><br />
+                        The slowest get lasted <b><span id="slowest-get"></span> <span id="slowest-get-unit"></span><span id="slowest-get-variation"></span></b>,
+                        and went <span id="slowest-get-direction"></span> from <b><span id="slowest-get-begin"></b></span>
+                        to <b><span id="slowest-get-end"></span></b>.
+                        <br /><br />
+                        The average get duration is <b><span id="avg-get-time"></span> <span id="avg-get-time-unit"></span><span id="avg-get-time-variation"></span></b>.
+                        <br /><br />
+                        The median get duration is <b><span id="med-get-time"></span> <span id="med-get-time-unit"></span><span id="med-get-time-variation"></span></b>.
+                    </div>
+                </div>
+                <div class="panel panel-info panel-low">
+                    <div class="panel-body">
+                        <h2 class="text-center">Get length</h2>
+                        The shortest get took <b>200 counts</b>. This happened several times over the course of the Tug of War, and can't be beaten, since gets are every 200 counts.
+                        <br /><br />
+                        The longest get took <b><span id="longest-get"></span></span><span id="longest-get-variation"></span> counts</b>,
+                        and went <span id="longest-get-direction"></span> from <b><span id="longest-get-begin"></b></span>
+                        to <b><span id="longest-get-end"></span></b>.
+                        <br /><br />
+                        The average get length is <b><span id="avg-get-len"></span><span id="avg-get-len-variation"></span> comments</b>.
+                        <br /><br />
+                        The median get length is <b><span id="med-get-len"></span></span><span id="med-get-len-variation"></span> comments</b>.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 panel-right">
+                <div class="panel panel-info">
+                    <div class="panel-body">
+                        <h2 class="text-center">Get sign</h2>
+                        Out of all the gets, <b><span id="pos-gets"></span><span id="pos-gets-variation"></span></b> are strictly positive,
+                        while <b><span id="neg-gets"></span><span id="neg-gets-variation"></span></b> are strictly negative.
+                        <br /><br />
+                        This means <b><span id="pos-gets-percent"></span><span id="pos-gets-percent-variation"></b> of all gets are strictly positive,
+                        and <b><span id="neg-gets-percent"></span><span id="neg-gets-percent-variation"></span></b> are strictly negative.
+                        <br /><br />
+                        The get reached was zero <b><span id="zero-gets"></span><span id="zero-gets-variation"></span></b> times,
+                        which is <b>1 get in <span id="of-gets-zero"></span></b>.
+                        <br /><br />
+                        The longest positive get streak lasted <b><span id="max-pos-get-streak"></span><span id="max-pos-get-streak-variation"></span></b> gets.
+                        <br /><br />
+                        The longest negative get streak lasted <b><span id="max-neg-get-streak"></span><span id="max-neg-get-streak-variation"></span></b> gets.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="row" id="help" style="display:none; margin-left: 5px; margin-right: 5px">
+        <div class="col-md-12">
+        <dl class="dl-horizontal">
+            <dt>How does it work?</dt>
+            <dd>Regularly (usually when a get is reached), I fetch all the recent count data from Reddit using a small script that I wrote. After making sure everything is right, I then use another script to generate the statistics, that I simply paste into a file. This website then reads this data and displays the statistics in a more aesthetically pleasing way.</dd>
+            <dt>What's next?</dt>
+            <dd>I plan on adding a lot more statistics over the next few weeks. In particular, user-based stats (who has the most counts, who is usually the fastest, etc). Now that I already have the complete dataset, it is easy to generate those statistics. I also plan on making the site more easy to maintain, although that shouldn't affect the existing design. I might also make the graphs dynamic, though that takes some work.</dd>
+            <dt>Is the data reliable?</dt>
+            <dd>All the counts were gathered automatically, and then checked, so this isn't a source of error. However, some human error could be found in the data. For example, it sometimes happened that someone missed a count or counted twice the same number, and it wasn't always noticed. I could unfortunately not leave that as is, due to how the scripts I'm using work, and I had to manually "fix" a few counts here and there, by changing a digit here and there, or sometimes adding or removing a count. This is why if you examine the data carefully, you might sometimes find some discrepancies. I did my best to keep that edition to a minimum and do it in the most coherent way possible, but if you notice that something looks wrong, feel free to message me and I will see if I can change it.</dd>
+            <dt>Contact</dt>
+            <dd>Have a suggestion on how to improve the website or add more stats? Found a typo? Something looks wrong? Feel free to shoot me an e-mail or a message on Reddit!</dd>
+            <dt>Raw data & scripts</dt>
+            <dd>The raw data of the Tug of War threads (list of threads, forks, complete formatted file with usernames, counts and comment submission dates) will soon be available directly on the website. For now, just message me if you want access to this data, or to the scripts I used to generate it.</dd>
+        </dl>
+        <hr/>
+        </div>
+        <div class="text-center">
+            pie3636, 2017<br />
+            <a href="mailto:pie3636@gmail.com">E-mail</a> − <a href="https://www.reddit.com/u/pie3636">Reddit</a> − <a href="https://github.com/pie3636/pie3636.github.io/tug-of-war/">Source</a>
+        </div>
+        <br/>
+        <div class="text-center">
+        <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
+        <span class="top-space">This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</span>
+        </div>
+    </div>
+    
+    
+    <div class="row" id="changelog" style="display:none; margin-left: 5px; margin-right: 5px">
+        <div class="col-md-12">
+            <h5>18 Aug 2017:</h5>
+            - Initial release<br />
+            <hr/><h5>04 Aug 2017:</h5>
+            - Conception draft<br />
+            <hr/>
+        </div>
+    </div>
+    
+</div>
+
+
+<script src="../jquery.min.js"></script>
+<script type="text/javascript" src="data.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</head>
+</html>
+
