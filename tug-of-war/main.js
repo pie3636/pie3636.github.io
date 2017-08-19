@@ -1,6 +1,6 @@
-var lastData = "08 Aug 2017"
+var lastData = "19 Aug 2017"
 
-var lastUpdate = "08 Aug 2017"
+var lastUpdate = "19 Aug 2017"
 var announcement = true
 
 function changeTab(newTab) {
