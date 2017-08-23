@@ -8,7 +8,8 @@ dd {
 }
 
 .large-img {
-    width: 90%;
+    max-width: 100%;
+    width: auto;
     display: block;
     margin-left: auto;
     margin-right: auto;
