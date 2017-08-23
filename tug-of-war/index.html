@@ -34,6 +34,7 @@
                 <li class="active"><a id="nav_charts" href="#" onclick="changeTab('charts')">Charts</a></li>
                 <li><a href="#" id="nav_counts" onclick="changeTab('counts')">Counts</a></li>
                 <li><a href="#" id="nav_gets" onclick="changeTab('gets')">Gets</a></li>
+                <li><a href="#" id="nav_users" onclick="changeTab('users')">Users</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#" id="nav_help" onclick="changeTab('help')">Help</a></li>
@@ -47,7 +48,9 @@
     <div class="alert alert-info" id="updateAnnouncement" style="display: none">
     <button type="button" class="close" id="updateAnnouncementClose">x</button>
     <b>Update</b> (<span id="updateAnnouncementVersion"></span>):<br />
-        - Switched to the web version! This allows me to make for a clearer display of stats (because Reddit formatting can only go so far)<br />
+        - Added basic use stats<br />
+        - Added chart for get length distribution<br />
+        - Added chart for posting time<br />
         You can also check the <a href="#" class="alert-link" onclick="changeTab('changelog')">changelog</a> for more information.
     </div>
     
@@ -77,6 +80,18 @@
                 <a target="_blank" id="charts-link-frequency" class="large-img"><img id="charts-img-frequency" title="Number of times each number has been counted, on a logarithmic scale (click to open in a new tab)"></img></a>
             </div>
         </div>
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <h1 class="text-center">Get length distribution</h1>
+                <a target="_blank" id="charts-link-getsLength" class="large-img"><img id="charts-img-getsLength" title="Proportion of gets that took longer than X comments"></img></a>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <h1 class="text-center">Counts posting time (UTC)</h1>
+                <a target="_blank" id="charts-link-weekly" class="large-img"><img id="charts-img-weekly" title="Number of counts posted during each 1 hour slot of the week. All times are in UTC"></img></a>
+            </div>
+        </div>
     </div>
     
     
@@ -101,6 +116,7 @@
                         <thead>
                             <h4 class="text-center">Most common counts</h4>
                             <tr>
+                                <th>#</th>
                                 <th>The number ...</th>
                                 <th>was counted ... times</th>
                                 <th></th>
@@ -114,6 +130,7 @@
                         <thead>
                             <h4 class="text-center">Least common counts</h4>
                             <tr>
+                                <th>#</th>
                                 <th>The number ...</th>
                                 <th>was counted ... times</th>
                                 <th></th>
@@ -196,6 +213,7 @@
                         <thead>
                             <h4 class="text-center">One-value stalemates</h4>
                             <tr>
+                                <th>#</th>
                                 <th>The number ...</th>
                                 <th>was counted ... consecutives times</th>
                                 <th></th>
@@ -209,6 +227,7 @@
                         <thead>
                             <h4 class="text-center">Two-value stalemates</h4>
                             <tr>
+                                <th>#</th>
                                 <th>The numbers ...</th>
                                 <th>were counted for ... comments in a row</th>
                                 <th></th>
@@ -239,6 +258,7 @@
                         <thead>
                             <h4 class="text-center">Most common gets</h4>
                             <tr>
+                                <th>#</th>
                                 <th>The get ...</th>
                                 <th>was reached ... times</th>
                                 <th></th>
@@ -252,6 +272,7 @@
                         <thead>
                             <h4 class="text-center">Least common gets</h4>
                             <tr>
+                                <th>#</th>
                                 <th>The get ...</th>
                                 <th>was reached ... times</th>
                                 <th></th>
@@ -318,15 +339,47 @@
     </div>
     
     
+    <div class="row" id="users" style="display:none">
+        <br />
+        <div class="col-md-12">Note: Values between parenthesis are variations since the last time I posted those stats.</div><br />
+        <div class="panel panel-info">
+            <div class="panel-body row">    
+                <h2 class="text-center">General</h2>
+                There are <b><span id="total-usrs"></span><span id="total-gets-variation"></span></b> reddit users taking part in the Tug of War.
+                <br /><br />
+                On average, each user has counted <b><span id="avg-usr"></span><span id="avg-usr-variation"></span></b> times,
+                with a median of <b><span id="med-usr"></span><span id="med-usr-variation"></span></b> counts.
+                <br /><br />
+                <div class="col-md-12">
+                    <table class="table table-hover">
+                        <thead>
+                            <h4 class="text-center">Top 20 counters</h4>
+                            <tr>
+                                <th>#</th>
+                                <th>The user ...</th>
+                                <th>has counted ... times</th>
+                                <th>Variation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="top-20-usrs"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
     <div class="row" id="help" style="display:none; margin-left: 5px; margin-right: 5px">
         <div class="col-md-12">
         <dl class="dl-horizontal">
             <dt>How does it work?</dt>
             <dd>Regularly (usually when a get is reached), I fetch all the recent count data from Reddit using a small script that I wrote. After making sure everything is right, I then use another script to generate the statistics, that I simply paste into a file. This website then reads this data and displays the statistics in a more aesthetically pleasing way.</dd>
             <dt>What's next?</dt>
-            <dd>I plan on adding a lot more statistics over the next few weeks. In particular, user-based stats (who has the most counts, who is usually the fastest, etc). Now that I already have the complete dataset, it is easy to generate those statistics. I also plan on making the site more easy to maintain, although that shouldn't affect the existing design. I might also make the graphs dynamic, though that takes some work.</dd>
+            <dd>I plan on adding a lot more statistics over the next few weeks. In particular, more user-based stats (who is usually the fastest, etc). Now that I already have the complete dataset, it is easy to generate those statistics. I also plan on making the site more easy to maintain, although that shouldn't affect the existing design. I might also make the graphs dynamic, though that takes some work.</dd>
             <dt>Is the data reliable?</dt>
             <dd>All the counts were gathered automatically, and then checked, so this isn't a source of error. However, some human error could be found in the data. For example, it sometimes happened that someone missed a count or counted twice the same number, and it wasn't always noticed. I could unfortunately not leave that as is, due to how the scripts I'm using work, and I had to manually "fix" a few counts here and there, by changing a digit here and there, or sometimes adding or removing a count. This is why if you examine the data carefully, you might sometimes find some discrepancies. I did my best to keep that edition to a minimum and do it in the most coherent way possible, but if you notice that something looks wrong, feel free to message me and I will see if I can change it.</dd>
+            <dt>No graph captions?</dt>
+            <dd>I am quite aware that in general, all graphs should be captioned. The reason why those aren't is simply because I'm using a spreadsheet to generate them, and I then manually take screenshots that I upload to imgur, before embedding it into the site. Since those screenshots can only have the same resolution as my screen, and there is a lot of information to convey in each graph, I try to make the actual graph as big as possible, to have the maximum resolution. This means eliminating everything that's on the sides. If you hover over a graph, you will see a tooltip explaining more in detail what each graph contains. In the future, I will most likely add web-based captions, or switch to dynamic charts.</dd>
             <dt>Contact</dt>
             <dd>Have a suggestion on how to improve the website or add more stats? Found a typo? Something looks wrong? Feel free to shoot me an e-mail or a message on Reddit!</dd>
             <dt>Raw data & scripts</dt>
@@ -348,7 +401,11 @@
     
     <div class="row" id="changelog" style="display:none; margin-left: 5px; margin-right: 5px">
         <div class="col-md-12">
-            <h5>18 Aug 2017:</h5>
+            <hr/><h5>23 Aug 2017:</h5>
+            - Added basic use stats<br />
+            - Added chart for get length distribution<br />
+            - Added chart for posting time<br />
+            <hr/><h5>18 Aug 2017:</h5>
             - Initial release<br />
             <hr/><h5>04 Aug 2017:</h5>
             - Conception draft<br />

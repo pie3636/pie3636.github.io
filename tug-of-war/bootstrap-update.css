@@ -57,6 +57,16 @@ h1, h2 {
     padding-left: 10px !important;
 }
 
+td:first-child {
+    white-space: nowrap;
+    width: 1px;
+    border-right: 1px solid #ddd;
+}
+
+th:first-child {
+    border-right: 2px solid #ddd;
+}
+
 .green {
     color: green;
 }

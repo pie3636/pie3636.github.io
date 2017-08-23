@@ -2,7 +2,9 @@ data = {
     charts: {
         historical: "http://i.imgur.com/MBV3pwi.png",
         temporal: "http://i.imgur.com/hMX3MEW.png",
-        frequency: "http://i.imgur.com/er9W7Pr.png"
+        frequency: "http://i.imgur.com/er9W7Pr.png",
+        getsLength: "http://i.imgur.com/tbst7w2.png",
+        weekly: "http://i.imgur.com/7YrT2EB.png"
     },
     comment: "- We have never stayed above zero for so long\n\
               - A new stalemate record has been reached\n\
@@ -54,6 +56,14 @@ data = {
         avgStreak:     { cur: 2.9292,   prev: 2.9776,   precision: 4 },
         posNegAsym:    { cur: 0.002101, prev: 0.000297, precision: 6 }
     },
+    oneStalemates: {
+        cur:  [[-1026, 499], [-1027, 499], [-1563, 184], [-1564, 183], [-1731, 157], [-1731, 152], [-1, 110], [3527, 101], [0, 100], [3528, 95]],
+        prev: [[-1026, 499], [-1027, 499], [-1563, 184], [-1564, 183], [-1731, 157], [-1731, 152], [-1, 110], [0, 100], [0, 0], [0, 0]]
+    },
+    twoStalemates: {
+        cur:  [[-1026, -1027, 998], [-1563, -1564, 367], [-1731, -1730, 305], [-1, 0, 201], [3527, 3528, 191], [-10, -11, 159], [277, 276, 150], [156, "157 (order of the 157)", 142], [560, 561, 129], [203, 202, 120]],
+        prev: [[-1026, -1027, 998], [-1563, -1564, 367], [-1731, -1730, 305], [-1, 0, 201], [-10, -11, 159], [277, 276, 150], [156, "157 (order of the 157)", 142], [560, 561, 129], [203, 202, 120], [0, 0, 0]]
+    },
     gets: {
         count:      { cur: 237,    prev: 237 },
         avg:        { cur: -72.57, prev: -373.75 },
@@ -95,13 +105,14 @@ data = {
         maxPosStreak:  { cur: 25,    prev: 25    },
         maxNegStreak:  { cur: 53,    prev: 53    },
     },
-    oneStalemates: {
-        cur:  [[-1026, 499], [-1027, 499], [-1563, 184], [-1564, 183], [-1731, 157], [-1731, 152], [-1, 110], [3527, 101], [0, 100], [3528, 95]],
-        prev: [[-1026, 499], [-1027, 499], [-1563, 184], [-1564, 183], [-1731, 157], [-1731, 152], [-1, 110], [0, 100], [0, 0], [0, 0]]
-    },
-    twoStalemates: {
-        cur:  [[-1026, -1027, 998], [-1563, -1564, 367], [-1731, -1730, 305], [-1, 0, 201], [3527, 3528, 191], [-10, -11, 159], [277, 276, 150], [156, "157 (order of the 157)", 142], [560, 561, 129], [203, 202, 120]],
-        prev: [[-1026, -1027, 998], [-1563, -1564, 367], [-1731, -1730, 305], [-1, 0, 201], [-10, -11, 159], [277, 276, 150], [156, "157 (order of the 157)", 142], [560, 561, 129], [203, 202, 120], [0, 0, 0]]
+    users: {
+        count: { cur: 1240,  prev: 1240  },
+        avg:   { cur: 91.77, prev: 91.77 },
+        med:   { cur: 4,     prev: 4     },
+        top20: {
+            cur: [["TheNitromeFan", 9330], ["gordonpt8", 5775], ["smarvin6689", 5288], ["davidjl123", 4791], ["Urbul", 4390], ["Smartstocks", 3976], ["Sharpeye468", 3585], ["xHOCKEYx12", 3473], ["randomusername123458", 3399], ["pie3636", 3185], ["DemonBurritoCat", 2687], ["[deleted]", 2375], ["KingCaspianX", 2174], ["Decap_", 2061], ["JordanLadd", 1847], ["SolidGoldMagikarp", 1671], ["VitaminB16", 1486], ["Adinida", 1374], ["kawzeg", 1283], ["abplows", 1245]],
+            prev: [["TheNitromeFan", 9330], ["gordonpt8", 5775], ["smarvin6689", 5288], ["davidjl123", 4791], ["Urbul", 4390], ["Smartstocks", 3976], ["Sharpeye468", 3585], ["xHOCKEYx12", 3473], ["randomusername123458", 3399], ["pie3636", 3185], ["DemonBurritoCat", 2687], ["[deleted]", 2375], ["KingCaspianX", 2174], ["Decap_", 2061], ["JordanLadd", 1847], ["SolidGoldMagikarp", 1671], ["VitaminB16", 1486], ["Adinida", 1374], ["kawzeg", 1283], ["abplows", 1245]]
+        }
     },
     deletedCounts: { cur: 525, prev: 522 },
     forks: {

@@ -1,6 +1,6 @@
 var lastData = "19 Aug 2017"
 
-var lastUpdate = "19 Aug 2017"
+var lastUpdate = "23 Aug 2017"
 var announcement = true
 
 function changeTab(newTab) {
@@ -110,10 +110,15 @@ $(function () {
         updateValue(data.getSign.maxNegStreak, "max-neg-get-streak", true);
         
         updateTable(data.oneStalemates, "one-stalemates");
-        updateTable2(data.twoStalemates, "two-stalemates");
+        updateTable(data.twoStalemates, "two-stalemates", true);
         
         updateValue(data.deletedCounts, "deleted-counts", true);
         updateValue(data.forks, "forks", true);
+        updateValue(data.users.count, "total-usrs", true);
+        updateValue(data.users.avg, "avg-usr", true, 2);
+        updateValue(data.users.med, "med-usr", true);
+        
+        updateTable(data.users.top20, "top-20-usrs", false, true, true);
 });
 
 function updateValue(value, id, hasVariation, digits, hasUnit) {
@@ -151,29 +156,49 @@ function updateValue(value, id, hasVariation, digits, hasUnit) {
     }
 }
 
-function updateTable(values, id) {
+function updateTable(values, id, isTwo, isUser, hasRanking) {
+    var cnt = 1, col1, col2, col3, delta;
     for (value in values.cur) {
-        var isNew = "New";
-        for (value2 in values.prev) {
-            if (values.cur[value][0] === values.prev[value2][0] && values.cur[value][1] === values.prev[value2][1]) {
-                isNew = "";
-                break;
+        col3 = "New";
+        if (hasRanking) {
+            for (value2 in values.prev) {
+                if (values.cur[value][0] === values.prev[value2][0]) {
+                    delta = value2 - value;
+                    if (delta === 0) {
+                        col3 = "=";
+                    } else if (delta > 0) {
+                        col3 = "<span class='green'>+ " + delta + "</span>";
+                    } else {
+                        col3 = "<span class='red'>- " + -delta + "</span>";
+                    }
+                    break;
+                }
+            }
+        } else {
+            for (value2 in values.prev) {
+                if (values.cur[value][0] === values.prev[value2][0] && values.cur[value][1] === values.prev[value2][1]
+                && (!isTwo || isTwo && values.cur[value][2] === values.prev[value2][2])) {
+                    col3 = "";
+                    break;
+                }
+            }
+        }        
+        if (isTwo) {
+            col1 = values.cur[value][0] + " and " + values.cur[value][1];
+            col2 = values.cur[value][2];
+        } else {
+            col1 = values.cur[value][0];
+            col2 = values.cur[value][1];
+        }
+        if (isUser) {
+            if (col1 !== "[deleted]") {
+                col1 = "<a href='http://reddit.com/u/" + col1 + "'>" + col1 + "</a>";
+            } else {
+                col1 = "Total for [deleted] users (not updated retroactively)";
             }
         }
-        $("#" + id).append("<tr><td>" + values.cur[value][0] + "</td><td>" + values.cur[value][1] + "</td><td>" + isNew + "</td></tr>");
-    }
-}
-
-function updateTable2(values, id) {
-    for (value in values.cur) {
-        var isNew = "New";
-        for (value2 in values.prev) {
-            if (values.cur[value][0] === values.prev[value2][0] && values.cur[value][1] === values.prev[value2][1] && values.cur[value][2] === values.prev[value2][2]) {
-                isNew = "";
-                break;
-            }
-        }
-        $("#" + id).append("<tr><td>" + values.cur[value][0] + " and " + values.cur[value][1] + "</td><td>" + values.cur[value][2] + "</td><td>" + isNew + "</td></tr>");
+        $("#" + id).append("<tr><td><b>" + cnt + "</b></td><td>" + col1 + "</td><td>" + col2 + "</td><td><b>" + col3 + "</b></td></tr>");
+        cnt++;
     }
 }
 
