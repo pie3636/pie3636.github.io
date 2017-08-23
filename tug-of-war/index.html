@@ -48,9 +48,7 @@
     <div class="alert alert-info" id="updateAnnouncement" style="display: none">
     <button type="button" class="close" id="updateAnnouncementClose">x</button>
     <b>Update</b> (<span id="updateAnnouncementVersion"></span>):<br />
-        - Added basic user stats<br />
-        - Added chart for get length distribution<br />
-        - Added chart for posting time<br />
+        - Added reply time histogram<br />
         You can also check the <a href="#" class="alert-link" onclick="changeTab('changelog')">changelog</a> for more information.
     </div>
     
@@ -90,6 +88,12 @@
             <div class="panel-body">
                 <h1 class="text-center">Counts posting time (UTC)</h1>
                 <a target="_blank" id="charts-link-weekly"><img id="charts-img-weekly" class="large-img" title="Number of counts posted during each 1 hour slot of the week. All times are UTC (click to open in a new tab)"></img></a>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <h1 class="text-center">Frequency of 1- to 60-seconds replies</h1>
+                <a target="_blank" id="charts-link-replyTime"><img id="charts-img-replyTime" class="large-img" title="Percentage of X-seconds replies amongst all counts (click to open in a new tab)"></img></a>
             </div>
         </div>
     </div>
@@ -401,6 +405,8 @@
     
     <div class="row" id="changelog" style="display:none; margin-left: 5px; margin-right: 5px">
         <div class="col-md-12">
+            <hr/><h5>24 Aug 2017:</h5>
+            - Added reply time histogram<br />
             <hr/><h5>23 Aug 2017:</h5>
             - Added basic use stats<br />
             - Added chart for get length distribution<br />

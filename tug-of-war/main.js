@@ -1,6 +1,6 @@
 var lastData = "19 Aug 2017"
 
-var lastUpdate = "23 Aug 2017"
+var lastUpdate = "24 Aug 2017"
 var announcement = true
 
 function changeTab(newTab) {
@@ -156,23 +156,37 @@ function updateValue(value, id, hasVariation, digits, hasUnit) {
     }
 }
 
+function isDeleted(tab) {
+    return tab[0] === "[deleted]";
+}
+
 function updateTable(values, id, isTwo, isUser, hasRanking) {
-    var cnt = 1, col1, col2, col3, delta, deleted, cntDisp;
+    var cnt = 1, col1, col2, col3, delta, cntDisp;
     for (value in values.cur) {
-        deleted = false;
         col3 = "New";
         if (hasRanking) {
-            for (value2 in values.prev) {
-                if (values.cur[value][0] === values.prev[value2][0]) {
-                    delta = value2 - value;
-                    if (delta === 0) {
-                        col3 = "=";
-                    } else if (delta > 0) {
-                        col3 = "<span class='green'>+ " + delta + "</span>";
-                    } else {
-                        col3 = "<span class='red'>- " + -delta + "</span>";
+            if (isDeleted(values.cur[value])) { // Don't register variation for [deleted]
+                console.log(values.cur[value])
+                col3 = "N/A";
+            } else {
+                var posDel = values.cur.findIndex(isDeleted), oldPosDel = values.prev.findIndex(isDeleted);
+                for (value2 in values.prev) {
+                    if (values.cur[value][0] === values.prev[value2][0]) {
+                        delta = value2 - value;
+                        if (value2 < oldPosDel && value > posDel) {
+                            delta++;
+                        } else if (value2 > oldPosDel && value < posDel) {
+                            delta--;
+                        }
+                        if (delta === 0) {
+                            col3 = "=";
+                        } else if (delta > 0) {
+                            col3 = "<span class='green'>+ " + delta + "</span>";
+                        } else {
+                            col3 = "<span class='red'>- " + -delta + "</span>";
+                        }
+                        break;
                     }
-                    break;
                 }
             }
         } else {
