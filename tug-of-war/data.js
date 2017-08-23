@@ -4,7 +4,7 @@ data = {
         temporal: "http://i.imgur.com/hMX3MEW.png",
         frequency: "http://i.imgur.com/er9W7Pr.png",
         getsLength: "http://i.imgur.com/tbst7w2.png",
-        weekly: "http://i.imgur.com/7YrT2EB.png"
+        weekly: "http://i.imgur.com/t4099mN.png"
     },
     comment: "- We have never stayed above zero for so long\n\
               - A new stalemate record has been reached\n\
