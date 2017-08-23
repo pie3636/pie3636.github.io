@@ -110,8 +110,8 @@ data = {
         avg:   { cur: 91.77, prev: 91.77 },
         med:   { cur: 4,     prev: 4     },
         top20: {
-            cur: [["TheNitromeFan", 9330], ["gordonpt8", 5775], ["smarvin6689", 5288], ["davidjl123", 4791], ["Urbul", 4390], ["Smartstocks", 3976], ["Sharpeye468", 3585], ["xHOCKEYx12", 3473], ["randomusername123458", 3399], ["pie3636", 3185], ["DemonBurritoCat", 2687], ["[deleted]", 2375], ["KingCaspianX", 2174], ["Decap_", 2061], ["JordanLadd", 1847], ["SolidGoldMagikarp", 1671], ["VitaminB16", 1486], ["Adinida", 1374], ["kawzeg", 1283], ["abplows", 1245]],
-            prev: [["TheNitromeFan", 9330], ["gordonpt8", 5775], ["smarvin6689", 5288], ["davidjl123", 4791], ["Urbul", 4390], ["Smartstocks", 3976], ["Sharpeye468", 3585], ["xHOCKEYx12", 3473], ["randomusername123458", 3399], ["pie3636", 3185], ["DemonBurritoCat", 2687], ["[deleted]", 2375], ["KingCaspianX", 2174], ["Decap_", 2061], ["JordanLadd", 1847], ["SolidGoldMagikarp", 1671], ["VitaminB16", 1486], ["Adinida", 1374], ["kawzeg", 1283], ["abplows", 1245]]
+            cur: [["TheNitromeFan", 9330], ["gordonpt8", 5775], ["smarvin6689", 5288], ["davidjl123", 4791], ["Urbul", 4390], ["Smartstocks", 3976], ["Sharpeye468", 3585], ["xHOCKEYx12", 3473], ["randomusername123458", 3399], ["pie3636", 3185], ["DemonBurritoCat", 2687], ["[deleted]", 2375], ["KingCaspianX", 2174], ["Decap_", 2061], ["JordanLadd", 1847], ["SolidGoldMagikarp", 1671], ["VitaminB16", 1486], ["Adinida", 1374], ["kawzeg", 1283], ["abplows", 1245], ["RandomRedditorWithNo", 1228]],
+            prev: [["TheNitromeFan", 9330], ["gordonpt8", 5775], ["smarvin6689", 5288], ["davidjl123", 4791], ["Urbul", 4390], ["Smartstocks", 3976], ["Sharpeye468", 3585], ["xHOCKEYx12", 3473], ["randomusername123458", 3399], ["pie3636", 3185], ["DemonBurritoCat", 2687], ["[deleted]", 2375], ["KingCaspianX", 2174], ["Decap_", 2061], ["JordanLadd", 1847], ["SolidGoldMagikarp", 1671], ["VitaminB16", 1486], ["Adinida", 1374], ["kawzeg", 1283], ["abplows", 1245], ["RandomRedditorWithNo", 1228]]
         }
     },
     deletedCounts: { cur: 525, prev: 522 },

@@ -157,8 +157,9 @@ function updateValue(value, id, hasVariation, digits, hasUnit) {
 }
 
 function updateTable(values, id, isTwo, isUser, hasRanking) {
-    var cnt = 1, col1, col2, col3, delta;
+    var cnt = 1, col1, col2, col3, delta, deleted, cntDisp;
     for (value in values.cur) {
+        deleted = false;
         col3 = "New";
         if (hasRanking) {
             for (value2 in values.prev) {
@@ -190,14 +191,17 @@ function updateTable(values, id, isTwo, isUser, hasRanking) {
             col1 = values.cur[value][0];
             col2 = values.cur[value][1];
         }
+        cntDisp = cnt;
         if (isUser) {
             if (col1 !== "[deleted]") {
                 col1 = "<a href='http://reddit.com/u/" + col1 + "'>" + col1 + "</a>";
             } else {
                 col1 = "Total for [deleted] users (not updated retroactively)";
+                cntDisp = "-";
+                cnt--;
             }
         }
-        $("#" + id).append("<tr><td><b>" + cnt + "</b></td><td>" + col1 + "</td><td>" + col2 + "</td><td><b>" + col3 + "</b></td></tr>");
+        $("#" + id).append("<tr><td class='text-center'><b>" + cntDisp + "</b></td><td>" + col1 + "</td><td>" + col2 + "</td><td><b>" + col3 + "</b></td></tr>");
         cnt++;
     }
 }
