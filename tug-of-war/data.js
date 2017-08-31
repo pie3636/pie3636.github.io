@@ -8,9 +8,8 @@ data = {
         replyTime: "http://i.imgur.com/ff8ncgL.png"
     },
     comment: "- We have never stayed above zero for so long\n\
-              - A new stalemate record has been reached\n\
-              - The count has recently been struggling between 3,000 and 3,600\n\
-              - After a spike in activity, the main Tug of War thread seems to have become slower. This might be due to the abundance of ToW-like threads popping up",
+              - The count has been struggling over 2,900 for more than a month now, however this trend might end soon\n\
+              - The Tug of War has gotten back to a standard pace, although the recent issues with Reddit have made it hard to reach low reply times",
     counts: {
         total:       { cur: 115783,  prev: 111635  },
         min:         { cur: -4043,   prev: -4043   },
