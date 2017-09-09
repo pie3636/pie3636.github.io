@@ -17,7 +17,7 @@ $(function () {
         currentTab = "charts";
         
         $("#version").append(lastData);
-        $("#version-mobile").append(lastData);
+        $("#version-mobile").append(lastData.substr(0, 7));
         $("#updateAnnouncementVersion").html(lastUpdate);
 
         $('.modal').on('show.bs.modal', centerModal);
