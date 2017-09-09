@@ -1,7 +1,9 @@
-var lastData = "31 Aug 2017"
+var lastData = "09 Sep 2017"
 
-var lastUpdate = "24 Aug 2017"
+var lastUpdate = "09 Sep 2017"
 var announcement = true
+
+// Todo make announcement permanently dismissible
 
 function changeTab(newTab) {
         $("#nav_" + currentTab).parent().removeClass("active");
@@ -119,6 +121,8 @@ $(function () {
         updateValue(data.users.med, "med-usr", true);
         
         updateTable(data.users.top20, "top-20-usrs", false, true, true);
+        
+        updateTable(data.top100, "top-100-usrs", false, true, true);
 });
 
 function updateValue(value, id, hasVariation, digits, hasUnit) {
@@ -166,7 +170,6 @@ function updateTable(values, id, isTwo, isUser, hasRanking) {
         col3 = "New";
         if (hasRanking) {
             if (isDeleted(values.cur[value])) { // Don't register variation for [deleted]
-                console.log(values.cur[value])
                 col3 = "N/A";
             } else {
                 var posDel = values.cur.findIndex(isDeleted), oldPosDel = values.prev.findIndex(isDeleted);
