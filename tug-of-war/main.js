@@ -3,8 +3,6 @@ var lastData = "09 Sep 2017"
 var lastUpdate = "09 Sep 2017"
 var announcement = true
 
-// Todo make announcement permanently dismissible
-
 function changeTab(newTab) {
         $("#nav_" + currentTab).parent().removeClass("active");
         $("#nav_" + newTab).parent().addClass("active");
@@ -19,6 +17,7 @@ $(function () {
         currentTab = "charts";
         
         $("#version").append(lastData);
+        $("#version-mobile").append(lastData);
         $("#updateAnnouncementVersion").html(lastUpdate);
 
         $('.modal').on('show.bs.modal', centerModal);

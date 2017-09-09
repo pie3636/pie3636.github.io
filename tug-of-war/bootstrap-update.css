@@ -7,6 +7,19 @@ dd {
     padding-bottom: 8px;
 }
 
+#version-mobile {
+    display: none;
+}
+
+@media (max-width: 640px) {
+    #version-mobile {
+        display: block;
+    }
+    #version {
+        display: none;
+    }
+}
+
 .large-img {
     max-width: 100%;
     width: auto;
