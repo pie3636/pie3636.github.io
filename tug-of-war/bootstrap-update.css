@@ -8,7 +8,7 @@ dd {
 }
 
 #version-mobile {
-    display: none;
+    display: none;  
 }
 
 @media (max-width: 640px) {
