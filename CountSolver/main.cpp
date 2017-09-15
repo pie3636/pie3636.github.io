@@ -4,17 +4,12 @@
 #include "Solver.h"
 
 int main() {
+    system("chcp 65001");
     Solver solver;
     std::string res;
     unsigned i;
     std::cout << "4-4-4-4 heuristical solver (tested up to 10,000)" << std::endl;
     std::cout << "Message /u/pie3636 if you find any incorrect values" << std::endl;
-    std::cout << std::endl;
-    std::cout << "Notation:" << std::endl;
-    std::cout << "O() = capital omega (ohm symbol)" << std::endl;
-    std::cout << "w() = small omega (w-like letter)" << std::endl;
-    std::cout << "o() = small sigma (o'-like letter)" << std::endl;
-    std::cout << "G() = capital gamma (upside-down L)" << std::endl;
     std::cout << std::endl;
     std::cout << "Note: Some pairs of parentheses in the answer may be unnecessary." << std::endl;
     std::cout << "In addition, this solution is most likely not optimal." << std::endl;
@@ -23,7 +18,7 @@ int main() {
     std::cin >> i;
     std::cout << std::endl;
     res = solver.heuristic4444(i);
-    if (res.find("<") == std::string::npos) {
+    if (res.find('<') == std::string::npos) {
         std::cout << solver.heuristic4444(i) << " = " << i << std::endl;
     } else {
         std::cout << i << "The solver was unable to solve this value." << std::endl;

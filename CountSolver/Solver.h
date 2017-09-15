@@ -85,8 +85,8 @@ class Solver {
             std::string heur, heur2, heur3;
             unsigned div;
             if (i == 2) {
-                return fours == 1 ? "O(4)" :
-                       fours == 2 ? "4 / O(4)" :
+                return fours == 1 ? "Ω(4)" :
+                       fours == 2 ? "4 / Ω(4)" :
                        fours == 3 ? "(4 + 4) / 4" :
                        fours == 4 ? "4 / 4 + 4 / 4" :
                        "<00-2@" + std::to_string(fours) + ">";
@@ -99,15 +99,15 @@ class Solver {
                         case 0:
                             return "<2>";
                         case 1:
-                            return "w(4)";
+                            return "ω(4)";
                         case 4:
                             return "4";
                         case 5:
                             return "p(4)";
                         case 6:
-                            return "G(4)";
+                            return "Γ(4)";
                         case 7:
-                            return "o(4)";
+                            return "Ω(4)";
                         case 8:
                             return "(4!!)";
                         case 9:
@@ -127,13 +127,13 @@ class Solver {
                         case 16:
                             return "d(p(4)!)";
                         case 17:
-                            return "P(o(4))";
+                            return "P(Ω(4))";
                         case 18:
-                            return "o(P(o(4)))";
+                            return "Ω(P(Ω(4)))";
                         case 19:
                             return "P(4!!)";
                         case 20:
-                            return "o(P(4!!))";
+                            return "Ω(P(4!!))";
                         case 24:
                             return "(4!)";
                         default:
@@ -153,7 +153,7 @@ class Solver {
                         return "4 + 4";
                     }
                     if (i == 16) {
-                        return "4 * 4";
+                        return "4 × 4";
                     }
                     if (i == 256) {
                         return "4^4";
@@ -173,13 +173,13 @@ class Solver {
                         if (isValid(heur)) {
                             return fours == 4 ?
                                    heur + " + 4 - 4" :
-                                   "(" + heur + ") * w(4)";
+                                   "(" + heur + ") × ω(4)";
                         }
                     }
                     if (fours == 4) {
                         heur = heuristic4444(i, 3);
                         if (isValid(heur)) {
-                            return "(" + heur + ") * w(4)";
+                            return "(" + heur + ") * ω(4)";
                         }
                     }
                     break;
@@ -193,7 +193,7 @@ class Solver {
                     heur = heuristic4444(div, 1);
                     heur2 = heuristic4444(i/div, 1);
                     if (isValid(heur) && isValid(heur2)) {
-                        return "(" + heur + ") * (" + heur2 + ")";
+                        return "(" + heur + ") × (" + heur2 + ")";
                     }
                     break;
                 case 3:
@@ -218,7 +218,7 @@ class Solver {
                                 heur2 = heuristic4444(j, 1);
                                 heur3 = heuristic4444(k, 1);
                                 if (isValid(heur) && isValid(heur2) && isValid(heur3)) {
-                                    return "(" + heuristic4444(i / val, 1) + " * " + heuristic4444(j, 1) + ") ^ (" + heuristic4444(k, 1) + ')';
+                                    return "(" + heuristic4444(i / val, 1) + " × " + heuristic4444(j, 1) + ") ^ (" + heuristic4444(k, 1) + ')';
                                 }
                             }
                         }
@@ -226,12 +226,12 @@ class Solver {
                     heur = heuristic4444(div, 1);
                     heur2 = heuristic4444(i/div, 2);
                     if (isValid(heur) && isValid(heur2)) {
-                        return "(" + heur + ") * (" + heur2 + ")";
+                        return "(" + heur + ") × (" + heur2 + ")";
                     }
                     heur = heuristic4444(div, 2);
                     heur2 = heuristic4444(i/div, 1);
                     if (isValid(heur) && isValid(heur2)) {
-                        return "(" + heur + ") * (" + heur2 + ")";
+                        return "(" + heur + ") × (" + heur2 + ")";
                     }
                     break;
                 case 4:
@@ -261,19 +261,19 @@ class Solver {
                                 heur2 = heuristic4444(j, 1);
                                 heur3 = heuristic4444(k, 1);
                                 if (isValid(heur) && isValid(heur2) && isValid(heur3)) {
-                                    return "(" + heur + " * " + heur2 + ") ^ (" + heur3 + ")";
+                                    return "(" + heur + " × " + heur2 + ") ^ (" + heur3 + ")";
                                 }
                                 heur = heuristic4444(i / val, 1);
                                 heur2 = heuristic4444(j, 2);
                                 heur3 = heuristic4444(k, 1);
                                 if (isValid(heur) && isValid(heur2) && isValid(heur3)) {
-                                    return "(" + heur + " * " + heur2 + ") ^ (" + heur3 + ")";
+                                    return "(" + heur + " × " + heur2 + ") ^ (" + heur3 + ")";
                                 }
                                 heur = heuristic4444(i / val, 1);
                                 heur2 = heuristic4444(j, 1);
                                 heur3 = heuristic4444(k, 2);
                                 if (isValid(heur) && isValid(heur2) && isValid(heur3)) {
-                                    return "(" + heur + " * " + heur2 + ") ^ (" + heur3 + ")";
+                                    return "(" + heur + " × " + heur2 + ") ^ (" + heur3 + ")";
                                 }
                             }
                         }
@@ -281,17 +281,17 @@ class Solver {
                     heur = heuristic4444(div, 1);
                     heur2 = heuristic4444(i/div, 3);
                     if (isValid(heur) && isValid(heur2)) {
-                        return "(" + heur + ") * (" + heur2 + ")";
+                        return "(" + heur + ") × (" + heur2 + ")";
                     }
                     heur = heuristic4444(div, 2);
                     heur2 = heuristic4444(i/div, 2);
                     if (isValid(heur) && isValid(heur2)) {
-                        return "(" + heur + ") * (" + heur2 + ")";
+                        return "(" + heur + ") × (" + heur2 + ")";
                     }
                     heur = heuristic4444(div, 3);
                     heur2 = heuristic4444(i/div, 1);
                     if (isValid(heur) && isValid(heur2)) {
-                        return "(" + heur + ") * (" + heur2 + ")";
+                        return "(" + heur + ") × (" + heur2 + ")";
                     }
                     break;
                 default:
@@ -300,31 +300,31 @@ class Solver {
             if (i % 24 == 0) {
                 heur = heuristic4444(i / 24, fours - 1);
                 if (isValid(heur)) {
-                    return "4! * (" + heur + ")";
+                    return "4! × (" + heur + ")";
                 }
             }
             if (i % 8 == 0) {
                 heur = heuristic4444(i / 8, fours - 1);
                 if (isValid(heur)) {
-                    return "4!! * (" + heur + ")";
+                    return "4!! × (" + heur + ")";
                 }
             }
             if (fours > 2 && i % 4 == 0) {
                 heur = heuristic4444(i / 4, fours - 1);
                 if (isValid(heur)) {
-                    return "4 * (" + heur + ")";
+                    return "4 × (" + heur + ")";
                 }
             }
             if (i % 6 == 0) {
                 heur = heuristic4444(i / 6, fours - 1);
                 if (isValid(heur)) {
-                    return "G(4) * (" + heur + ")";
+                    return "Γ(4) × (" + heur + ")";
                 }
             }
             if (i % 2 == 0) {
                 heur = heuristic4444(i / 2, fours - 1);
                 if (isValid(heur)) {
-                    return "O(4) * (" + heur + ")";
+                    return "Ω(4) * (" + heur + ")";
                 }
             }
             for (unsigned j = (unsigned) sqrt(i); j >= 2; j--) {
@@ -332,19 +332,19 @@ class Solver {
                 if (i == val) {
                     heur = heuristic4444(j, fours - 1);
                     if (isValid(heur)) {
-                        return "(" + heur + ") ^ O(4)";
+                        return "(" + heur + ") ^ Ω(4)";
                     }
                 }
                 if (i % val == 0) {
                     heur = heuristic4444(i / val, 2);
                     heur2 = heuristic4444(j, 1);
                     if (isValid(heur) && isValid(heur2)) {
-                        return "(" + heur + " * " + heur2 + ") ^ O(2)";
+                        return "(" + heur + " × " + heur2 + ") ^ Ω(2)";
                     }
                     heur = heuristic4444(i / val, 1);
                     heur2 = heuristic4444(j, 2);
                     if (isValid(heur) && isValid(heur2)) {
-                        return "(" + heur + " * " + heur2 + ") ^ O(2)";
+                        return "(" + heur + " × " + heur2 + ") ^ Ω(2)";
                     }
                 }
             }
