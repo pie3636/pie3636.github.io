@@ -11,7 +11,7 @@ int main() {
     std::string res;
 #ifndef DEBUG
     unsigned i;
-    std::cout << "4-4-4-4 heuristical solver v. 0.1795.1140 (tested up to 10,000)" << std::endl;
+    std::cout << "4-4-4-4 heuristical solver v. 0.1795.1606 (tested up to 10,000)" << std::endl;
     std::cout << "Message /u/pie3636 if you find any incorrect values" << std::endl;
     std::cout << std::endl;
     std::cout << "Note: Some pairs of parentheses in the answer may be unnecessary." << std::endl;
@@ -21,15 +21,15 @@ int main() {
     std::cin >> i;
     std::cout << std::endl;
     res = solver.heuristic4444(i);
-    if (res.find('<') == std::string::npos) {
+    if (res.find('<') == std::string::npos || std::count(res.begin(), res.end(), '4' != 4)) {
         std::cout << solver.heuristic4444(i) << " = " << i << std::endl;
     } else {
-        std::cout << i << "The solver was unable to solve this value." << std::endl;
+        std::cout << "The solver was unable to solve this value." << std::endl;
     }
 #else
     for (int i = 1; i < MAX; i++) {
         res = solver.heuristic4444(i);
-        if (res.find('<') != std::string::npos) {
+        if (res.find('<') != std::string::npos || std::count(res.begin(), res.end(), '4' != 4)) {
             std::cout << solver.heuristic4444(i) << ": " << i << std::endl;
         }
     }
