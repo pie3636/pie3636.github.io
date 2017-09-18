@@ -64,11 +64,11 @@
 */
 
 /*
- * RELEASE
- * DEBUG1 (test min)
+ * DEBUG
+ * DEBUG1 (test one)
  * DEBUG2 (test all)
  */
-#define DEBUG1
+#define RELEASE
 
 #include <iostream>
 #include "Solver.h"
@@ -79,7 +79,7 @@ int main() {
     std::string res;
 
 #ifdef RELEASE
-    std::cout << "4-4-4-4 heuristical solver v. 0.1795.1740 (tested up to 10,000)" << std::endl;
+    std::cout << "4-4-4-4 heuristical solver v. 0.19919.0008 (tested up to 10,000)" << std::endl;
     std::cout << "Message /u/pie3636 if you find any incorrect values" << std::endl;
     std::cout << std::endl;
     std::cout << "Note: Some pairs of parentheses in the answer may be unnecessary." << std::endl;
@@ -101,8 +101,11 @@ int main() {
 #ifdef DEBUG1
     uint64_t minCost = 1000, maxCost = 0, sumCost = 0, indexMin, indexMax;
     for (uint64_t i = 1; i < MAX; i++) {
+        // m3 M28 x16.4155
+        // m3 M27 x14.124
+        // if (i % 10 == 0) std::cout << i << std::endl;
         res = solver.heuristic4444(i);
-        if (res.find('<') != std::string::npos || std::count(res.begin(), res.end(), '4' != 4)) {
+        if (res.find('<') != std::string::npos || std::count(res.begin(), res.end(), '4') != 4) {
             std::cout << solver.heuristic4444(i) << ": " << i << std::endl;
         }
         uint64_t cost = solver.evaluateCost(res);
@@ -123,7 +126,7 @@ int main() {
     std::cout << solver.heuristic4444(indexMax) << std::endl;
 #endif
 #ifdef DEBUG2
-    unsigned i = 4761;
+    unsigned i = 64;
     res = solver.heuristic4444(i);
     if (res.find('<') != std::string::npos && std::count(res.begin(), res.end(), '4' == 4)) {
         std::cout << "The solver was unable to solve this value." << std::endl;

@@ -17,6 +17,10 @@ class Solver {
         std::vector <unsigned> primes {};
         const std::vector <unsigned> base = {288, 210, 24, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
 
+        std::string finalSols2[MAX + 1] = {""};
+        std::string finalSols3[MAX + 1] = {""};
+        std::string finalSols4[MAX + 1] = {""};
+
         const UnaryOperator *const unaryOperators[1] = {
                 new AbsoluteValue(COST_ABS)
         };
@@ -85,13 +89,32 @@ class Solver {
         }
 
         std::string heuristic4444(uint64_t i, int fours = 4, bool trace = false, int depth = 0, int line = 0) const {
-            if (trace) std::cout << "[DEBUG] Entering h4 <" << fours << '\t' << i << '\t' << depth << "> from " << line << std::endl;
-            std::string heur, heur2, heur3, savedHeur3 = "";
+            if (trace) {
+                std::cout << "[DEBUG] H4 <" << fours << '\t' << i << '\t' << depth << "> from " << line << std::endl;
+            }
+            if (fours == 4 && finalSols4[i] != "") {
+                return finalSols4[i];
+            }
+            if (fours == 3 && finalSols3[i] != "") {
+                return finalSols2[i];
+            }
+            if (fours == 2 && finalSols2[i] != "") {
+                return finalSols2[i];
+            }
+            std::vector <std::pair <std::string, uint64_t>> solutions;
+            std::string heur, heur2, heur3;
             unsigned div, divCoeff, r, copy;
+            if (i == 1) {
+                return fours == 1 ? "ω(4)" :
+                       fours == 2 ? "4 / 4" :
+                       fours == 3 ? "(4 + 4 - 4)" :
+                       fours == 4 ? "4 / 4 + 4 - 4" :
+                       "<00-1@" + std::to_string(fours) + ">";
+            }
             if (i == 2) {
                 return fours == 1 ? "Ω(4)" :
-                       fours == 2 ? "(4 / Ω(4))" :
-                       fours == 3 ? "((4 + 4) / 4)" :
+                       fours == 2 ? "4 / Ω(4)" :
+                       fours == 3 ? "(4 + 4) / 4" :
                        fours == 4 ? "4 / 4 + 4 / 4" :
                        "<00-2@" + std::to_string(fours) + ">";
             }
@@ -102,8 +125,6 @@ class Solver {
                     switch (i) {
                         case 0:
                             return "<2>";
-                        case 1:
-                            return "ω(4)";
                         case 3:
                             return "d(4)";
                         case 4:
@@ -148,7 +169,7 @@ class Solver {
                             return "sf(4)";
                         default:
                             if (is_prime_mr(i)) {
-                                return invertPrime(i, 1);
+                                return invertPrime((unsigned) i, 1);
                             }
                             return "<3-" + std::to_string(i) + ">";
                     }
@@ -156,14 +177,11 @@ class Solver {
                     if (i == 0) {
                         return "(4 - 4)";
                     }
-                    if (i == 1) {
-                        return "(4 / 4)";
-                    }
                     if (i == 8) {
                         return "(4 + 4)";
                     }
                     if (i == 16) {
-                        return "(4 × 4)";
+                        return "4 × 4";
                     }
                     if (i == 256) {
                         return "4^4";
@@ -172,42 +190,43 @@ class Solver {
                     if (i == r * r * r * r) {
                         heur = heuristic4444(r, 1, trace, depth + 1, __LINE__);
                         if (isValid(heur)) {
-                            return "(" + heur + ") ^ 4";
+                            solutions.push_back({"(" + heur + ") ^ 4", 0});
                         }
                     }
                     r = (unsigned) sqrt(i);
                     if (i == r * r) {
                         heur = heuristic4444(r, 1, trace, depth + 1, __LINE__);
                         if (isValid(heur)) {
-                            return "(" + heur + ") ^ Ω(4)";
+                            solutions.push_back({"(" + heur + ") ^ Ω(4)", 0});
                         }
                     }
                 case 3:
                 case 4:
                     if (is_prime_mr(i)) {
-                        return invertPrime(i, fours);
+                        return invertPrime((unsigned) i, fours);
                     }
                     if (fours != 2) {
                         heur = heuristic4444(i, 2, trace, depth + 1, __LINE__);
                         if (isValid(heur)) {
-                            return fours == 4 ?
-                                   heur + " + 4 - 4" :
-                                   heur + " × ω(4)";
+                            solutions.push_back({fours == 4 ?
+                                                 heur + " + 4 - 4" :
+                                                 heur + " × ω(4)", 0});
                         }
                     }
                     if (fours == 4) {
                         heur = heuristic4444(i, 3, trace, depth + 1, __LINE__);
                         if (isValid(heur)) {
-                            savedHeur3 = heur;
+                            solutions.push_back({heur + " × ω(4)", 0});
                         }
                     }
                     break;
                 default:
                     return "<02-" + std::to_string(i) + "@" + std::to_string(fours) + ">";
             }
+
             div = (unsigned int) largestPrimeDiv((int) i);
             divCoeff = 1;
-            copy = i /div;
+            copy = (unsigned) i / div;
             while (copy % div == 0) {
                 copy /= div;
                 divCoeff++;
@@ -217,13 +236,13 @@ class Solver {
             switch (fours) {
                 case 2:
                     heur = heuristic4444(div, 1, trace, depth + 1, __LINE__);
-                    heur2 = heuristic4444(i/div, 1, trace, depth + 1, __LINE__);
+                    heur2 = heuristic4444(i / div, 1, trace, depth + 1, __LINE__);
                     if (isValid(heur) && isValid(heur2)) {
-                        return heur + " × " + heur2;
+                        solutions.push_back({heur + " × " + heur2, 0});
                     }
                     break;
                 case 3:
-                    for (unsigned k = (unsigned)(floor(log(MAX) / log(2))); k >= 2; k--) { // Testing n**k
+                    for (unsigned k = (unsigned) (floor(log(MAX) / log(2))); k >= 2; k--) { // Testing n**k
                         for (valMax = 2; ipow(valMax, k) <= MAX; valMax++);
                         for (unsigned j = valMax; j >= 2; j--) {
                             val = ipow(j, k);
@@ -232,7 +251,7 @@ class Solver {
                                     heur = heuristic4444(j, l, trace, depth + 1, __LINE__);
                                     heur2 = heuristic4444(k, 3 - l, trace, depth + 1, __LINE__);
                                     if (isValid(heur) && isValid(heur2)) {
-                                        return "(" + heur + ") ^ " + heur2;
+                                        solutions.push_back({"(" + heur + ") ^ " + heur2, 0});
                                     }
                                 }
                             }
@@ -241,7 +260,7 @@ class Solver {
                                 heur2 = heuristic4444(j, 1, trace, depth + 1, __LINE__);
                                 heur3 = heuristic4444(k, 1, trace, depth + 1, __LINE__);
                                 if (isValid(heur) && isValid(heur2) && isValid(heur3)) {
-                                    return heur + " × (" + heur2 + ") ^ " + heur3;
+                                    solutions.push_back({heur + " × (" + heur2 + ") ^ " + heur3, 0});
                                 }
                             }
                         }
@@ -250,12 +269,12 @@ class Solver {
                         heur = heuristic4444(div, l, trace, depth + 1, __LINE__);
                         heur2 = heuristic4444(i / div, 3 - l, trace, depth + 1, __LINE__);
                         if (isValid(heur) && isValid(heur2)) {
-                            return heur + " × " + heur2;
+                            solutions.push_back({heur + " × " + heur2, 0});
                         }
                     }
                     break;
                 case 4:
-                    for (unsigned k = (unsigned)(floor(log(MAX) / log(2))); k >= 2; k--) { // Testing n**k
+                    for (unsigned k = (unsigned) (floor(log(MAX) / log(2))); k >= 2; k--) { // Testing n**k
                         for (valMax = 2; ipow(valMax, k) <= MAX; valMax++);
                         for (unsigned j = valMax; j >= 2; j--) {
                             val = ipow(j, k);
@@ -264,7 +283,7 @@ class Solver {
                                     heur = heuristic4444(j, l, trace, depth + 1, __LINE__);
                                     heur2 = heuristic4444(k, 4 - l, trace, depth + 1, __LINE__);
                                     if (isValid(heur) && isValid(heur2)) {
-                                        return "(" + heur + ") ^ " + heur2;
+                                        solutions.push_back({"(" + heur + ") ^ " + heur2, 0});
                                     }
                                 }
                             }
@@ -274,7 +293,7 @@ class Solver {
                                     heur2 = heuristic4444(j, 1 + (l == 2 ? 1 : 0), trace, depth + 1, __LINE__);
                                     heur3 = heuristic4444(k, 1 + (l == 3 ? 1 : 0), trace, depth + 1, __LINE__);
                                     if (isValid(heur) && isValid(heur2) && isValid(heur3)) {
-                                        return heur + " × (" + heur2 + ") ^ " + heur3;
+                                        solutions.push_back({heur + " × (" + heur2 + ") ^ " + heur3, 0});
                                     }
                                 }
                             }
@@ -284,41 +303,42 @@ class Solver {
                         heur = heuristic4444(div, l, trace, depth + 1, __LINE__);
                         heur2 = heuristic4444(i / div, 4 - l, trace, depth + 1, __LINE__);
                         if (isValid(heur) && isValid(heur2)) {
-                            return heur + " × " + heur2;
+                            solutions.push_back({heur + " × " + heur2, 0});
                         }
                     }
                     break;
                 default:
                     return "<03-" + std::to_string(i) + "@" + std::to_string(fours) + ">";
             }
+
             if (i % 24 == 0) {
                 heur = heuristic4444(i / 24, fours - 1, trace, depth + 1, __LINE__);
                 if (isValid(heur)) {
-                    return "4! × " + heur;
+                    solutions.push_back({"4! × " + heur, 0});
                 }
             }
             if (i % 8 == 0) {
                 heur = heuristic4444(i / 8, fours - 1, trace, depth + 1, __LINE__);
                 if (isValid(heur)) {
-                    return "4!! × " + heur;
+                    solutions.push_back({"4!! × " + heur, 0});
                 }
             }
             if (i % 4 == 0) {
                 heur = heuristic4444(i / 4, fours - 1, trace, depth + 1, __LINE__);
                 if (isValid(heur)) {
-                    return "4 × " + heur;
+                    solutions.push_back({"4 × " + heur, 0});
                 }
             }
             if (fours >= 2 && i % 6 == 0) {
                 heur = heuristic4444(i / 6, fours - 1, trace, depth + 1, __LINE__);
                 if (isValid(heur)) {
-                    return "Γ(4) × " + heur;
+                    solutions.push_back({"Γ(4) × " + heur, 0});
                 }
             }
             if (fours >= 2 && i % 2 == 0) {
                 heur = heuristic4444(i / 2, fours - 1, trace, depth + 1, __LINE__);
                 if (isValid(heur)) {
-                    return "Ω(4) × " + heur;
+                    solutions.push_back({"Ω(4) × " + heur, 0});
                 }
             }
             for (unsigned j = (unsigned) sqrt(i); j >= 2; j--) {
@@ -326,7 +346,7 @@ class Solver {
                 if (i == val && fours >= 2) {
                     heur = heuristic4444(j, fours - 1, trace, depth + 1, __LINE__);
                     if (isValid(heur)) {
-                        return heur + " ^ Ω(4)";
+                        solutions.push_back({heur + " ^ Ω(4)", 0});
                     }
                 }
                 if (i % val == 0) {
@@ -334,13 +354,13 @@ class Solver {
                         heur = heuristic4444(i / val, l, trace, depth + 1, __LINE__);
                         heur2 = heuristic4444(j, fours - 1 - l, trace, depth + 1, __LINE__);
                         if (isValid(heur) && isValid(heur2)) {
-                            return "(" + heur + " × " + heur2 + ") ^ Ω(4)";
+                            solutions.push_back({"(" + heur + " × " + heur2 + ") ^ Ω(4)", 0});
                         }
                     }
                     for (int l = 1; l < fours - 1; l++) {
                         heur = heuristic4444(i / val * j, fours - 1, trace, depth + 1, __LINE__);
                         if (isValid(heur)) {
-                            return heur + " ^ Ω(4)";
+                            solutions.push_back({heur + " ^ Ω(4)", 0});
                         }
                     }
                 }
@@ -350,12 +370,28 @@ class Solver {
                     heur = heuristic4444(i / j, fours - 1, trace, depth + 1, __LINE__);
                     heur2 = heuristic4444(j, 1, trace, depth + 1, __LINE__);
                     if (isValid(heur)) {
-                        return heur + " × " + heur2;
+                        solutions.push_back({heur + " × " + heur2, 0});
                     }
                 }
             }
-            if (savedHeur3 != "") {
-                return savedHeur3 + " × ω(4)";
+            if (!solutions.empty()) {
+                for (unsigned j = 0; j < solutions.size(); j++) {
+                    solutions[j].second = evaluateCost(solutions[j].first);
+                }
+                std::sort(solutions.begin(), solutions.end(),
+                          [](std::pair <std::string, uint64_t> &a, std::pair <std::string, uint64_t> &b) {
+                              return a.second < b.second;
+                          });
+                if (fours == 4) {
+                    finalSols4[i] == solutions.front().first;
+                }
+                if (fours == 3) {
+                    finalSols3[i] == solutions.front().first;
+                }
+                if (fours == 2) {
+                    finalSols2[i] == solutions.front().first;
+                }
+                return solutions.front().first;
             }
             return "<4-" + std::to_string(i) + "@" + std::to_string(fours) + ">";
         }
@@ -408,7 +444,7 @@ class Solver {
             if (solve.length() > 0) {
                 std::cout << "Missing costs for <" << solve << ">" << std::endl;
             }
-            return cost;
+            return (uint64_t) cost;
         }
 
         uint64_t baseInvertPrime(unsigned i) const {
