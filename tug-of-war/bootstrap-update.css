@@ -136,9 +136,14 @@ b {
 
 .navbar-brand {
     position: absolute;
+    width: 100%;
     left: 0;
     text-align: center;
-    margin: auto;
+    margin:0 auto;
+}
+
+.navbar-brand.mobile {
+    text-align: left;
 }
 
 .alert-success {
