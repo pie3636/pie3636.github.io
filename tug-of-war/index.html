@@ -18,7 +18,7 @@
 </head>
 
 <body role="document">
-<nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
             <span class="navbar-brand mobile" id="version-mobile"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> ToW stats - </span>
@@ -29,13 +29,13 @@
                 <span class="icon-bar"></span>
             </button>
         </div>
+        <span class="navbar-brand" id="version"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Tug of War statistics - </span>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-left">
                 <li class="active"><a id="nav_charts" href="#" onclick="changeTab('charts')">Charts</a></li>
                 <li><a href="#" id="nav_counts" onclick="changeTab('counts')">Counts</a></li>
                 <li><a href="#" id="nav_gets" onclick="changeTab('gets')">Gets</a></li>
                 <li><a href="#" id="nav_users" onclick="changeTab('users')">Users</a></li>
-                <span class="navbar-brand" id="version"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Tug of War statistics - </span>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#" id="nav_hoc" onclick="changeTab('hoc')">Hall of Counters</a></li>
