@@ -10,7 +10,7 @@ data = {
     comment: "- We have never stayed above zero for so long\n\
               - The count has gone below 1600 for the first time in three months\n\
               - The count is still heading towards zero, with little to no resistance\n\
-              - New stalemate records have been established by /u/kdiuro13 and /u/WellHeresMyFourthAcc",
+              - New stalemate records have been established by <a href='http://reddit.com/u/kdiuro13'><b>/u/kdiuro13</b></a> and <a href='http://reddit.com/u/WellHeresMyFourthAcc'><b>/u/WellHeresMyFourthAcc</b></a>",
     counts: {
         total:       { cur: 118487,  prev: 117329  },
         min:         { cur: -4043,   prev: -4043   },
