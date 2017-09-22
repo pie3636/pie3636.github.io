@@ -1,7 +1,7 @@
-var lastData = "09 Sep 2017"
+var lastData = "22 Sep 2017"
 
 var lastUpdate = "09 Sep 2017"
-var announcement = true
+var announcement = false
 
 function changeTab(newTab) {
         $("#nav_" + currentTab).parent().removeClass("active");
