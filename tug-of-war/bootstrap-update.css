@@ -7,6 +7,20 @@ dd {
     padding-bottom: 8px;
 }
 
+@media (min-width: 992px) {
+    .col-md-border:not(:last-child) {
+        border-right: 1px solid #808080;
+    }
+    .col-md-border + .col-md-border {
+        border-left: 1px solid #808080;
+        margin-left: -1px;
+    }
+}
+
+.no-padding {
+    padding: 0;
+}
+
 #version-mobile {
     display: none;  
 }

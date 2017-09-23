@@ -47,17 +47,19 @@
 </nav>
 
 <div class="container-fluid" role="main" id="main">
-    <div class="alert alert-info" id="updateAnnouncement" style="display: none">
+    <div class="panel alert alert-info" id="updateAnnouncement" style="display: none">
     <button type="button" class="close" id="updateAnnouncementClose">x</button>
     <b>Update</b> (<span id="updateAnnouncementVersion"></span>):<br />
-        - Added Hall of Counters (top 100 counters)<br />
+        - Added users with the most gets<br />
+        - Added users with the most assists<br />
+        - Added fastest users<br />
         You can also check the <a href="#" class="alert-link" onclick="changeTab('changelog')">changelog</a> for more information.
     </div>
     
     <noscript><h1 class="text-center">Oops! The page doesn't seem to load... If your connection is being slow, you can wait some more. Otherwise, please make sure JavaScript is enabled, and try again. If you are using an add-on like NoScript, please whitelist <u>pie3636.github.io</u> in order to access this page.</h1></noscript>
     <h1 class="text-center" id="loading">Loading...</h1>
     
-    <div class="row" id="charts">
+    <div id="charts">
         <div class="panel panel-primary" id="comment-panel" style="display:none">
             <div class="panel-heading">Stats in a nutshell</div>
             <div class="panel-body" id="comment"></div>
@@ -101,305 +103,333 @@
     </div>
     
     
-    <div class="row" id="counts" style="display:none">
+    <div id="counts" style="display:none">
         <br />
         <div class="col-md-12">Note: Values between parenthesis are variations since the last time I posted those stats.</div><br />
-        <div class="panel panel-info">
-            <div class="panel-body row">
-                <h2 class="text-center">General</h2>
-                There are <b><span id="total-counts"></span><span id="total-counts-variation"></span></b> total counts.
-                <br /><br />
-                Counts are ranging from <b><span id="min-count"></span><span id="min-count-variation"></span></b>
-                to <b><span id="max-count"></span><span id="max-count-variation"></span></b>,
-                making a total range of <b><span id="count-range"></span><span id="count-range-variation"></span></b>,
-                which is <b>1/<span id="of-max-count-range"></span></b> of the maximum possible range with that many counts.
-                <br /><br />
-                The average count value is <b><span id="avg-count"></span><span id="avg-count-variation"></span></b>,
-                and the median count value is <b><span id="med-count"></span><span id="med-count-variation"></span></b>.
-                <br /><br />
-                <div class="col-md-6 table-left">
-                    <table class="table table-hover">
-                        <thead>
-                            <h4 class="text-center">Most common counts</h4>
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th>The number ...</th>
-                                <th>was counted ... times</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="most-common-counts"></tbody>
-                    </table>
-                </div>
-                <div class="col-md-6 table-right">
-                    <table class="table table-hover">
-                        <thead>
-                            <h4 class="text-center">Least common counts</h4>
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th>The number ...</th>
-                                <th>was counted ... times</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="least-common-counts"></tbody>
-                    </table>
-                </div>
+        <div class="panel panel-info panel-body">
+            <h2 class="text-center">General</h2>
+            There are <b><span id="total-counts"></span><span id="total-counts-variation"></span></b> total counts.
+            <br /><br />
+            Counts are ranging from <b><span id="min-count"></span><span id="min-count-variation"></span></b>
+            to <b><span id="max-count"></span><span id="max-count-variation"></span></b>,
+            making a total range of <b><span id="count-range"></span><span id="count-range-variation"></span></b>,
+            which is <b>1/<span id="of-max-count-range"></span></b> of the maximum possible range with that many counts.
+            <br /><br />
+            The average count value is <b><span id="avg-count"></span><span id="avg-count-variation"></span></b>,
+            and the median count value is <b><span id="med-count"></span><span id="med-count-variation"></span></b>.
+            <br /><br />
+            <div class="col-md-6 table-left">
+                <table class="table table-hover">
+                    <thead>
+                        <h4 class="text-center">Most common counts</h4>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>The number ...</th>
+                            <th>was counted ... times</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="most-common-counts"></tbody>
+                </table>
+            </div>
+            <div class="col-md-6 table-right">
+                <table class="table table-hover">
+                    <thead>
+                        <h4 class="text-center">Least common counts</h4>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>The number ...</th>
+                            <th>was counted ... times</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="least-common-counts"></tbody>
+                </table>
             </div>
         </div>
         <div class="row">
             <div class="col-md-6 panel-left">
-                <div class="panel panel-info">
-                    <div class="panel-body">
-                        <h2 class="text-center">Reply time</h2>
-                        The first Tug of War count was counted <b><span id="started"></span> <span id="started-unit"></span><span id="started-variation"></span></b> ago,
-                        on <b>2015-11-05 17:13:39 UTC</b>.
-                        <br /><br />
-                        Since then, the time between two consecutive counts has ranged from <b><span id="fastest-count"></span> <span id="fastest-count-unit"></span><span id="fastest-count-variation"></span></b>
-                        to <b><span id="slowest-count"></span> <span id="slowest-count-unit"></span><span id="slowest-count-variation"></span></b>.
-                        <br /><br />
-                        The average reply time is <b><span id="avg-time"></span> <span id="avg-time-unit"></span><span id="avg-time-variation"></span></b>.
-                        The median reply time is <b><span id="med-time"></span> <span id="med-time-unit"></span><span id="med-time-variation"></span></b>.
-                    </div>
+                <div class="panel panel-info panel-body">
+                    <h2 class="text-center">Reply time</h2>
+                    The first Tug of War count was counted <b><span id="started"></span> <span id="started-unit"></span><span id="started-variation"></span></b> ago,
+                    on <b>2015-11-05 17:13:39 UTC</b>.
+                    <br /><br />
+                    Since then, the time between two consecutive counts has ranged from <b><span id="fastest-count"></span> <span id="fastest-count-unit"></span><span id="fastest-count-variation"></span></b>
+                    to <b><span id="slowest-count"></span> <span id="slowest-count-unit"></span><span id="slowest-count-variation"></span></b>.
+                    <br /><br />
+                    The average reply time is <b><span id="avg-time"></span> <span id="avg-time-unit"></span><span id="avg-time-variation"></span></b>.
+                    The median reply time is <b><span id="med-time"></span> <span id="med-time-unit"></span><span id="med-time-variation"></span></b>.
                 </div>
-                <div class="panel panel-info panel-low">
-                    <div class="panel-body">
-                        <h2 class="text-center">Count direction</h2>
-                        The longest increasing streak lasted <b><span id="max-up-streak"></span><span id="max-up-streak-variation"></span></b> counts.
-                        This is <b><span id="max-up-streak-percent"></span><span id="max-up-streak-percent-variation"></span></b> of the entire range. 
-                        <br /><br />
-                        This streak went up from <b><span id="max-up-streak-begin"></span></b> to <b><span id="max-up-streak-end"></span></b>.
-                        <br /><br />
-                        The longest decreasing streak lasted <b><span id="max-down-streak"></span><span id="max-down-streak-variation"></span></b> counts.
-                        This is <b><span id="max-down-streak-percent"></span><span id="max-down-streak-percent-variation"></span></b> of the entire range. 
-                        <br /><br />
-                        This streak went down from <b><span id="max-down-streak-begin"></span></b> to <b><span id="max-down-streak-end"></span></b>.
-                        <br /><br />
-                        On average, the count changes direction every <b><span id="avg-streak"></span><span id="avg-streak-variation"></span></b> counts.
-                        <br /><br />
-                        On average, increasing streaks last <b><span id="pos-neg-asym"></span><span id="pos-neg-asym-variation"></span></b> counts longer than decreasing ones.
-                    </div>
+                <div class="panel panel-info panel-low panel-body">
+                    <h2 class="text-center">Count direction</h2>
+                    The longest increasing streak lasted <b><span id="max-up-streak"></span><span id="max-up-streak-variation"></span></b> counts.
+                    This is <b><span id="max-up-streak-percent"></span><span id="max-up-streak-percent-variation"></span></b> of the entire range. 
+                    <br /><br />
+                    This streak went up from <b><span id="max-up-streak-begin"></span></b> to <b><span id="max-up-streak-end"></span></b>.
+                    <br /><br />
+                    The longest decreasing streak lasted <b><span id="max-down-streak"></span><span id="max-down-streak-variation"></span></b> counts.
+                    This is <b><span id="max-down-streak-percent"></span><span id="max-down-streak-percent-variation"></span></b> of the entire range. 
+                    <br /><br />
+                    This streak went down from <b><span id="max-down-streak-begin"></span></b> to <b><span id="max-down-streak-end"></span></b>.
+                    <br /><br />
+                    On average, the count changes direction every <b><span id="avg-streak"></span><span id="avg-streak-variation"></span></b> counts.
+                    <br /><br />
+                    On average, increasing streaks last <b><span id="pos-neg-asym"></span><span id="pos-neg-asym-variation"></span></b> counts longer than decreasing ones.
                 </div>
             </div>
             <div class="col-md-6 panel-right">
-                <div class="panel panel-info">
-                    <div class="panel-body">
-                        <h2 class="text-center">Count sign</h2>
-                        Out of all the counts, <b><span id="pos-counts"></span><span id="pos-counts-variation"></span></b> are strictly positive,
-                        while <b><span id="neg-counts"></span><span id="neg-counts-variation"></span></b> are strictly negative.
-                        <br /><br />
-                        This means <b><span id="pos-counts-percent"></span><span id="pos-counts-percent-variation"></b> of all counts are strictly positive,
-                        and <b><span id="neg-counts-percent"></span><span id="neg-counts-percent-variation"></span></b> are strictly negative.
-                        <br /><br />
-                        Zero was counted <b><span id="zero-counts"></span><span id="zero-counts-variation"></span></b> times,
-                        which is <b>1 count in <span id="of-counts-zero"></span></b>.
-                        <br /><br />
-                        The longest positive streak lasted <b><span id="max-pos-streak"></span><span id="max-pos-streak-variation"></span></b> counts.
-                        <br /><br />
-                        The longest negative streak lasted <b><span id="max-neg-streak"></span><span id="max-neg-streak-variation"></span></b> counts.
-                    </div>
+                <div class="panel panel-info panel-body">
+                    <h2 class="text-center">Count sign</h2>
+                    Out of all the counts, <b><span id="pos-counts"></span><span id="pos-counts-variation"></span></b> are strictly positive,
+                    while <b><span id="neg-counts"></span><span id="neg-counts-variation"></span></b> are strictly negative.
+                    <br /><br />
+                    This means <b><span id="pos-counts-percent"></span><span id="pos-counts-percent-variation"></b> of all counts are strictly positive,
+                    and <b><span id="neg-counts-percent"></span><span id="neg-counts-percent-variation"></span></b> are strictly negative.
+                    <br /><br />
+                    Zero was counted <b><span id="zero-counts"></span><span id="zero-counts-variation"></span></b> times,
+                    which is <b>1 count in <span id="of-counts-zero"></span></b>.
+                    <br /><br />
+                    The longest positive streak lasted <b><span id="max-pos-streak"></span><span id="max-pos-streak-variation"></span></b> counts.
+                    <br /><br />
+                    The longest negative streak lasted <b><span id="max-neg-streak"></span><span id="max-neg-streak-variation"></span></b> counts.
                 </div>
-                <div class="panel panel-info panel-low">
-                    <div class="panel-body">
-                        <h2 class="text-center">Other</h2>
-                        There were <b><span id="deleted-counts"></span><span id="deleted-counts-variation"></span></b> deleted or otherwise unreadable counts that I had to interpolate based on what seemed more likely.
-                        <br /><br />
-                        We have forked <b><span id="forks"></span><span id="forks-variation"></span></b> times off the oldest count.
-                    </div>
+                <div class="panel panel-info panel-low panel-body">
+                    <h2 class="text-center">Other</h2>
+                    There were <b><span id="deleted-counts"></span><span id="deleted-counts-variation"></span></b> deleted or otherwise unreadable counts that I had to interpolate based on what seemed more likely.
+                    <br /><br />
+                    We have forked <b><span id="forks"></span><span id="forks-variation"></span></b> times off the oldest count.
                 </div>
             </div>
         </div>
-        <div class="panel panel-info">
-            <div class="panel-body row">
-                <h2 class="text-center">Stalemates</h2>
-                The counts that were reached the most consecutives times in a row are:
-                <br /><br />
-                <div class="col-md-6 table-left">
-                    <table class="table table-hover">
-                        <thead>
-                            <h4 class="text-center">One-value stalemates</h4>
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th>The number ...</th>
-                                <th>was counted ... consecutives times</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="one-stalemates"></tbody>
-                    </table>
-                </div>
-                <div class="col-md-6 table-right">
-                    <table class="table table-hover">
-                        <thead>
-                            <h4 class="text-center">Two-value stalemates</h4>
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th>The numbers ...</th>
-                                <th>were counted for ... comments in a row</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="two-stalemates"></tbody>
-                    </table>
-                </div>
-                Note that here, "consecutive" means that the value was reached every other count, due to how Tug of War works.
+        <div class="panel panel-info panel-body">
+            <h2 class="text-center">Stalemates</h2>
+            The counts that were reached the most consecutives times in a row are:
+            <br /><br />
+            <div class="col-md-6 table-left">
+                <table class="table table-hover">
+                    <thead>
+                        <h4 class="text-center">One-value stalemates</h4>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>The number ...</th>
+                            <th>was counted ... consecutives times</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="one-stalemates"></tbody>
+                </table>
             </div>
+            <div class="col-md-6 table-right">
+                <table class="table table-hover">
+                    <thead>
+                        <h4 class="text-center">Two-value stalemates</h4>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>The numbers ...</th>
+                            <th>were counted for ... comments in a row</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="two-stalemates"></tbody>
+                </table>
+            </div>
+            Note that here, "consecutive" means that the value was reached every other count, due to how Tug of War works.
         </div>
     </div>
     
     
-    <div class="row" id="gets" style="display:none">
+    <div id="gets" style="display:none">
         <br />
         <div class="col-md-12">Note: Values between parenthesis are variations since the last time I posted those stats.</div><br />
-        <div class="panel panel-info">
-            <div class="panel-body row">    
-                <h2 class="text-center">General</h2>
-                There are <b><span id="total-gets"></span><span id="total-gets-variation"></span></b> total gets.
-                <br /><br />
-                The average get value is <b><span id="avg-get"></span><span id="avg-get-variation"></span></b>,
-                and the median get value is <b><span id="med-get"></span><span id="med-get-variation"></span></b>.
-                <br /><br />
-                <div class="col-md-6 table-left">
-                    <table class="table table-hover">
-                        <thead>
-                            <h4 class="text-center">Most common gets</h4>
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th>The get ...</th>
-                                <th>was reached ... times</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="most-common-gets"></tbody>
-                    </table>
-                </div>
-                <div class="col-md-6 table-right">
-                    <table class="table table-hover">
-                        <thead>
-                            <h4 class="text-center">Least common gets</h4>
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th>The get ...</th>
-                                <th>was reached ... times</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="least-common-gets"></tbody>
-                    </table>
-                </div>
+        <div class="panel panel-info panel-body">
+            <h2 class="text-center">General</h2>
+            There are <b><span id="total-gets"></span><span id="total-gets-variation"></span></b> total gets.
+            <br /><br />
+            The average get value is <b><span id="avg-get"></span><span id="avg-get-variation"></span></b>,
+            and the median get value is <b><span id="med-get"></span><span id="med-get-variation"></span></b>.
+            <br /><br />
+            <div class="col-md-6 table-left">
+                <table class="table table-hover">
+                    <thead>
+                        <h4 class="text-center">Most common gets</h4>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>The get ...</th>
+                            <th>was reached ... times</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="most-common-gets"></tbody>
+                </table>
+            </div>
+            <div class="col-md-6 table-right">
+                <table class="table table-hover">
+                    <thead>
+                        <h4 class="text-center">Least common gets</h4>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>The get ...</th>
+                            <th>was reached ... times</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="least-common-gets"></tbody>
+                </table>
             </div>
         </div>
         <div class="row">
             <div class="col-md-6 panel-left">
-                <div class="panel panel-info">
-                    <div class="panel-body">
-                        <h2 class="text-center">Get time</h2>
-                        The fastest get lasted <b><span id="fastest-get"></span> <span id="fastest-get-unit"></span><span id="fastest-get-variation"></span></b>,
-                        and went <span id="fastest-get-direction"></span> from <b><span id="fastest-get-begin"></span></b>
-                        to <b><span id="fastest-get-end"></span></b>.
-                        <br /><br />
-                        The slowest get lasted <b><span id="slowest-get"></span> <span id="slowest-get-unit"></span><span id="slowest-get-variation"></span></b>,
-                        and went <span id="slowest-get-direction"></span> from <b><span id="slowest-get-begin"></b></span>
-                        to <b><span id="slowest-get-end"></span></b>.
-                        <br /><br />
-                        The average get duration is <b><span id="avg-get-time"></span> <span id="avg-get-time-unit"></span><span id="avg-get-time-variation"></span></b>.
-                        <br /><br />
-                        The median get duration is <b><span id="med-get-time"></span> <span id="med-get-time-unit"></span><span id="med-get-time-variation"></span></b>.
-                    </div>
+                <div class="panel panel-info panel-body">
+                    <h2 class="text-center">Get time</h2>
+                    The fastest get lasted <b><span id="fastest-get"></span> <span id="fastest-get-unit"></span><span id="fastest-get-variation"></span></b>,
+                    and went <span id="fastest-get-direction"></span> from <b><span id="fastest-get-begin"></span></b>
+                    to <b><span id="fastest-get-end"></span></b>.
+                    <br /><br />
+                    The slowest get lasted <b><span id="slowest-get"></span> <span id="slowest-get-unit"></span><span id="slowest-get-variation"></span></b>,
+                    and went <span id="slowest-get-direction"></span> from <b><span id="slowest-get-begin"></b></span>
+                    to <b><span id="slowest-get-end"></span></b>.
+                    <br /><br />
+                    The average get duration is <b><span id="avg-get-time"></span> <span id="avg-get-time-unit"></span><span id="avg-get-time-variation"></span></b>.
+                    <br /><br />
+                    The median get duration is <b><span id="med-get-time"></span> <span id="med-get-time-unit"></span><span id="med-get-time-variation"></span></b>.
                 </div>
-                <div class="panel panel-info panel-low">
-                    <div class="panel-body">
-                        <h2 class="text-center">Get length</h2>
-                        The shortest get took <b>200 counts</b>. This happened several times over the course of the Tug of War, and can't be beaten, since gets are every 200 counts.
-                        <br /><br />
-                        The longest get took <b><span id="longest-get"></span></span><span id="longest-get-variation"></span> counts</b>,
-                        and went <span id="longest-get-direction"></span> from <b><span id="longest-get-begin"></b></span>
-                        to <b><span id="longest-get-end"></span></b>.
-                        <br /><br />
-                        The average get length is <b><span id="avg-get-len"></span><span id="avg-get-len-variation"></span> comments</b>.
-                        <br /><br />
-                        The median get length is <b><span id="med-get-len"></span></span><span id="med-get-len-variation"></span> comments</b>.
-                    </div>
+                <div class="panel panel-info panel-low panel-body">
+                    <h2 class="text-center">Get length</h2>
+                    The shortest get took <b>200 counts</b>. This happened several times over the course of the Tug of War, and can't be beaten, since gets are every 200 counts.
+                    <br /><br />
+                    The longest get took <b><span id="longest-get"></span></span><span id="longest-get-variation"></span> counts</b>,
+                    and went <span id="longest-get-direction"></span> from <b><span id="longest-get-begin"></b></span>
+                    to <b><span id="longest-get-end"></span></b>.
+                    <br /><br />
+                    The average get length is <b><span id="avg-get-len"></span><span id="avg-get-len-variation"></span> comments</b>.
+                    <br /><br />
+                    The median get length is <b><span id="med-get-len"></span></span><span id="med-get-len-variation"></span> comments</b>.
                 </div>
             </div>
             <div class="col-md-6 panel-right">
-                <div class="panel panel-info">
-                    <div class="panel-body">
-                        <h2 class="text-center">Get sign</h2>
-                        Out of all the gets, <b><span id="pos-gets"></span><span id="pos-gets-variation"></span></b> are strictly positive,
-                        while <b><span id="neg-gets"></span><span id="neg-gets-variation"></span></b> are strictly negative.
-                        <br /><br />
-                        This means <b><span id="pos-gets-percent"></span><span id="pos-gets-percent-variation"></b> of all gets are strictly positive,
-                        and <b><span id="neg-gets-percent"></span><span id="neg-gets-percent-variation"></span></b> are strictly negative.
-                        <br /><br />
-                        The get reached was zero <b><span id="zero-gets"></span><span id="zero-gets-variation"></span></b> times,
-                        which is <b>1 get in <span id="of-gets-zero"></span></b>.
-                        <br /><br />
-                        The longest positive get streak lasted <b><span id="max-pos-get-streak"></span><span id="max-pos-get-streak-variation"></span></b> gets.
-                        <br /><br />
-                        The longest negative get streak lasted <b><span id="max-neg-get-streak"></span><span id="max-neg-get-streak-variation"></span></b> gets.
-                    </div>
+                <div class="panel panel-info panel-body">
+                    <h2 class="text-center">Get sign</h2>
+                    Out of all the gets, <b><span id="pos-gets"></span><span id="pos-gets-variation"></span></b> are strictly positive,
+                    while <b><span id="neg-gets"></span><span id="neg-gets-variation"></span></b> are strictly negative.
+                    <br /><br />
+                    This means <b><span id="pos-gets-percent"></span><span id="pos-gets-percent-variation"></b> of all gets are strictly positive,
+                    and <b><span id="neg-gets-percent"></span><span id="neg-gets-percent-variation"></span></b> are strictly negative.
+                    <br /><br />
+                    The get reached was zero <b><span id="zero-gets"></span><span id="zero-gets-variation"></span></b> times,
+                    which is <b>1 get in <span id="of-gets-zero"></span></b>.
+                    <br /><br />
+                    The longest positive get streak lasted <b><span id="max-pos-get-streak"></span><span id="max-pos-get-streak-variation"></span></b> gets.
+                    <br /><br />
+                    The longest negative get streak lasted <b><span id="max-neg-get-streak"></span><span id="max-neg-get-streak-variation"></span></b> gets.
                 </div>
             </div>
         </div>
     </div>
     
     
-    <div class="row" id="users" style="display:none">
+    <div id="users" style="display:none">
         <br />
         <div class="col-md-12">Note: Values between parenthesis are variations since the last time I posted those stats.</div><br />
-        <div class="panel panel-info">
-            <div class="panel-body row">    
-                <h2 class="text-center">General</h2>
-                There are <b><span id="total-usrs"></span><span id="total-gets-variation"></span></b> reddit users taking part in the Tug of War.
-                <br /><br />
-                On average, each user has counted <b><span id="avg-usr"></span><span id="avg-usr-variation"></span></b> times,
-                with a median of <b><span id="med-usr"></span><span id="med-usr-variation"></span></b> counts.
-                <br /><br />
-                <div class="col-md-12">
+        <div class="panel panel-info panel-body">
+            <h2 class="text-center">General</h2>
+            There are <b><span id="total-usrs"></span><span id="total-gets-variation"></span></b> reddit users taking part in the Tug of War.
+            <br /><br />
+            On average, each user has counted <b><span id="avg-usr"></span><span id="avg-usr-variation"></span></b> times,
+            with a median of <b><span id="med-usr"></span><span id="med-usr-variation"></span></b> counts.
+            <br /><br />
+            <div class="col-md-12">
+                <table class="table table-hover">
+                    <thead>
+                        <h4 class="text-center">Top 20 counters</h4>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>The user ...</th>
+                            <th>has counted ... times</th>
+                            <th>Variation</th>
+                        </tr>
+                    </thead>
+                    <tbody id="top-20-usrs"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel-body row">
+            <div class="col-md-6 no-padding">
+                <div class="panel panel-info panel-body">
                     <table class="table table-hover">
                         <thead>
-                            <h4 class="text-center">Top 20 counters</h4>
+                            <h4 class="text-center">Users with the most gets</h4>
+                            Here are displayed the counters who have obtained at least <b><span id="usr-min-gets"></span></b> gets.<br /><br />
                             <tr>
                                 <th class="text-center">#</th>
                                 <th>The user ...</th>
-                                <th>has counted ... times</th>
-                                <th>Variation</th>
+                                <th>has obtained ... gets</th>
+                                <th></th>
                             </tr>
                         </thead>
-                        <tbody id="top-20-usrs"></tbody>
+                        <tbody id="top-usr-gets"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6 no-padding">
+                <div class="panel panel-info panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <h4 class="text-center">Users with the most assists</h4>
+                            Here are displayed the counters who have obtained at least <b><span id="usr-min-assists"></span></b> assists.<br /><br />
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>The user ...</th>
+                                <th>has obtained ... gets</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="top-usr-assists"></tbody>
                     </table>
                 </div>
             </div>
         </div>
+        <div class="panel panel-info panel-body">
+            <table class="table table-hover">
+                <thead>
+                    <h4 class="text-center">Users with the lowest average reply time</h4>
+                    Here are the 100 fastest users amongst the users who have counted at least <b><span id="usr-min-counts"></span></b> times. Note that this calculation uses the average reply time, which might not be the best indicator of speed overall.<br /><br />
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>The user ...</th>
+                        <th>has an average reply time of ... seconds</th>
+                        <th>over ... counts</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="top-usr-speed"></tbody>
+            </table>
+        </div>
     </div>
     
     
-    <div class="row" id="hoc" style="display:none">
+    <div id="hoc" style="display:none">
         <br />
         <!--<div class="col-md-12">Note: Values between parenthesis are variations since the last time I posted those stats.</div><br />-->
-        <div class="panel panel-info">
-            <div class="panel-body row">    
-                <div class="col-md-12">
-                    <table class="table table-hover">
-                        <thead>
-                            <h4 class="text-center">Top 100 counters</h4>
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th>The user ...</th>
-                                <th>has counted ... times</th>
-                                <th>Variation</th>
-                            </tr>
-                        </thead>
-                        <tbody id="top-100-usrs"></tbody>
-                    </table>
-                </div>
+        <div class="panel panel-info panel-body">
+            <div class="col-md-12">
+                <table class="table table-hover">
+                    <thead>
+                        <h4 class="text-center">Top 100 counters</h4>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>The user ...</th>
+                            <th>has counted ... times</th>
+                            <th>Variation</th>
+                        </tr>
+                    </thead>
+                    <tbody id="top-100-usrs"></tbody>
+                </table>
             </div>
         </div>
     </div>
     
     
-    <div class="row" id="help" style="display:none; margin-left: 5px; margin-right: 5px">
+    <div id="help" style="display:none; margin-left: 5px; margin-right: 5px">
         <div class="col-md-12">
         <dl class="dl-horizontal">
             <dt>How does it work?</dt>
@@ -429,8 +459,12 @@
     </div>
     
     
-    <div class="row" id="changelog" style="display:none; margin-left: 5px; margin-right: 5px">
+    <div id="changelog" style="display:none; margin-left: 5px; margin-right: 5px">
         <div class="col-md-12">
+            <hr/><h5>23 Sep 2017:</h5>
+            - Added users with the most gets<br />
+            - Added users with the most assists<br />
+            - Added fastest users<br />
             <hr/><h5>09 Sep 2017:</h5>
             - Added Hall of Counters (top 100 counters)<br />
             <hr/><h5>24 Aug 2017:</h5>

@@ -1,7 +1,7 @@
 var lastData = "22 Sep 2017"
 
-var lastUpdate = "09 Sep 2017"
-var announcement = false
+var lastUpdate = "23 Sep 2017"
+var announcement = true
 
 function changeTab(newTab) {
         $("#nav_" + currentTab).parent().removeClass("active");
@@ -120,6 +120,13 @@ $(function () {
         updateValue(data.users.med, "med-usr", true);
         
         updateTable(data.users.top20, "top-20-usrs", false, true, true);
+        updateTable(data.users.topGets, "top-usr-gets", false, true, true);
+        updateValue(data.users.topGets.threshold, "usr-min-gets");
+        updateTable(data.users.topAssists, "top-usr-assists", false, true, true);
+        updateValue(data.users.topAssists.threshold, "usr-min-assists");
+        
+        updateTable(data.users.fastest, "top-usr-speed", false, true, true);
+        updateValue(data.users.fastest.threshold, "usr-min-counts");
         
         updateTable(data.top100, "top-100-usrs", false, true, true);
 });
@@ -135,13 +142,13 @@ function updateValue(value, id, hasVariation, digits, hasUnit) {
     $("#" + id).html(format(valueCur));
     if (hasVariation && variation) {
         isPos = variation > 0;
-        if (typeof digits !== "undefined" && digits !== 0 || typeof (digits = value.precision) !== "undefined") { // Try to read from parameter, if it fails try to read from JSON
+        if (typeof digits !== "undefined" && digits !== 0 || typeof (digits = value.precision) !== "undefined") { // Try to read "digits" from parameter, if it fails try to read from JSON
             variation = variation.toFixed(digits);
-            if (~variation.indexOf(".")) { // remove trailing zeroes
+            if (~variation.indexOf(".")) { // Remove trailing zeroes
                 while (variation[variation.length - 1] === "0") {
                     variation = variation.slice(0, -1);
                 }
-                if (variation.slice(-1) === ".") { // remove trailing "."
+                if (variation.slice(-1) === ".") { // Remove trailing "."
                     variation = variation.slice(0, -1);
                 }
             }
@@ -164,13 +171,14 @@ function isDeleted(tab) {
 }
 
 function updateTable(values, id, isTwo, isUser, hasRanking) {
-    var cnt = 1, col1, col2, col3, delta, cntDisp;
+    var cnt = 1, col1, col2, col3, delta, cntDisp; // cnt is the current rank number, cntDisp is the displayed value
     for (value in values.cur) {
         col3 = "New";
         if (hasRanking) {
             if (isDeleted(values.cur[value])) { // Don't register variation for [deleted]
                 col3 = "N/A";
             } else {
+                // If value passed above or under [deleted], it shouldn't be accounted for in the ranking variation
                 var posDel = values.cur.findIndex(isDeleted), oldPosDel = values.prev.findIndex(isDeleted);
                 for (value2 in values.prev) {
                     if (values.cur[value][0] === values.prev[value2][0]) {
@@ -191,21 +199,27 @@ function updateTable(values, id, isTwo, isUser, hasRanking) {
                     }
                 }
             }
-        } else {
-            for (value2 in values.prev) {
+        } else { // No ranking
+            for (value2 in values.prev) { // Remove "New" if it was already present
                 if (values.cur[value][0] === values.prev[value2][0] && values.cur[value][1] === values.prev[value2][1]
                 && (!isTwo || isTwo && values.cur[value][2] === values.prev[value2][2])) {
                     col3 = "";
                     break;
                 }
             }
-        }        
+        }
+        var curCol = 2;
         if (isTwo) {
             col1 = values.cur[value][0] + " and " + values.cur[value][1];
             col2 = values.cur[value][2];
+            curCol++;
         } else {
             col1 = values.cur[value][0];
             col2 = values.cur[value][1];
+        }
+        while (curCol < values.cur[value].length) { // Append remaining columns if necessary
+            col2 += "</td><td>" + values.cur[value][curCol];
+            curCol++;
         }
         cntDisp = cnt;
         if (isUser) {
@@ -265,34 +279,3 @@ function format(nStr) {
 }
 
 $(window).scroll(scroll);
-
-/*
-(function($) {
-    $.eventReport = function(selector, root) {
-        var s = [];
-        $(selector || '*', root).addBack().each(function() {
-            // the following line is the only change
-            var e = $._data(this, 'events');
-            if(!e) return;
-            s.push(this.tagName);
-            if(this.id) s.push('#', this.id);
-            if(this.className) s.push('.', this.className.replace(/ +/g, '.'));
-            for(var p in e) {
-                var r = e[p],
-                    h = r.length - r.delegateCount;
-                if(h)
-                    s.push('\n', h, ' ', p, ' handler', h > 1 ? 's' : '');
-                if(r.delegateCount) {
-                    for(var q = 0; q < r.length; q++)
-                        if(r[q].selector) s.push('\n', p, ' for ', r[q].selector);
-                }
-            }
-            s.push('\n\n');
-        });
-        return s.join('');
-    }
-    $.fn.eventReport = function(selector) {
-        return $.eventReport(selector, this);
-    }
-})(jQuery);
-*/
