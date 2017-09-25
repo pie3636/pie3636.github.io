@@ -50,9 +50,12 @@
     <div class="panel alert alert-info" id="updateAnnouncement" style="display: none">
     <button type="button" class="close" id="updateAnnouncementClose">x</button>
     <b>Update</b> (<span id="updateAnnouncementVersion"></span>):<br />
+        - Added users with the highest "counting score"<br />
+        <hr style="margin-top: 5px; margin-bottom: 5px"/>
+        From 23 Sep 2017:<br />
         - Added users with the most gets<br />
         - Added users with the most assists<br />
-        - Added fastest users<br />
+        - Added fastest users<br /><br />
         You can also check the <a href="#" class="alert-link" onclick="changeTab('changelog')">changelog</a> for more information.
     </div>
     
@@ -352,7 +355,7 @@
                 </table>
             </div>
         </div>
-        <div class="panel-body row">
+        <div class="row">
             <div class="col-md-6 no-padding">
                 <div class="panel panel-info panel-body">
                     <table class="table table-hover">
@@ -388,21 +391,44 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-info panel-body">
-            <table class="table table-hover">
-                <thead>
-                    <h4 class="text-center">Users with the lowest average reply time</h4>
-                    Here are the 100 fastest users amongst the users who have counted at least <b><span id="usr-min-counts"></span></b> times. Note that this calculation uses the average reply time, which might not be the best indicator of speed overall.<br /><br />
-                    <tr>
-                        <th class="text-center">#</th>
-                        <th>The user ...</th>
-                        <th>has an average reply time of ... seconds</th>
-                        <th>over ... counts</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="top-usr-speed"></tbody>
-            </table>
+        <div class="row">
+            <div class="col-md-6 no-padding">
+                <div class="panel panel-info panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <h4 class="text-center">Users with the lowest average reply time</h4>
+                            Here are the 100 fastest users amongst the users who have counted at least <b><span id="usr-min-counts"></span></b> times. Note that this calculation uses the average reply time, which might not be the best indicator of speed overall.<br /><br />
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>The user ...</th>
+                                <th>has an average reply time of ... seconds</th>
+                                <th>over ... counts</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="top-usr-speed"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6 no-padding">
+                <div class="panel panel-info panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <h4 class="text-center">Users with the highest score</h4>
+                            To give a more meaningful ranking of the fastest and most active users, here are the 100 users with the highest "counting score", determined as the sum of the inverse square roots of this user's reply times in seconds.<br />
+                            This allows us to include users with very few counts but an overall high speed.<br />
+                            For example, 100 16-second counts are worth as many points as 20 4-seconds counts, or 10 1-second counts.<br /><br />
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>The user ...</th>
+                                <th>has a score of ...</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="top-usr-speed-score"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -461,6 +487,8 @@
     
     <div id="changelog" style="display:none; margin-left: 5px; margin-right: 5px">
         <div class="col-md-12">
+            <hr/><h5>24 Sep 2017:</h5>
+            - Added users with the highest "counting score"<br />
             <hr/><h5>23 Sep 2017:</h5>
             - Added users with the most gets<br />
             - Added users with the most assists<br />

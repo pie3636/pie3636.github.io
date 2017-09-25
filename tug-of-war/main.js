@@ -1,6 +1,6 @@
 var lastData = "22 Sep 2017"
 
-var lastUpdate = "23 Sep 2017"
+var lastUpdate = "24 Sep 2017"
 var announcement = true
 
 function changeTab(newTab) {
@@ -127,6 +127,8 @@ $(function () {
         
         updateTable(data.users.fastest, "top-usr-speed", false, true, true);
         updateValue(data.users.fastest.threshold, "usr-min-counts");
+        
+        updateTable(data.users.speedScore, "top-usr-speed-score", false, true, true);
         
         updateTable(data.top100, "top-100-usrs", false, true, true);
 });
