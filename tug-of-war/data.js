@@ -3,8 +3,8 @@ data = {
     lastUpdate: "27 Sep 2017",
     announcement: true,
     charts: {
-        historical: "https://i.imgur.com/Xgo3Bm6.png",
-        temporal: "https://i.imgur.com/T0ldBTt.png",
+        historical: "https://i.imgur.com/T0ldBTt.png",
+        temporal: "https://i.imgur.com/XgT0ldBTt.png",
         frequency: "https://i.imgur.com/DskAw4t.png",
         getsLength: "https://i.imgur.com/TTF16Qu.png",
         weekly: "https://i.imgur.com/GhDf07H.png",
