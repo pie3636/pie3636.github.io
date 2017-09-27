@@ -1,4 +1,4 @@
-var lastData = "22 Sep 2017"
+var lastData = "27 Sep 2017"
 
 var lastUpdate = "24 Sep 2017"
 var announcement = true
