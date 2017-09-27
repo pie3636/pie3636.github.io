@@ -1,8 +1,3 @@
-var lastData = "27 Sep 2017"
-
-var lastUpdate = "24 Sep 2017"
-var announcement = true
-
 function changeTab(newTab) {
         $("#nav_" + currentTab).parent().removeClass("active");
         $("#nav_" + newTab).parent().addClass("active");
@@ -16,16 +11,16 @@ $(function () {
         $("#loading").remove();
         currentTab = "charts";
         
-        $("#version").append(lastData);
-        $("#version-mobile").append(lastData.substr(0, 7));
-        $("#updateAnnouncementVersion").html(lastUpdate);
+        $("#version").append(data.lastData);
+        $("#version-mobile").append(data.lastData.substr(0, 7));
+        $("#updateAnnouncementVersion").html(data.lastUpdate);
 
         $('.modal').on('show.bs.modal', centerModal);
         $(window).on("resize", function() {
             $('.modal:visible').each(centerModal);
         });
         
-        if (announcement) {
+        if (data.announcement) {
             $("#updateAnnouncement").show();
         }
         $("#updateAnnouncementClose").click(function() {
@@ -45,10 +40,11 @@ $(function () {
         }
         
         updateValue(data.counts.total, "total-counts", true);
+        updateValue(data.counts.ofMain, "of-main-counts-percent", true);
         updateValue(data.counts.min, "min-count", true);
         updateValue(data.counts.max, "max-count", true);
         updateValue(data.counts.range, "count-range", true);
-        updateValue(data.counts.ofMaxRange, "of-max-count-range");
+        updateValue(data.counts.ofMaxRange, "of-max-count-range", true, 2);
         updateValue(data.counts.avg, "avg-count", true, 2);
         updateValue(data.counts.med, "med-count", true);
         
@@ -128,12 +124,16 @@ $(function () {
         updateTable(data.users.fastest, "top-usr-speed", false, true, true);
         updateValue(data.users.fastest.threshold, "usr-min-counts");
         
+        updateTable(data.users.fastestMed, "top-usr-med-speed", false, true, true);
+        
         updateTable(data.users.speedScore, "top-usr-speed-score", false, true, true);
         
         updateTable(data.top100, "top-100-usrs", false, true, true);
 });
 
 function updateValue(value, id, hasVariation, digits, hasUnit) {
+    // Try to read "digits" from parameter, if it fails try to read from
+    hasDigits = typeof digits !== "undefined" && digits !== 0 || typeof (digits = value.precision) !== "undefined"; JSON
     if (hasVariation) {
         valueCur = value.cur;
         variation = valueCur - value.prev;
@@ -141,10 +141,13 @@ function updateValue(value, id, hasVariation, digits, hasUnit) {
         valueCur = value;
         variation = 0;
     }
-    $("#" + id).html(format(valueCur));
+    if (hasDigits) {
+        valueCur = valueCur.toFixed(digits);
+    }
+    $("#" + id).html(format(valueCur) + (~id.indexOf("percent") ? " %" : ""));
     if (hasVariation && variation) {
         isPos = variation > 0;
-        if (typeof digits !== "undefined" && digits !== 0 || typeof (digits = value.precision) !== "undefined") { // Try to read "digits" from parameter, if it fails try to read from JSON
+        if (hasDigits) {
             variation = variation.toFixed(digits);
             if (~variation.indexOf(".")) { // Remove trailing zeroes
                 while (variation[variation.length - 1] === "0") {
@@ -173,7 +176,7 @@ function isDeleted(tab) {
 }
 
 function updateTable(values, id, isTwo, isUser, hasRanking) {
-    var cnt = 1, col1, col2, col3, delta, cntDisp; // cnt is the current rank number, cntDisp is the displayed value
+    var cnt = 1, col1, col2, col3, delta, cntDisp, oldCol2 = "", exAequos = 0; // cnt is the current rank number, cntDisp is the displayed value
     for (value in values.cur) {
         col3 = "New";
         if (hasRanking) {
@@ -223,6 +226,13 @@ function updateTable(values, id, isTwo, isUser, hasRanking) {
             col2 += "</td><td>" + values.cur[value][curCol];
             curCol++;
         }
+        if (col2 == oldCol2) {
+            cnt--;
+            exAequos++;
+        } else {
+            cnt += exAequos;
+            exAequos = 0;
+        }
         cntDisp = cnt;
         if (isUser) {
             if (col1 !== "[deleted]") {
@@ -234,6 +244,7 @@ function updateTable(values, id, isTwo, isUser, hasRanking) {
             }
         }
         $("#" + id).append("<tr><td class='text-center'><b>" + cntDisp + "</b></td><td>" + col1 + "</td><td>" + col2 + "</td><td><b>" + col3 + "</b></td></tr>");
+        oldCol2 = col2;
         cnt++;
     }
 }

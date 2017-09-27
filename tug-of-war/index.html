@@ -50,12 +50,13 @@
     <div class="panel alert alert-info" id="updateAnnouncement" style="display: none">
     <button type="button" class="close" id="updateAnnouncementClose">x</button>
     <b>Update</b> (<span id="updateAnnouncementVersion"></span>):<br />
-        - Added users with the highest "counting score"<br />
+        - Added users with the lowest median reply time<br />
+        - Added ratio to main counting thread<br />
+        - Optimized layout and made things hopefully more readable overall<br />
         <hr style="margin-top: 5px; margin-bottom: 5px"/>
-        From 23 Sep 2017:<br />
-        - Added users with the most gets<br />
-        - Added users with the most assists<br />
-        - Added fastest users<br /><br />
+        From 26 Sep 2017:<br />
+        - Added users with the highest "counting score"<br />
+        - Site is now easier to maintain (lots of useless code removed)<br /><br />
         You can also check the <a href="#" class="alert-link" onclick="changeTab('changelog')">changelog</a> for more information.
     </div>
     
@@ -113,6 +114,8 @@
             <h2 class="text-center">General</h2>
             There are <b><span id="total-counts"></span><span id="total-counts-variation"></span></b> total counts.
             <br /><br />
+            This is <b><span id="of-main-counts-percent"></span><span id="of-main-counts-percent-variation"></span></b> of the main thread's number of counts.
+            <br /><br />
             Counts are ranging from <b><span id="min-count"></span><span id="min-count-variation"></span></b>
             to <b><span id="max-count"></span><span id="max-count-variation"></span></b>,
             making a total range of <b><span id="count-range"></span><span id="count-range-variation"></span></b>,
@@ -122,9 +125,9 @@
             and the median count value is <b><span id="med-count"></span><span id="med-count-variation"></span></b>.
             <br /><br />
             <div class="col-md-6 table-left">
+                <h4 class="text-center">Most common counts</h4>
                 <table class="table table-hover">
                     <thead>
-                        <h4 class="text-center">Most common counts</h4>
                         <tr>
                             <th class="text-center">#</th>
                             <th>The number ...</th>
@@ -136,9 +139,9 @@
                 </table>
             </div>
             <div class="col-md-6 table-right">
+                <h4 class="text-center">Least common counts</h4>
                 <table class="table table-hover">
                     <thead>
-                        <h4 class="text-center">Least common counts</h4>
                         <tr>
                             <th class="text-center">#</th>
                             <th>The number ...</th>
@@ -209,9 +212,9 @@
             The counts that were reached the most consecutives times in a row are:
             <br /><br />
             <div class="col-md-6 table-left">
+                <h4 class="text-center">One-value stalemates</h4>
                 <table class="table table-hover">
                     <thead>
-                        <h4 class="text-center">One-value stalemates</h4>
                         <tr>
                             <th class="text-center">#</th>
                             <th>The number ...</th>
@@ -223,9 +226,9 @@
                 </table>
             </div>
             <div class="col-md-6 table-right">
+                <h4 class="text-center">Two-value stalemates</h4>
                 <table class="table table-hover">
                     <thead>
-                        <h4 class="text-center">Two-value stalemates</h4>
                         <tr>
                             <th class="text-center">#</th>
                             <th>The numbers ...</th>
@@ -252,9 +255,9 @@
             and the median get value is <b><span id="med-get"></span><span id="med-get-variation"></span></b>.
             <br /><br />
             <div class="col-md-6 table-left">
+                <h4 class="text-center">Most common gets</h4>
                 <table class="table table-hover">
                     <thead>
-                        <h4 class="text-center">Most common gets</h4>
                         <tr>
                             <th class="text-center">#</th>
                             <th>The get ...</th>
@@ -266,9 +269,9 @@
                 </table>
             </div>
             <div class="col-md-6 table-right">
+                <h4 class="text-center">Least common gets</h4>
                 <table class="table table-hover">
                     <thead>
-                        <h4 class="text-center">Least common gets</h4>
                         <tr>
                             <th class="text-center">#</th>
                             <th>The get ...</th>
@@ -355,69 +358,65 @@
                 </table>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6 no-padding">
-                <div class="panel panel-info panel-body">
-                    <table class="table table-hover">
-                        <thead>
-                            <h4 class="text-center">Users with the most gets</h4>
-                            Here are displayed the counters who have obtained at least <b><span id="usr-min-gets"></span></b> gets.<br /><br />
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th>The user ...</th>
-                                <th>has obtained ... gets</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="top-usr-gets"></tbody>
-                    </table>
-                </div>
+        <div class="panel panel-info panel-body">
+            <h2 class="text-center">Gets and assists</h2>
+            <div class="col-md-6 no-padding table-left col-md-border">
+                <h4 class="text-center">Users with the most gets</h4>
+                Here are displayed the counters who have obtained at least <b><span id="usr-min-gets"></span></b> gets.<br /><br />
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>The user ...</th>
+                            <th>has obtained ... gets</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="top-usr-gets"></tbody>
+                </table>
             </div>
-            <div class="col-md-6 no-padding">
-                <div class="panel panel-info panel-body">
-                    <table class="table table-hover">
-                        <thead>
-                            <h4 class="text-center">Users with the most assists</h4>
-                            Here are displayed the counters who have obtained at least <b><span id="usr-min-assists"></span></b> assists.<br /><br />
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th>The user ...</th>
-                                <th>has obtained ... assists</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="top-usr-assists"></tbody>
-                    </table>
-                </div>
+            <div class="col-md-6 no-padding table-right col-md-border">
+                <h4 class="text-center">Users with the most assists</h4>
+                Here are displayed the counters who have obtained at least <b><span id="usr-min-assists"></span></b> assists.<br /><br />
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>The user ...</th>
+                            <th>has obtained ... assists</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="top-usr-assists"></tbody>
+                </table>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6 no-padding">
-                <div class="panel panel-info panel-body">
+        <div class="panel panel-info panel-body">
+            <h2 class="text-center">Reply time</h2>
+            <div class="row"> <!-- Necessary for the borders to work (rely on first-child and last-child). The class allows the padding on the next div to work -->
+                <div class="col-md-6 no-padding table-left col-md-border">
+                    <h4 class="text-center">Users with the lowest median reply time</h4>
+                    Here are the 100 fastest users amongst the users who have counted at least <b><span id="usr-min-counts"></span></b> times.<br /><br />
                     <table class="table table-hover">
                         <thead>
-                            <h4 class="text-center">Users with the lowest average reply time</h4>
-                            Here are the 100 fastest users amongst the users who have counted at least <b><span id="usr-min-counts"></span></b> times. Note that this calculation uses the average reply time, which might not be the best indicator of speed overall.<br /><br />
                             <tr>
                                 <th class="text-center">#</th>
                                 <th>The user ...</th>
-                                <th>has an average reply time of ... seconds</th>
+                                <th>has a median reply time of ... seconds</th>
                                 <th>over ... counts</th>
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody id="top-usr-speed"></tbody>
+                        <tbody id="top-usr-med-speed"></tbody>
                     </table>
                 </div>
-            </div>
-            <div class="col-md-6 no-padding">
-                <div class="panel panel-info panel-body">
+                <div class="col-md-6 no-padding table-right col-md-border">
+                    <h4 class="text-center">Users with the highest score</h4>
+                    To give a more meaningful ranking of the fastest and most active users, here are the 100 users with the highest "counting score", determined as the sum of the inverse square roots of this user's reply times in seconds.<br />
+                    This allows us to include users with very few counts but an overall high speed.<br />
+                    For example, 100 16-second counts are worth as many points as 20 4-seconds counts, or 10 1-second counts.<br /><br />
                     <table class="table table-hover">
                         <thead>
-                            <h4 class="text-center">Users with the highest score</h4>
-                            To give a more meaningful ranking of the fastest and most active users, here are the 100 users with the highest "counting score", determined as the sum of the inverse square roots of this user's reply times in seconds.<br />
-                            This allows us to include users with very few counts but an overall high speed.<br />
-                            For example, 100 16-second counts are worth as many points as 20 4-seconds counts, or 10 1-second counts.<br /><br />
                             <tr>
                                 <th class="text-center">#</th>
                                 <th>The user ...</th>
@@ -429,6 +428,23 @@
                     </table>
                 </div>
             </div>
+            <hr class="hr-large"/>
+            <div>
+                <h4 class="text-center">Users with the lowest average reply time</h4>
+                Here are the 100 fastest users amongst the users who have counted at least <b><span id="usr-min-counts"></span></b> times. Note that this calculation uses the average reply time, which might not be the best indicator of speed overall.<br /><br />
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>The user ...</th>
+                            <th>has an average reply time of ... seconds</th>
+                            <th>over ... counts</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="top-usr-speed"></tbody>
+                </table>
+            </div>
         </div>
     </div>
     
@@ -438,9 +454,9 @@
         <!--<div class="col-md-12">Note: Values between parenthesis are variations since the last time I posted those stats.</div><br />-->
         <div class="panel panel-info panel-body">
             <div class="col-md-12">
+                <h4 class="text-center">Top 100 counters</h4>
                 <table class="table table-hover">
                     <thead>
-                        <h4 class="text-center">Top 100 counters</h4>
                         <tr>
                             <th class="text-center">#</th>
                             <th>The user ...</th>
@@ -487,8 +503,13 @@
     
     <div id="changelog" style="display:none; margin-left: 5px; margin-right: 5px">
         <div class="col-md-12">
+            <h5>27 Sep 2017:</h5>
+            - Added users with the lowest median reply time<br />
+            - Added ratio to main counting thread<br />
+            - Optimized layout and made things hopefully more readable overall<br />
             <hr/><h5>24 Sep 2017:</h5>
             - Added users with the highest "counting score"<br />
+            - Site is now easier to maintain (lots of useless code removed)<br />
             <hr/><h5>23 Sep 2017:</h5>
             - Added users with the most gets<br />
             - Added users with the most assists<br />

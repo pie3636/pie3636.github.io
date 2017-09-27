@@ -7,12 +7,18 @@ dd {
     padding-bottom: 8px;
 }
 
+.hr-large {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    border-top: 1px dashed #808080;
+}
+
 @media (min-width: 992px) {
     .col-md-border:not(:last-child) {
-        border-right: 1px solid #808080;
+        border-right: 1px dashed #808080;
     }
     .col-md-border + .col-md-border {
-        border-left: 1px solid #808080;
+        border-left: 1px dashed #808080;
         margin-left: -1px;
     }
 }
@@ -79,6 +85,10 @@ h1, h2 {
 
 .table-left {
     padding-right: 10px !important;
+}
+
+.table-leftborder {
+    border-right: 1px dashed #777;
 }
 
 .table-right {
