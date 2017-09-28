@@ -9,7 +9,7 @@
 <title>Tug of War statistics</title>
 <link href="css/bootstrap.css" rel="stylesheet">
 <link href="css/bootstrap-theme.css" rel="stylesheet">
-<link href="bootstrap-update.css" rel="stylesheet">
+<link href="theme.css" rel="stylesheet">
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -48,22 +48,24 @@
 
 <div class="container-fluid" role="main" id="main">
     <div class="panel alert alert-info" id="updateAnnouncement" style="display: none">
-    <button type="button" class="close" id="updateAnnouncementClose">x</button>
-    <b>Update</b> (<span id="updateAnnouncementVersion"></span>):<br />
+        <button type="button" class="close" id="updateAnnouncementClose">x</button>
+        <b>Update</b> (<span id="updateAnnouncementVersion"></span>):<br />
+        <!--<hr style="margin-top: 5px; margin-bottom: 5px"/>-->
+        - Changelog pop-up (this one!) will now be dismissed until next version when closed<br />
+        - Added increasing/decreasing get streaks, and fixed increasing/decreasing count streaks stats that were wrong<br />
+        - Ries are now clearly displayed in ranking tables, and are taken into account when calculating ranking variations<br />
+        <hr style="margin-top: 5px; margin-bottom: 5px"/>
+        From earlier:<br />
         - Added users with the lowest median reply time<br />
         - Added ratio to main counting thread<br />
-        - Optimized layout and made things hopefully more readable overall<br />
-        <hr style="margin-top: 5px; margin-bottom: 5px"/>
-        From 26 Sep 2017:<br />
-        - Added users with the highest "counting score"<br />
-        - Site is now easier to maintain (lots of useless code removed)<br /><br />
+        - Optimized layout and made things hopefully more readable overall<br /><br />
         You can also check the <a href="#" class="alert-link" onclick="changeTab('changelog')">changelog</a> for more information.
     </div>
     
     <noscript><h1 class="text-center">Oops! The page doesn't seem to load... If your connection is being slow, you can wait some more. Otherwise, please make sure JavaScript is enabled, and try again. If you are using an add-on like NoScript, please whitelist <u>pie3636.github.io</u> in order to access this page.</h1></noscript>
     <h1 class="text-center" id="loading">Loading...</h1>
     
-    <div id="charts">
+    <div id="charts" style="display:none">
         <div class="panel panel-primary" id="comment-panel" style="display:none">
             <div class="panel-heading">Stats in a nutshell</div>
             <div class="panel-body" id="comment"></div>
@@ -300,16 +302,18 @@
                     The median get duration is <b><span id="med-get-time"></span> <span id="med-get-time-unit"></span><span id="med-get-time-variation"></span></b>.
                 </div>
                 <div class="panel panel-info panel-low panel-body">
-                    <h2 class="text-center">Get length</h2>
-                    The shortest get took <b>200 counts</b>. This happened several times over the course of the Tug of War, and can't be beaten, since gets are every 200 counts.
+                    <h2 class="text-center">Get direction</h2>
+                    The longest increasing get streak lasted <b><span id="max-up-get-streak"></span><span id="max-up-get-streak-variation"></span></b> gets.
                     <br /><br />
-                    The longest get took <b><span id="longest-get"></span></span><span id="longest-get-variation"></span> counts</b>,
-                    and went <span id="longest-get-direction"></span> from <b><span id="longest-get-begin"></b></span>
-                    to <b><span id="longest-get-end"></span></b>.
+                    This streak went up from <b><span id="max-up-get-streak-begin"></span></b> to <b><span id="max-up-get-streak-end"></span></b>.
                     <br /><br />
-                    The average get length is <b><span id="avg-get-len"></span><span id="avg-get-len-variation"></span> comments</b>.
+                    The longest decreasing get streak lasted <b><span id="max-down-streak"></span><span id="max-down-get-streak-variation"></span></b> gets.
                     <br /><br />
-                    The median get length is <b><span id="med-get-len"></span></span><span id="med-get-len-variation"></span> comments</b>.
+                    This streak went down from <b><span id="max-down-get-streak-begin"></span></b> to <b><span id="max-down-get-streak-end"></span></b>.
+                    <br /><br />
+                    On average, the get changes direction every <b><span id="avg-get-streak"></span><span id="avg-get-streak-variation"></span></b> gets.
+                    <br /><br />
+                    On average, increasing get streaks last <b><span id="pos-neg-get-asym"></span><span id="pos-neg-get-asym-variation"></span></b> gets longer than decreasing ones.
                 </div>
             </div>
             <div class="col-md-6 panel-right">
@@ -327,6 +331,18 @@
                     The longest positive get streak lasted <b><span id="max-pos-get-streak"></span><span id="max-pos-get-streak-variation"></span></b> gets.
                     <br /><br />
                     The longest negative get streak lasted <b><span id="max-neg-get-streak"></span><span id="max-neg-get-streak-variation"></span></b> gets.
+                </div>
+                <div class="panel panel-info panel-low panel-body">
+                    <h2 class="text-center">Get length</h2>
+                    The shortest get took <b>200 counts</b>. This happened several times over the course of the Tug of War, and can't be beaten, since gets are every 200 counts.
+                    <br /><br />
+                    The longest get took <b><span id="longest-get"></span></span><span id="longest-get-variation"></span> counts</b>,
+                    and went <span id="longest-get-direction"></span> from <b><span id="longest-get-begin"></b></span>
+                    to <b><span id="longest-get-end"></span></b>.
+                    <br /><br />
+                    The average get length is <b><span id="avg-get-len"></span><span id="avg-get-len-variation"></span> comments</b>.
+                    <br /><br />
+                    The median get length is <b><span id="med-get-len"></span></span><span id="med-get-len-variation"></span> comments</b>.
                 </div>
             </div>
         </div>
@@ -496,17 +512,22 @@
         <br/>
         <div class="text-center">
         <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />
-        <span class="top-space">This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</span>
+        <span class="top6">This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</span>
         </div>
     </div>
     
     
     <div id="changelog" style="display:none; margin-left: 5px; margin-right: 5px">
         <div class="col-md-12">
-            <h5>27 Sep 2017:</h5>
+            <h5>28 Sep 2017:</h5>
+            - Changelog pop-up (this one!) will now be dismissed until next version when closed<br />
+            <hr/><h5>27 Sep 2017:</h5>
+            - Changelog pop-up will now be dismissed until next version when closed<br />
+            - Added increasing/decreasing get streaks, and fixed increasing/decreasing count streaks stats that were wrong<br />
             - Added users with the lowest median reply time<br />
             - Added ratio to main counting thread<br />
-            - Optimized layout and made things hopefully more readable overall<br />
+            - Ranking tables now support ties<br />
+            - Optimized layout, fixed typos and made things hopefully more readable overall<br />
             <hr/><h5>24 Sep 2017:</h5>
             - Added users with the highest "counting score"<br />
             - Site is now easier to maintain (lots of useless code removed)<br />

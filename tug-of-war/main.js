@@ -10,6 +10,7 @@ function changeTab(newTab) {
 $(function () {
         $("#loading").remove();
         currentTab = "charts";
+        changeTab("charts");
         
         $("#version").append(data.lastData);
         $("#version-mobile").append(data.lastData.substr(0, 7));
@@ -20,11 +21,13 @@ $(function () {
             $('.modal:visible').each(centerModal);
         });
         
-        if (data.announcement) {
+        var storedVersion = localStorage.storedVersion;
+        if (typeof storedVersion === "undefined" || storedVersion !== data.lastUpdate) {
             $("#updateAnnouncement").show();
         }
         $("#updateAnnouncementClose").click(function() {
             $("#updateAnnouncement").hide();
+            localStorage.storedVersion = data.lastUpdate;
         });
         
         /******************** Data inclusion ********************/
@@ -97,6 +100,14 @@ $(function () {
         updateValue(data.gets.longest.end, "longest-get-end");
         updateValue(data.gets.avgLen, "avg-get-len", true, 2);
         updateValue(data.gets.medLen, "med-get-len", true);
+        updateValue(data.getSign.maxUpStreak.length, "max-up-get-streak", true);
+        updateValue(data.getSign.maxUpStreak.begin, "max-up-get-streak-begin");
+        updateValue(data.getSign.maxUpStreak.end, "max-up-get-streak-end");
+        updateValue(data.getSign.maxDownStreak.length, "max-down-get-streak", true);
+        updateValue(data.getSign.maxDownStreak.begin, "max-down-get-streak-begin");
+        updateValue(data.getSign.maxDownStreak.end, "max-down-get-streak-end");
+        updateValue(data.getSign.avgStreak, "avg-get-streak", true);
+        updateValue(data.getSign.posNegAsym, "pos-neg-get-asym", true);
         updateValue(data.getSign.pos, "pos-gets", true);
         updateValue(data.getSign.neg, "neg-gets", true);
         updateValue(data.getSign.posPercent, "pos-gets-percent", true, 2);
@@ -115,20 +126,20 @@ $(function () {
         updateValue(data.users.avg, "avg-usr", true, 2);
         updateValue(data.users.med, "med-usr", true);
         
-        updateTable(data.users.top20, "top-20-usrs", false, true, true);
-        updateTable(data.users.topGets, "top-usr-gets", false, true, true);
+        updateTable(data.users.top20, "top-20-usrs", false, true);
+        updateTable(data.users.topGets, "top-usr-gets", false, true);
         updateValue(data.users.topGets.threshold, "usr-min-gets");
-        updateTable(data.users.topAssists, "top-usr-assists", false, true, true);
+        updateTable(data.users.topAssists, "top-usr-assists", false, true);
         updateValue(data.users.topAssists.threshold, "usr-min-assists");
         
-        updateTable(data.users.fastest, "top-usr-speed", false, true, true);
+        updateTable(data.users.fastest, "top-usr-speed", false, true);
         updateValue(data.users.fastest.threshold, "usr-min-counts");
         
-        updateTable(data.users.fastestMed, "top-usr-med-speed", false, true, true);
+        updateTable(data.users.fastestMed, "top-usr-med-speed", false, true);
         
-        updateTable(data.users.speedScore, "top-usr-speed-score", false, true, true);
+        updateTable(data.users.speedScore, "top-usr-speed-score", false, true);
         
-        updateTable(data.top100, "top-100-usrs", false, true, true);
+        updateTable(data.top100, "top-100-usrs", false, true);
 });
 
 function updateValue(value, id, hasVariation, digits, hasUnit) {
@@ -175,42 +186,26 @@ function isDeleted(tab) {
     return tab[0] === "[deleted]";
 }
 
-function updateTable(values, id, isTwo, isUser, hasRanking) {
-    var cnt = 1, col1, col2, col3, delta, cntDisp, oldCol2 = "", exAequos = 0; // cnt is the current rank number, cntDisp is the displayed value
-    for (value in values.cur) {
+function hasSameValue(a, b, isTwo) {
+    return a[1] === b[1] && (!isTwo || isTwo && a[2] === b[2]);
+}
+
+function updateTable(values, id, isTwo, hasRanking) {
+    if (hasRanking) {
+        updateTableR(values, id, isTwo)
+    } else {
+        updateTableNR(values, id, isTwo)
+    }
+}
+
+function updateTableNR(values, id, isTwo) {
+    var col1, col2, col3;
+    for (var value = 0; value < values.cur.length; value++) {
         col3 = "New";
-        if (hasRanking) {
-            if (isDeleted(values.cur[value])) { // Don't register variation for [deleted]
-                col3 = "N/A";
-            } else {
-                // If value passed above or under [deleted], it shouldn't be accounted for in the ranking variation
-                var posDel = values.cur.findIndex(isDeleted), oldPosDel = values.prev.findIndex(isDeleted);
-                for (value2 in values.prev) {
-                    if (values.cur[value][0] === values.prev[value2][0]) {
-                        delta = value2 - value;
-                        if (value2 < oldPosDel && value > posDel) {
-                            delta++;
-                        } else if (value2 > oldPosDel && value < posDel) {
-                            delta--;
-                        }
-                        if (delta === 0) {
-                            col3 = "=";
-                        } else if (delta > 0) {
-                            col3 = "<span class='green'>+ " + delta + "</span>";
-                        } else {
-                            col3 = "<span class='red'>- " + -delta + "</span>";
-                        }
-                        break;
-                    }
-                }
-            }
-        } else { // No ranking
-            for (value2 in values.prev) { // Remove "New" if it was already present
-                if (values.cur[value][0] === values.prev[value2][0] && values.cur[value][1] === values.prev[value2][1]
-                && (!isTwo || isTwo && values.cur[value][2] === values.prev[value2][2])) {
-                    col3 = "";
-                    break;
-                }
+        for (oldValue in values.prev) { // Remove "New" if it was already present
+            if (values.cur[value][0] === values.prev[oldValue][0] && hasSameValue(values.cur[value], values.prev[oldValue], isTwo)) {
+                col3 = "";
+                break;
             }
         }
         var curCol = 2;
@@ -226,26 +221,90 @@ function updateTable(values, id, isTwo, isUser, hasRanking) {
             col2 += "</td><td>" + values.cur[value][curCol];
             curCol++;
         }
-        if (col2 == oldCol2) {
+        $("#" + id).append("<tr><td class='text-center'><b>" + (value + 1) + "</b></td><td>" + col1 + "</td><td>" + col2 + "</td><td><b>" + col3 + "</b></td></tr>");
+    }
+}
+
+function getRanks(values, isTwo) {
+    var res = [], tiesBegin = [], tiesEnd = [], cnt = 0, ties = 0;
+    for (var value = 0; value < values.length; value++) {
+        cnt++;
+        res.push([values[value][0], cnt].concat(values[value].slice(1)));
+        if (value != 0 && hasSameValue(values[value - 1], values[value], isTwo)) {
             cnt--;
-            exAequos++;
+            if (ties == 0) {
+                tiesBegin.push(value);
+            }
+            ties++;
+            res[res.length - 1][1] = cnt;
         } else {
-            cnt += exAequos;
-            exAequos = 0;
-        }
-        cntDisp = cnt;
-        if (isUser) {
-            if (col1 !== "[deleted]") {
-                col1 = "<a href='http://reddit.com/u/" + col1 + "'>" + col1 + "</a>";
-            } else {
-                col1 = "Total for [deleted] users (not updated retroactively)";
-                cntDisp = "-";
+            cnt += ties;
+            ties = 0;
+            tiesEnd.push(value);
+            tiesBegin.push(value + 1);
+            res[res.length - 1][1] = cnt;
+            if (isDeleted(values[value])) {
                 cnt--;
+                res[res.length - 1][1] = "-";
             }
         }
-        $("#" + id).append("<tr><td class='text-center'><b>" + cntDisp + "</b></td><td>" + col1 + "</td><td>" + col2 + "</td><td><b>" + col3 + "</b></td></tr>");
-        oldCol2 = col2;
-        cnt++;
+    }
+    return [res, tiesBegin, tiesEnd];
+}
+
+function updateTableR(values, id, isTwo) {
+    dataPrev = getRanks(values.prev, isTwo)[0];
+    ranks = getRanks(values.cur, isTwo);
+    dataCur = ranks[0];
+    var col1, col2, col3, delta;
+    for (var value = 0; value < values.cur.length; value++) {
+        if (isDeleted(values.cur[value])) { // Don't register variation for [deleted]
+            col3 = "N/A";
+        } else {
+            delta = "";
+            for (val in dataPrev) {
+                if (dataPrev[val][0] == values.cur[value][0]) {
+                    delta = dataPrev[val][1] - dataCur[value][1];
+                    break;
+                }
+            }
+            if (delta === "") {
+                col3 = "New";
+            } else if (delta === 0) {
+                col3 = "=";
+            } else if (delta > 0) {
+                col3 = "<span class='green'>+ " + delta + "</span>";
+            } else {
+                col3 = "<span class='red'>- " + -delta + "</span>";
+            }
+        }
+        var curCol = 2;
+        if (isTwo) {
+            col1 = values.cur[value][0] + " and " + values.cur[value][1];
+            col2 = values.cur[value][2];
+            curCol++;
+        } else {
+            col1 = values.cur[value][0];
+            col2 = values.cur[value][1];
+        }
+        while (curCol < values.cur[value].length) { // Append remaining columns if necessary
+            col2 += "</td><td>" + values.cur[value][curCol];
+            curCol++;
+        }
+        border = " class='inter-border ";
+        if (~ranks[1].indexOf(value + 1)) {
+            border += "double-border-top ";
+        }
+        if (~ranks[2].indexOf(value + 1)) {
+            border += "double-border-bottom";
+        }
+        border += "'";
+        if (col1 !== "[deleted]") {
+            col1 = "<a href='http://reddit.com/u/" + col1 + "'>" + col1 + "</a>";
+        } else {
+            col1 = "Total for [deleted] users (not updated retroactively)";
+        }
+        $("#" + id).append("<tr" + border + "><td class='text-center'><b>" + dataCur[value][1] + "</b></td><td>" + col1 + "</td><td>" + col2 + "</td><td><b>" + col3 + "</b></td></tr>")
     }
 }
 
