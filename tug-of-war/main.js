@@ -51,8 +51,8 @@ $(function () {
         updateValue(data.counts.avg, "avg-count", true, 2);
         updateValue(data.counts.med, "med-count", true);
         
-        updateTable(data.counts.mostCommon, "most-common-counts");
-        updateTable(data.counts.leastCommon, "least-common-counts");
+        updateTable(data.counts.mostCommon, "most-common-counts", false, false, true);
+        updateTable(data.counts.leastCommon, "least-common-counts", false, false, true);
         
         updateValue(data.replyTime.started, "started", true, 2, true);
         updateValue(data.replyTime.fastest, "fastest-count", true, 2, true);
@@ -81,8 +81,8 @@ $(function () {
         updateValue(data.gets.avg, "avg-get", true, 2);
         updateValue(data.gets.med, "med-get", true);
         
-        updateTable(data.gets.mostCommon, "most-common-gets");
-        updateTable(data.gets.leastCommon, "least-common-gets");
+        updateTable(data.gets.mostCommon, "most-common-gets", false, false, true);
+        updateTable(data.gets.leastCommon, "least-common-gets", false, false, true);
         
         updateValue(data.gets.fastest.time, "fastest-get", true, 2, true);
         $("#fastest-get-direction").html(data.gets.fastest.begin < data.gets.fastest.end ? "up" : "down")
@@ -190,20 +190,20 @@ function hasSameValue(a, b, isTwo) {
     return a[1] === b[1] && (!isTwo || isTwo && a[2] === b[2]);
 }
 
-function updateTable(values, id, isTwo, hasRanking) {
+function updateTable(values, id, isTwo, hasRanking, canValueChange) {
     if (hasRanking) {
         updateTableR(values, id, isTwo)
     } else {
-        updateTableNR(values, id, isTwo)
+        updateTableNR(values, id, isTwo, canValueChange)
     }
 }
 
-function updateTableNR(values, id, isTwo) {
+function updateTableNR(values, id, isTwo, canValueChange) {
     var col1, col2, col3;
     for (var value = 0; value < values.cur.length; value++) {
         col3 = "New";
         for (oldValue in values.prev) { // Remove "New" if it was already present
-            if (values.cur[value][0] === values.prev[oldValue][0] && hasSameValue(values.cur[value], values.prev[oldValue], isTwo)) {
+            if (values.cur[value][0] === values.prev[oldValue][0] && (canValueChange || hasSameValue(values.cur[value], values.prev[oldValue], isTwo))) {
                 col3 = "";
                 break;
             }
