@@ -308,21 +308,6 @@ function updateTableR(values, id, isTwo) {
     }
 }
 
-function scroll() {
-    var height = $('#navbar').height();
-    if ($(this).scrollTop() + height + 10 > $("#charts").position().top) {
-        $('#upgrades').css({
-            "position": "fixed",
-            "top": height + 10,
-            "right": 0});
-    } else {
-        $('#upgrades').css({
-            "position": "relative",
-            "top": "auto",
-            "right": "auto"});
-    }
-}
-
 function tooltip(id, title, show) {
     show = (typeof show === 'undefined' ? true : show);
     $("#" + id).attr("title", title).tooltip('fixTitle');
@@ -349,5 +334,3 @@ function format(nStr) {
     }
     return x1 + x2;
 }
-
-$(window).scroll(scroll);
