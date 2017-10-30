@@ -57,7 +57,9 @@
             Please note that clearing your browser's local storage (for example, with programs such as CCleaner) will erase your presets.<br/>
             <input type="text" id="presetSave" placeholder="Enter preset name">
             <span class="left-pad"></span>
-            <button class="btn btn-default" id="btn-save">Save</button></br>
+            <button class="btn btn-default" id="btn-save">Save</button>
+            <button class="btn btn-default" id="btn-import">Import</button>
+            <button class="btn btn-default" id="btn-export">Export</button></br>
             <select id="presetEdit">
                 <option value="" disabled selected>Select an existing preset</option>
                 <option value="default">Standard</option>
@@ -165,10 +167,11 @@ Always: Runs will be simulated as if they were all quest runs (adding quest ches
             </div>
         </div>
     </div>
+    
+    
+    
     <div id="results" class="modal fade" role="dialog">
         <div class="modal-dialog">
-
-            <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -201,7 +204,44 @@ Always: Runs will be simulated as if they were all quest runs (adding quest ches
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
-
+        </div>
+    </div>
+    
+    
+    
+    <div id="export" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Export preset</h4>
+                </div>
+                <div class="modal-body">
+                    Here is your preset code:<br/>
+                    <textarea id="export-code" class="full-size" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    <div id="import" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Import preset</h4>
+                </div>
+                <div class="modal-body">
+                    Paste here your preset code:<br/>
+                    <textarea id="import-code" class="full-size"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <div id="import-error" style="display: none" class="red bottom15"><b>Error:</b> invalid preset code. Please try again <span id="import-error-text"></span></div>
+                    <button type="button" id="do-import" class="btn btn-default btn-center">Import</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -209,8 +249,11 @@ Always: Runs will be simulated as if they were all quest runs (adding quest ches
 
 <script src="../jquery.min.js"></script>
 <script src="js/random.min.js"></script>
-<script type="text/javascript" src="main.js"></script>
+<script src="js/base64.min.js"></script>
+<script src="js/inflate.js"></script>
+<script src="js/deflate.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="main.js"></script>
 </body>
 </head>
 </html>

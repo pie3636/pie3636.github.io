@@ -59,11 +59,6 @@ itemObjs = {
     "Red Hand":             new Item(151)
 }
 
-itemCount = 0;
-for (var i in itemObjs) {
-    itemCount++;
-}
-
 names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon’s Staff", "Solomon’s Key", "Excalibur", "Aegis", "Caduceus", "Philosopher’s Stone", "Hydra’s Poison Arrow", "Durandal", "Mistilteinn", "A King's Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour", "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor+", "Awakening Sword+", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate", "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand"];
 
 caps = [20, Infinity, Infinity, 30, 20, Infinity, 25, Infinity, 100, Infinity, 300, 10, 300, 10, 300, 10, 300, 10, 600, Infinity, 10, 105, 105, 100, Infinity, 12, 3, 45, 45, 15000, 15000, 15000, 15000, 10, 70, 70, 30000, 30, 30, 16, 31, 5, 701, 401, 76, 85, Infinity, 50000, 16, 16, 11, 30, 151, 151];
@@ -74,21 +69,10 @@ droprank2 = [9, 2, 1.5, 11, 10, 1.9, 11, 5, 6, 9, 17, 14, 11, 9, 8, 3, 9, 2, 11,
 
 function centerModal() {
     $(this).show();
-    var $dialog = $(this).find(".modal-dialog").css("margin-top", offset);;
-    var offset = ($(window).height() - $dialog.height()) / 2;
+    var $dialog = $(this).find(".modal-dialog").css("margin-top", offset);
+    var offset = Math.max(($(window).height() - $dialog.height()) / 2, 30);
     $dialog.css("margin-top", offset);
 }
-
-/*
-Item levels
- presetSave
- btnSave
-presetEdit
-btnLoad
-btnRemove
- 
-res-sort = avg/proba
-*/
 
 function acquireItem(curItems, id, noBuy) {
     if (noBuy) {
@@ -1159,7 +1143,6 @@ function mainLoop() {
 }
 
 function debugInit() {
-    items = new Array(itemCount).fill(0);
     j = 0;
     for (var i in itemObjs) {
         items[j] = Number($("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, ""))[0].value);
@@ -1191,6 +1174,9 @@ function debugCur() {
 }
 
 function displayResults() {
+    if (presetLoading) { // Loading a preset will trigger radio button clicks and call this function
+        return;
+    }
     sortType = $("input[name='res-sort']:checked")[0].id;
     $("#res-table").html("");
     $("#simulated-count").html(steps);
@@ -1229,6 +1215,84 @@ function runSimulation() {
     setTimeout(mainLoop, 10);
 }
 
+function openImport() {
+    $("#import-code")[0].value = "";
+    $("#import-error").hide();
+    $("#import").modal();
+}
+
+function importPreset() {
+    try {
+        presetLoading = true;
+        toImport = JSON.parse(RawDeflate.inflate(Base64.decode($("#import-code")[0].value)));
+        items = toImport[0];
+        var j = 0;
+        for (i in itemObjs) { // Update item levels in GUI
+            $("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, ""))[0].value = items[j];
+            j++;
+        }
+        $("#" + toImport[1]).prop("checked", true).trigger("click");
+        $("#resets")[0].value = toImport[2];
+        $("#" + toImport[3]).prop("checked", true).trigger("click");
+        $("#single-floor")[0].value = toImport[4];
+        $("#reset-chests").prop("checked", toImport[5]);
+        $("#floor-chests").prop("checked", toImport[6]);
+        $("#floor-min")[0].value = toImport[7];
+        $("#floor-max")[0].value = toImport[8];
+        $("#" + toImport[9]).prop("checked", true).trigger("click");
+        for (var i = 8; i < 15; i++) {
+            $("#" + i).value = toImport[i + 2];
+        }
+        $("#" + toImport[18]).prop("checked", true).trigger("click");
+        
+        $("#import").modal("hide");
+        presetLoading = false;
+    } catch (e) {
+        $("#import-error").show();
+        $("#import-error-text").html("(" + e.message + ")");
+        console.error(e);
+        presetLoading = false;
+    }
+}
+
+function exportPreset() {
+    toExport = [
+        items, 
+        $("input[name='is-full-run']:checked")[0].id,
+        Number($("#resets")[0].value),
+        $("input[name='run-time']:checked")[0].id,
+        Number($("#single-floor")[0].value),
+        $("#reset-chests")[0].checked,
+        $("#floor-chests")[0].checked,
+        Number($("#floor-min")[0].value),
+        Number($("#floor-max")[0].value),
+        $("input[name='quest']:checked")[0].id,
+        Number($("#8min")[0].value),
+        Number($("#9min")[0].value),
+        Number($("#10min")[0].value),
+        Number($("#11min")[0].value),
+        Number($("#12min")[0].value),
+        Number($("#13min")[0].value),
+        Number($("#14min")[0].value),
+        Number($("#15min")[0].value),
+        $("input[name='res-sort']:checked")[0].id,
+    ];
+    $("#export-code").html(Base64.encode(RawDeflate.deflate(JSON.stringify(toExport))));
+    $("#export").modal();
+}
+
+function savePreset() {
+    // TODO
+}
+
+function loadPreset() {
+    // TODO
+}
+
+function removePreset() {
+    // TODO
+}
+
 $(function () {
     $('[data-toggle="tooltip"]').tooltip();
     $("#version").append("1.7.4");
@@ -1243,13 +1307,40 @@ $(function () {
     random45Bool = Random.bool(.45);
     random70Bool = Random.bool(.7);
     
+    itemCount = 0;
+    
     for (var i in itemObjs) {
-        itemObjs[i].value = 0; // TODO
+        itemCount++;
+    }
+    
+    presetLoading = false;
+    
+    items = new Array(itemCount).fill(0); // TODO   
+    
+    for (var i in itemObjs) {
+        itemObjs[i].value = 0; // TODO, also merge with loop under
     }
 
     for (var i in itemObjs) {
         $("#itemLevels").append("<tr><td>" + i + "</td><td><input type='number' id='" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, "") + "' name='quantity' min='0' max='" + itemObjs[i].cap + "' value='" + itemObjs[i].value + "'></td><tr/>");
     }
+    
+    $('.modal').on('show.bs.modal', centerModal);
+    $("#export").on('shown.bs.modal', function(e) {
+        $("#export-code").select();
+    })
+    $("#import").on('shown.bs.modal', function(e) {
+        $("#import-code").focus();
+    })
+    $(window).on("resize", function() {
+        $('.modal:visible').each(centerModal);
+    });
+    
+    $(".btn").click(function() { // Unfocus buttons
+        this.blur();
+    });
+    
+    // Event listeners
     
     $("#full-run").click(function() {
         $("#run-form").show();
@@ -1268,19 +1359,15 @@ $(function () {
     $("#normal-quest, #always-quest").click(function() {
         $("#quest-form").show();
     });
-
-    $(".btn").click(function() {
-        this.blur();} // Unfocus buttons
-    );
-    
-    $('.modal').on('show.bs.modal', centerModal);
-    $(window).on("resize", function() {
-        $('.modal:visible').each(centerModal);
-    });
     
     $("#simulate").click(runSimulation);
-    
     $("#prob, #avg").click(displayResults);
+    $("#btn-save").click(savePreset);
+    $("#btn-import").click(openImport);
+    $("#btn-export").click(exportPreset);
+    $("#do-import").click(importPreset);
+    $("#btn-load").click(loadPreset);
+    $("#btn-remove").click(removePreset);
     
     //debugCur();
 });
