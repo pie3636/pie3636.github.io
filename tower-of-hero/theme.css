@@ -1,0 +1,125 @@
+body {
+    padding-top: 60px; /* Navbar */
+}
+
+hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-top: 1px solid #ccc;
+}
+
+br {
+    margin-bottom: 10px;
+}
+
+input[type="number"] {
+    width: 100px;
+}
+
+td {
+    vertical-align: middle !important;
+    padding: 2px !important;
+}
+
+/* Make modal scrollable */
+.modal .modal-body {
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.modal-dialog {
+    margin-top: 0px !important;
+}
+
+.col-left {
+    padding-right: 20px !important;
+    border-right: 1px solid #ccc !important;
+}
+
+/* Override default setting (bold) */
+label {
+    font-weight: normal;
+}
+
+/* Align text vertically */
+input[type="radio"],input[type="checkbox"],.valign {
+    vertical-align: -1px;
+}
+
+/* Remove default background gradient */
+.btn {
+    background-image: none;
+    padding: 3px 8px;
+}
+
+/* Not too sure why I ended up needing this */
+.navbar-brand {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    text-align: center;
+    margin:0 auto;
+}
+
+/* ============ Tooltips ============ */
+.no-padding {
+    padding: 0;
+}
+
+.tooltip-text {
+    font-weight: bold;
+    border-bottom: 1px dotted #000;
+}
+
+span.tooltip-left + div.tooltip {
+    text-align: left;
+}
+
+.tooltip-inner {
+    max-width: 300px;
+    width: 300px; /* If max-width does not work, try using width instead */
+    white-space: pre-wrap;
+}
+/* ================================== */
+
+/* ============ Used a bit everywhere ============ */
+.left-pad {
+    padding-left: 15px;
+}
+
+.green {
+    color: green;
+}
+
+.red {
+    color: darkred;
+}
+
+.top3 {
+    margin-top:3px;
+}
+
+.top6 {
+    margin-top:6px;
+}
+
+.top15 {
+    margin-top: 15px;
+}
+
+.min50 {
+    display:inline-block;
+    width: 50px;
+}
+
+.br-high {
+    margin-bottom: 20px;
+}
+
+.panel-danger {
+  background-image:none;
+  border-color: #dca7a7;
+  color: white;
+  background-color: #CB3D4A;
+}
+/* =============================================== */
