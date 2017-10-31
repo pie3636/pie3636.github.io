@@ -1,71 +1,81 @@
-function Item(cap) {
+function Item(id, cap, droprank, droprank2) {
+    this.id = id;
     this.cap = cap;
+    this.droprank = droprank;
+    this.droprank2 = droprank2;
 }
 
 itemObjs = {
-    "Lance":                new Item(20),
-    "Earth Armour":         new Item(Infinity),
-    "Claymore":             new Item(Infinity),
-    "Wing Boots":           new Item(30),
-    "Training Book":        new Item(20),
-    "Golden Gloves":        new Item(Infinity),
-    "Rapier":               new Item(25),
-    "Halberd":              new Item(Infinity),
-    "Red Elixir":           new Item(100),
-    "Gold Vessels":         new Item(Infinity),
-    "Blue Elixir":          new Item(300),
-    "Green Elixir":         new Item(10),
-    "Coat of Gold":         new Item(300),
-    "Golden Rod":           new Item(10),
-    "Solomon’s Staff":      new Item(300),
-    "Solomon’s Key":        new Item(10),
-    "Excalibur":            new Item(300),
-    "Aegis":                new Item(10),
-    "Caduceus":             new Item(600),
-    "Philosopher’s Stone":  new Item(Infinity),
-    "Hydra’s Poison Arrow": new Item(10),
-    "Durandal":             new Item(105),
-    "Mistilteinn":          new Item(105),
-    "A King's Crown":       new Item(100),
-    "Gungnir":              new Item(Infinity),
-    "Lævateinn":            new Item(12),
-    "Gáe Bolg":             new Item(3),
-    "Mithril Sword":        new Item(45),
-    "Mithril Armour":       new Item(45),
-    "Full Plate":           new Item(15000),
-    "Flamberge":            new Item(15000),
-    "Full Helmet":          new Item(15000),
-    "Tomahawk":             new Item(15000),
-    "Summoning letter":     new Item(10),
-    "Awakening Armor":      new Item(70),
-    "Awakening Sword":      new Item(70),
-    "Gold Box":             new Item(30000),
-    "Awakening Armor+1":    new Item(30),
-    "Awakening Sword+1":    new Item(30),
-    "Guild Hat":            new Item(16),
-    "Mjolnir":              new Item(31),
-    "Dark Knight Armor":    new Item(5),
-    "Gate":                 new Item(701),
-    "Dark Gate":            new Item(401),
-    "Magic Lamp":           new Item(76),
-    "Dark Boots":           new Item(85),
-    "Fire Sword":           new Item(Infinity),
-    "Freyr's Sword":        new Item(50000),
-    "Flame Pot":            new Item(16),
-    "Ice Pot":              new Item(16),
-    "Golden Pot":           new Item(11),
-    "Black Essence":        new Item(30),
-    "Demon Eye":            new Item(151),
-    "Red Hand":             new Item(151)
+    //                               id  cap       rank  rank2
+    "Lance":                new Item(0,  20,       1,    9  ),
+    "Earth Armour":         new Item(1,  Infinity, 1,    2  ),
+    "Claymore":             new Item(2,  Infinity, 0.05, 1.5),
+    "Wing Boots":           new Item(3,  30,       1,    11 ),
+    "Training Book":        new Item(4,  20,       3,    10 ),
+    "Golden Gloves":        new Item(5,  Infinity, 2,    1.9),
+    "Rapier":               new Item(6,  25,       1,    11 ),
+    "Halberd":              new Item(7,  Infinity, 3,    5  ),
+    "Red Elixir":           new Item(8,  100,      2,    6  ),
+    "Gold Vessels":         new Item(9,  Infinity, 2,    9  ),
+    "Blue Elixir":          new Item(10, 300,      7,    17 ),
+    "Green Elixir":         new Item(11, 10,       7,    14 ),
+    "Coat of Gold":         new Item(12, 300,      5,    11 ),
+    "Golden Rod":           new Item(13, 10,       5,    9  ),
+    "Solomon’s Staff":      new Item(14, 300,      3,    8  ),
+    "Solomon’s Key":        new Item(15, 10,       4,    3  ),
+    "Excalibur":            new Item(16, 300,      4,    9  ),
+    "Aegis":                new Item(17, 10,       3,    2  ),
+    "Caduceus":             new Item(18, 600,      4,    11 ),
+    "Philosopher’s Stone":  new Item(19, Infinity, 4,    3  ),
+    "Hydra’s Poison Arrow": new Item(20, 10,       5,    3  ),
+    "Durandal":             new Item(21, 105,      5,    30 ),
+    "Mistilteinn":          new Item(22, 105,      6,    32 ),
+    "A King's Crown":       new Item(23, 100,      30,   90 ),
+    "Gungnir":              new Item(24, Infinity, 5,    6  ),
+    "Lævateinn":            new Item(25, 12,       10,   50 ),
+    "Gáe Bolg":             new Item(26, 3,        50,   500),
+    "Mithril Sword":        new Item(27, 45,       7,    45 ),
+    "Mithril Armour":       new Item(28, 45,       5,    28 ),
+    "Full Plate":           new Item(29, 15000,    7.5,  5.5),
+    "Flamberge":            new Item(30, 15000,    6.5,  5.5),
+    "Full Helmet":          new Item(31, 15000,    11,   15 ),
+    "Tomahawk":             new Item(32, 15000,    10,   15 ),
+    "Summoning letter":     new Item(33, 10,       7,    10 ),
+    "Awakening Armor":      new Item(34, 70,       10,   67 ),
+    "Awakening Sword":      new Item(35, 70,       10,   67 ),
+    "Gold Box":             new Item(36, 30000,    0.9,  2  ),
+    "Awakening Armor+":     new Item(37, 30,       12,   70 ),
+    "Awakening Sword+":     new Item(38, 30,       12,   70 ),
+    "Guild Hat":            new Item(39, 16,       6,    26 ),
+    "Mjolnir":              new Item(40, 31,       12,   12 ),
+    "Dark Knight Armor":    new Item(41, 5,        15,   13 ),
+    "Gate":                 new Item(42, 701,      9,    7  ),
+    "Dark Gate":            new Item(43, 401,      10,   8  ),
+    "Magic Lamp":           new Item(44, 76,       7,    10 ),
+    "Dark Boots":           new Item(45, 85,       8.7,  5  ),
+    "Fire Sword":           new Item(46, Infinity, 999,  999),
+    "Freyr's Sword":        new Item(47, 50000,    20,   20 ),
+    "Flame Pot":            new Item(48, 16,       7,    25 ),
+    "Ice Pot":              new Item(49, 16,       7,    25 ),
+    "Golden Pot":           new Item(50, 11,       7,    25 ),
+    "Black Essence":        new Item(51, 30,       6,    30 ),
+    "Demon Eye":            new Item(52, 151,      12,   12 ),
+    "Red Hand":             new Item(53, 151,      30,   90 )
 }
 
 names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon’s Staff", "Solomon’s Key", "Excalibur", "Aegis", "Caduceus", "Philosopher’s Stone", "Hydra’s Poison Arrow", "Durandal", "Mistilteinn", "A King's Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour", "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor+", "Awakening Sword+", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate", "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand"];
 
-caps = [20, Infinity, Infinity, 30, 20, Infinity, 25, Infinity, 100, Infinity, 300, 10, 300, 10, 300, 10, 300, 10, 600, Infinity, 10, 105, 105, 100, Infinity, 12, 3, 45, 45, 15000, 15000, 15000, 15000, 10, 70, 70, 30000, 30, 30, 16, 31, 5, 701, 401, 76, 85, Infinity, 50000, 16, 16, 11, 30, 151, 151];
+caps = names.map(function(index) {
+    return itemObjs[index].cap;
+});
 
-droprank = [1, 1, 0.05, 1, 3, 2, 1, 3, 2, 2, 7, 7, 5, 5, 3, 4, 4, 3, 4, 4, 5, 5, 6, 30, 5, 10, 50, 7, 5, 7.5, 6.5, 11, 10, 7, 10, 10, 0.9, 12, 12, 6, 12, 15, 9, 10, 7, 8.7, 999, 20, 7, 7, 7, 6, 12, 30];
+droprank = names.map(function(index) {
+    return itemObjs[index].droprank;
+});
 
-droprank2 = [9, 2, 1.5, 11, 10, 1.9, 11, 5, 6, 9, 17, 14, 11, 9, 8, 3, 9, 2, 11, 3, 3, 30, 32, 90, 6, 50, 500, 45, 28, 5.5, 5.5, 15, 15, 10, 67, 67, 2, 70, 70, 26, 12, 13, 7, 8, 10, 5, 999, 20, 25, 25, 25, 30, 12, 90];
+droprank2 = names.map(function(index) {
+    return itemObjs[index].droprank2;
+});
 
 function centerModal() {
     $(this).show();
@@ -1181,19 +1191,29 @@ function displayResults() {
     $("#res-table").html("");
     $("#simulated-count").html(steps);
     $("#simulated-item").html(gainedLevels.reduce((a, b) => a + b, 0).toFixed(2));
+    var j;
     if (sortType === "avg") {
+        j = 0;
         tabs = doubleRefSort(gainedTimes, names, gainedLevels);
-        for (var i = 0; i < itemCount; i++) {
-            $("#res-table").append("<tr><td>" + tabs[1][i] + "</td><td>" + tabs[0][i].toFixed(5) + "%</td><td>" + tabs[2][i].toFixed(2) + "</td></tr>");
-        }
     } else if (sortType === "prob") {
+        j = 2;
         tabs = doubleRefSort(gainedLevels, names, gainedTimes);
-        for (var i = 0; i < itemCount; i++) {
-            $("#res-table").append("<tr><td>" + tabs[1][i] + "</td><td>" + tabs[2][i].toFixed(5) + "%</td><td>" + tabs[0][i].toFixed(2) + "</td></tr>");
-        }
     } else {
         $('#results').modal('hide');
         $("#err-wrong-sort").show();
+        return;
+    }
+    for (var i = 0; i < itemCount; i++) {
+        var str = "<tr><td>" + tabs[1][i] + "</td><td>" + curItems[itemObjs[tabs[1][i]].id] + "</td><td>";
+        if (!isntMaxed(curItems, itemObjs[tabs[1][i]].id)) {
+            str += "<span class='red'>Capped</span></td><td>";
+        } else if (tabs[1][i] === "Fire Sword") {
+            str += "<span class='red'>Shop only</span></td><td>";
+        } else {
+            str += tabs[j][i].toFixed(5) + "%</td><td>+" + tabs[2 - j][i].toFixed(2);
+        }
+        str += "</td></tr>";
+        $("#res-table").append(str);
     }
 }
 

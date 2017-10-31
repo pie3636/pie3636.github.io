@@ -53,7 +53,7 @@ textarea[readonly] {
 
 /* ============ Tables ============ */
 th {
-    padding: 8px 8px 8px 0px; /* Fix horizontal alignment */
+    padding: 8px 8px 8px 2px !important; /* Fix horizontal alignment */
 }
 
 td {
