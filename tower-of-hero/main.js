@@ -1256,6 +1256,11 @@ function importPreset() {
 }
 
 function exportPreset() {
+    j = 0;
+    for (var i in itemObjs) {
+        items[j] = Number($("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, ""))[0].value);
+        j++;
+    }
     toExport = [
         items, 
         $("input[name='is-full-run']:checked")[0].id,
