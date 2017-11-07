@@ -100,6 +100,7 @@ $(function () {
         updateValue(data.gets.longest.end, "longest-get-end");
         updateValue(data.gets.avgLen, "avg-get-len", true, 2);
         updateValue(data.gets.medLen, "med-get-len", true);
+        updateValue(data.gets.lastLen, "last-get-len");
         updateValue(data.getSign.maxUpStreak.length, "max-up-get-streak", true);
         updateValue(data.getSign.maxUpStreak.begin, "max-up-get-streak-begin");
         updateValue(data.getSign.maxUpStreak.end, "max-up-get-streak-end");

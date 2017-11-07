@@ -51,14 +51,7 @@
         <button type="button" class="close" id="updateAnnouncementClose">x</button>
         <b>Update</b> (<span id="updateAnnouncementVersion"></span>):<br />
         <!--<hr style="margin-top: 5px; margin-bottom: 5px"/>-->
-        - Changelog pop-up (this one!) will now be dismissed until next version when closed<br />
-        - Added increasing/decreasing get streaks, and fixed increasing/decreasing count streaks stats that were wrong<br />
-        - Ties are now clearly displayed in ranking tables, and are taken into account when calculating ranking variations<br />
-        <hr style="margin-top: 5px; margin-bottom: 5px"/>
-        From earlier:<br />
-        - Added users with the lowest median reply time<br />
-        - Added ratio to main counting thread<br />
-        - Optimized layout and made things hopefully more readable overall<br /><br />
+        - Added statistic: last get length in comparison to other gets<br /><br />
         You can also check the <a href="#" class="alert-link" onclick="changeTab('changelog')">changelog</a> for more information.
     </div>
     
@@ -343,6 +336,8 @@
                     The average get length is <b><span id="avg-get-len"></span><span id="avg-get-len-variation"></span> comments</b>.
                     <br /><br />
                     The median get length is <b><span id="med-get-len"></span></span><span id="med-get-len-variation"></span> comments</b>.
+                    <br /><br />
+                    The last get was longer than <b><span id="last-get-len"></span></b> of other gets.
                 </div>
             </div>
         </div>
@@ -519,7 +514,9 @@
     
     <div id="changelog" style="display:none; margin-left: 5px; margin-right: 5px">
         <div class="col-md-12">
-            <h5>28 Sep 2017:</h5>
+            <h5>07 Nov 2017:</h5>
+            - Added statistic: last get length in comparison to other gets<br />
+            <hr/><h5>28 Sep 2017:</h5>
             - Ties are now clearly displayed in ranking tables, and are taken into account when calculating ranking variations<br />
             <hr/><h5>27 Sep 2017:</h5>
             - Changelog pop-up will now be dismissed until next version when closed<br />
