@@ -13,7 +13,8 @@ data = {
     comment: "- Last get was the longest in the entire history of the Tug of War, with 4287 comments\n\
               - We are still gaining ground on the main thread, although progressing at a slightly lower rate\n\
               - We have had the first negative comments in over 6 months\n\
-              - An astonishing 55 new counters joined us in the last Tug of War thread. Welcome to them!",
+              - An astonishing 55 new counters joined us in the last Tug of War thread. Welcome to them!\n\
+              - Congratulations to /u/Urbul for reaching the top 3!",
     counts: {
         total:       { cur: 129340, prev: 125053  },
         ofMain:      { cur: 129340/2020309*100, prev: 125053/2014113*100, precision: 2 },
