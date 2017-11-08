@@ -51,7 +51,10 @@
         <button type="button" class="close" id="updateAnnouncementClose">x</button>
         <b>Update</b> (<span id="updateAnnouncementVersion"></span>):<br />
         <!--<hr style="margin-top: 5px; margin-bottom: 5px"/>-->
-        - Added statistic: last get length in comparison to other gets<br /><br />
+        - Added statistic: last get length in comparison to other gets<br />
+        - Added chart: cumulative contribution of top users<br />
+        - Added chart: top teams by score<br />
+        - User-based charts now display stat variations in addition to rank variations<br /><br />
         You can also check the <a href="#" class="alert-link" onclick="changeTab('changelog')">changelog</a> for more information.
     </div>
     
@@ -97,6 +100,12 @@
             <div class="panel-body">
                 <h1 class="text-center">Frequency of 1- to 60-seconds replies</h1>
                 <a target="_blank" id="charts-link-replyTime"><img id="charts-img-replyTime" class="large-img" title="Percentage of X-seconds replies amongst all counts (click to open in a new tab)"></img></a>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <h1 class="text-center">Cumulative contribution of top users</h1>
+                <a target="_blank" id="charts-link-powerUsers"><img id="charts-img-powerUsers" class="large-img" title="Percentage of all comments posted by top X users (click to open in a new tab)"></img></a>
             </div>
         </div>
     </div>
@@ -457,6 +466,24 @@
                 </table>
             </div>
         </div>
+        <div class="panel panel-info panel-body">
+            <h2 class="text-center">Teams</h2>
+            <div>
+                <h4 class="text-center">Highest scoring teams</h4>
+                Here are the 20 pairs of users who have counted together the most often. The number of points a team has is the number of comments posted by this team that have been replied to by the other team member.<br /><br />
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>The users ...</th>
+                            <th>have shared ... counts</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="top-team-score-_and"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
     
     
@@ -486,9 +513,9 @@
         <div class="col-md-12">
         <dl class="dl-horizontal">
             <dt>How does it work?</dt>
-            <dd>Regularly (usually when a get is reached), I fetch all the recent count data from Reddit using a small script that I wrote. After making sure everything is right, I then use another script to generate the statistics, that I simply paste into a file. This website then reads this data and displays the statistics in a more aesthetically pleasing way.</dd>
+            <dd>Regularly (usually when a get is reached), I fetch all the recent count data from Reddit using a small script that I wrote. After making sure everything is right, I then use another script to generate the statistics, that I simply paste into a file. This website then reads this data and displays the statistics in a more aesthetically pleasing way. If you want to see what the raw stat file looks like, take a look <a href="data.js">here</a>.</dd>
             <dt>What's next?</dt>
-            <dd>I plan on adding a lot more statistics over the next few weeks. In particular, more user-based stats (who participated in most threads, etc). Now that I already have the complete dataset, it is easy to generate those statistics. I also plan on making the site more easy to maintain, although that shouldn't affect the existing design. I might also make the graphs dynamic, though that takes some work.</dd>
+            <dd>I plan on adding a lot more statistics soon. In particular, more user-based stats (who participated in most threads, etc). Now that I already have the complete dataset, it is easy to generate those statistics. I also plan on making the site more easy to maintain, although that shouldn't affect the existing design. I might also make the graphs dynamic, however doing that will take a lot of work and time, so don't expect it anytime soon.</dd>
             <dt>Is the data reliable?</dt>
             <dd>All the counts were gathered automatically, and then checked, so this isn't a source of error. However, some human error could be found in the data. For example, it sometimes happened that someone missed a count or counted twice the same number, and it wasn't always noticed. I could unfortunately not leave that as is, due to how the scripts I'm using work, and I had to manually "fix" a few counts here and there, by changing a digit here and there, or sometimes adding or removing a count. This is why if you examine the data carefully, you might sometimes find some discrepancies. I did my best to keep that edition to a minimum and do it in the most coherent way possible, but if you notice that something looks wrong, feel free to message me and I will see if I can change it.</dd>
             <dt>No graph captions?</dt>
@@ -514,7 +541,11 @@
     
     <div id="changelog" style="display:none; margin-left: 5px; margin-right: 5px">
         <div class="col-md-12">
-            <h5>07 Nov 2017:</h5>
+            <h5>08 Nov 2017:</h5>
+            - Added chart: cumulative contribution of top users<br />
+            - Added chart: top teams by score<br />
+            - User-based charts now display stat variations in addition to rank variations<br />
+            <hr/><h5>07 Nov 2017:</h5>
             - Added statistic: last get length in comparison to other gets<br />
             <hr/><h5>28 Sep 2017:</h5>
             - Ties are now clearly displayed in ranking tables, and are taken into account when calculating ranking variations<br />

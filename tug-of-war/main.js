@@ -51,8 +51,8 @@ $(function () {
         updateValue(data.counts.avg, "avg-count", true, 2);
         updateValue(data.counts.med, "med-count", true);
         
-        updateTable(data.counts.mostCommon, "most-common-counts", false, false, true);
-        updateTable(data.counts.leastCommon, "least-common-counts", false, false, true);
+        updateTableNR(data.counts.mostCommon, "most-common-counts", false, true);
+        updateTableNR(data.counts.leastCommon, "least-common-counts", false, true);
         
         updateValue(data.replyTime.started, "started", true, 2, true);
         updateValue(data.replyTime.fastest, "fastest-count", true, 2, true);
@@ -81,8 +81,8 @@ $(function () {
         updateValue(data.gets.avg, "avg-get", true, 2);
         updateValue(data.gets.med, "med-get", true);
         
-        updateTable(data.gets.mostCommon, "most-common-gets", false, false, true);
-        updateTable(data.gets.leastCommon, "least-common-gets", false, false, true);
+        updateTableNR(data.gets.mostCommon, "most-common-gets", false, true);
+        updateTableNR(data.gets.leastCommon, "least-common-gets", false, true);
         
         updateValue(data.gets.fastest.time, "fastest-get", true, 2, true);
         $("#fastest-get-direction").html(data.gets.fastest.begin < data.gets.fastest.end ? "up" : "down")
@@ -118,8 +118,8 @@ $(function () {
         updateValue(data.getSign.maxPosStreak, "max-pos-get-streak", true);
         updateValue(data.getSign.maxNegStreak, "max-neg-get-streak", true);
         
-        updateTable(data.oneStalemates, "one-stalemates");
-        updateTable(data.twoStalemates, "two-stalemates", true);
+        updateTableNR(data.oneStalemates, "one-stalemates");
+        updateTableNR(data.twoStalemates, "two-stalemates", true);
         
         updateValue(data.deletedCounts, "deleted-counts", true);
         updateValue(data.forks, "forks", true);
@@ -127,20 +127,24 @@ $(function () {
         updateValue(data.users.avg, "avg-usr", true, 2);
         updateValue(data.users.med, "med-usr", true);
         
-        updateTable(data.users.top20, "top-20-usrs", false, true);
-        updateTable(data.users.topGets, "top-usr-gets", false, true);
+        updateTableR(data.users.top20, "top-20-usrs");
+        updateTableR(data.users.topGets, "top-usr-gets");
+        
         updateValue(data.users.topGets.threshold, "usr-min-gets");
-        updateTable(data.users.topAssists, "top-usr-assists", false, true);
+        
+        updateTableR(data.users.topAssists, "top-usr-assists");
+        
         updateValue(data.users.topAssists.threshold, "usr-min-assists");
         
-        updateTable(data.users.fastest, "top-usr-speed", false, true);
+        updateTableR(data.users.fastest, "top-usr-speed");
+        
         updateValue(data.users.fastest.threshold, "usr-min-counts");
         
-        updateTable(data.users.fastestMed, "top-usr-med-speed", false, true);
+        updateTableR(data.users.fastestMed, "top-usr-med-speed");
+        updateTableR(data.users.speedScore, "top-usr-speed-score");
+        updateTableR(data.users.topTeamScore, "top-team-score-_and");
         
-        updateTable(data.users.speedScore, "top-usr-speed-score", false, true);
-        
-        updateTable(data.top100, "top-100-usrs", false, true);
+        updateTableR(data.top100, "top-100-usrs");
 });
 
 function updateValue(value, id, hasVariation, digits, hasUnit) {
@@ -191,14 +195,6 @@ function hasSameValue(a, b, isTwo) {
     return a[1] === b[1] && (!isTwo || isTwo && a[2] === b[2]);
 }
 
-function updateTable(values, id, isTwo, hasRanking, canValueChange) {
-    if (hasRanking) {
-        updateTableR(values, id, isTwo)
-    } else {
-        updateTableNR(values, id, isTwo, canValueChange)
-    }
-}
-
 function updateTableNR(values, id, isTwo, canValueChange) {
     var col1, col2, col3;
     for (var value = 0; value < values.cur.length; value++) {
@@ -226,12 +222,13 @@ function updateTableNR(values, id, isTwo, canValueChange) {
     }
 }
 
-function getRanks(values, isTwo) {
+// Returns [ranks with equal positions, tie begin indices, tie end indices]
+function getRanks(values) {
     var res = [], tiesBegin = [], tiesEnd = [], cnt = 0, ties = 0;
     for (var value = 0; value < values.length; value++) {
         cnt++;
         res.push([values[value][0], cnt].concat(values[value].slice(1)));
-        if (value != 0 && hasSameValue(values[value - 1], values[value], isTwo)) {
+        if (value != 0 && hasSameValue(values[value - 1], values[value], false)) {
             cnt--;
             if (ties == 0) {
                 tiesBegin.push(value);
@@ -253,16 +250,57 @@ function getRanks(values, isTwo) {
     return [res, tiesBegin, tiesEnd];
 }
 
-function updateTableR(values, id, isTwo) {
-    dataPrev = getRanks(values.prev, isTwo)[0];
-    ranks = getRanks(values.cur, isTwo);
+// Returns map[name, values], where values is a table
+function getValues(values) {
+    var map = {}, curCol = 2;
+    for (var value = 0; value < values.length; value++) {
+        map[values[value][0]] = [values[value][1]];
+        curCol = 2;
+        while (curCol < values[value].length) { // Append remaining columns if necessary
+            map[values[value][0]].push(values[value][curCol]);
+            curCol++;
+        }
+    }
+    return map;
+}
+
+function getVariationText(delta, forceNoEmpty) {
+    if (delta === 0) {
+        return forceNoEmpty ? "" : "=";
+    } else if (delta > 0) {
+        return "<span class='green'>+ " + delta + "</span>";
+    } else {
+        return "<span class='red'>- " + -delta + "</span>";
+    }
+}
+
+// Returns the variation text for any col2 stat
+function deltaFor(curVal, map, col) {
+    try {
+        var str = getVariationText(Math.floor(100 * (curVal[col - 1] - map[curVal[0]][col - 2])) / 100, true);
+        if (str !== "") {
+            return " <b>(" + str + ")</b>";
+        }
+        return str;
+    } catch (e if e instanceof TypeError) {
+        return "";
+    }
+}
+
+function updateTableR(values, id) {
+    ranks = getRanks(values.cur);
+    dataPrev = getRanks(values.prev)[0];
     dataCur = ranks[0];
+    oldDataMap = getValues(values.prev);
     var col1, col2, col3, delta;
     for (var value = 0; value < values.cur.length; value++) {
+        var curCol = 2;
+        col1 = values.cur[value][0];
+        col2 = values.cur[value][1];
+        delta = "";
         if (isDeleted(values.cur[value])) { // Don't register variation for [deleted]
             col3 = "N/A";
         } else {
-            delta = "";
             for (val in dataPrev) {
                 if (dataPrev[val][0] == values.cur[value][0]) {
                     delta = dataPrev[val][1] - dataCur[value][1];
@@ -271,25 +309,14 @@ function updateTableR(values, id, isTwo) {
             }
             if (delta === "") {
                 col3 = "New";
-            } else if (delta === 0) {
-                col3 = "=";
-            } else if (delta > 0) {
-                col3 = "<span class='green'>+ " + delta + "</span>";
             } else {
-                col3 = "<span class='red'>- " + -delta + "</span>";
+                col3 = getVariationText(delta);
             }
         }
-        var curCol = 2;
-        if (isTwo) {
-            col1 = values.cur[value][0] + " and " + values.cur[value][1];
-            col2 = values.cur[value][2];
-            curCol++;
-        } else {
-            col1 = values.cur[value][0];
-            col2 = values.cur[value][1];
-        }
+        col2 += deltaFor(values.cur[value], oldDataMap, curCol);
         while (curCol < values.cur[value].length) { // Append remaining columns if necessary
             col2 += "</td><td>" + values.cur[value][curCol];
+            col2 += deltaFor(values.cur[value], oldDataMap, curCol); // Get variation
             curCol++;
         }
         border = " class='inter-border ";
@@ -300,10 +327,14 @@ function updateTableR(values, id, isTwo) {
             border += "double-border-bottom";
         }
         border += "'";
-        if (col1 !== "[deleted]") {
-            col1 = "<a href='http://reddit.com/u/" + col1 + "'>" + col1 + "</a>";
+        if (~id.indexOf("_and")) {
+            col1 = col1.split(" ").map(x => x === "[deleted]" ? "[deleted]" : "<a href='http://reddit.com/u/" + x + "'>" + x + "</a>").join(" and ");
         } else {
-            col1 = "Total for [deleted] users (not updated retroactively)";
+            if (col1 !== "[deleted]") {
+                col1 = "<a href='http://reddit.com/u/" + col1 + "'>" + col1 + "</a>";
+            } else {
+                col1 = "Total for [deleted] users (not updated retroactively)";
+            }
         }
         $("#" + id).append("<tr" + border + "><td class='text-center'><b>" + dataCur[value][1] + "</b></td><td>" + col1 + "</td><td>" + col2 + "</td><td><b>" + col3 + "</b></td></tr>")
     }
