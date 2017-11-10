@@ -230,7 +230,6 @@ function format(nStr) {
 }
 
 $(document).ready(function() {
-    console.log("nojn");
     $("#loading").remove();
     currentTab = "charts";
     changeTab("charts");

@@ -96,7 +96,7 @@ function acquireItem(curItems, id, noBuy) {
 }
 
 function isntMaxed(curItems, id) {
-    return caps[id] == 0 || curItems[id] != caps[id];
+    return caps[id] == 0 || curItems[id] < caps[id];
 }
 
 function randomRangeInt(min, max) {
