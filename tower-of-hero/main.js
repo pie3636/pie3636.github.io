@@ -44,8 +44,8 @@ itemObjs = {
     "Awakening Armor":      new Item(34, 70,       10,   67 ),
     "Awakening Sword":      new Item(35, 70,       10,   67 ),
     "Gold Box":             new Item(36, 30000,    0.9,  2  ),
-    "Awakening Armor+":     new Item(37, 30,       12,   70 ),
-    "Awakening Sword+":     new Item(38, 30,       12,   70 ),
+    "Awakening Armor 2":    new Item(37, 30,       12,   70 ),
+    "Awakening Sword 2":    new Item(38, 30,       12,   70 ),
     "Guild Hat":            new Item(39, 16,       6,    26 ),
     "Mjolnir":              new Item(40, 31,       12,   12 ),
     "Dark Knight Armor":    new Item(41, 5,        15,   13 ),
@@ -63,7 +63,7 @@ itemObjs = {
     "Red Hand":             new Item(53, 151,      30,   90 )
 }
 
-names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon’s Staff", "Solomon’s Key", "Excalibur", "Aegis", "Caduceus", "Philosopher’s Stone", "Hydra’s Poison Arrow", "Durandal", "Mistilteinn", "A King's Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour", "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor+", "Awakening Sword+", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate", "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand"];
+names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon’s Staff", "Solomon’s Key", "Excalibur", "Aegis", "Caduceus", "Philosopher’s Stone", "Hydra’s Poison Arrow", "Durandal", "Mistilteinn", "A King's Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour", "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor 2", "Awakening Sword 2", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate", "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand"];
 
 caps = names.map(function(index) {
     return itemObjs[index].cap;
@@ -96,7 +96,7 @@ function acquireItem(curItems, id, noBuy) {
 }
 
 function isntMaxed(curItems, id) {
-    return caps[id] == 0 || curItems[id] != caps[id];
+    return caps[id] == 0 || curItems[id] < caps[id];
 }
 
 function randomRangeInt(min, max) {
@@ -1092,7 +1092,7 @@ function mainLoop() {
                 }
             }
         } else if (questType === "normal-quest") {
-            guildHatStat = items[39] == 0 ? 0 : items[39] + 24;
+            guildHatStat = curItems[39] == 0 ? 0 : curItems[39] + 24;
             if ($("#reset-chests")[0].checked) {
                 if ($("#floor-chests")[0].checked) {
                     sim_sq_re_fl();
@@ -1148,7 +1148,7 @@ function mainLoop() {
 function debugInit() {
     j = 0;
     for (var i in itemObjs) {
-        items[j] = Number($("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, ""))[0].value);
+        items[j] = Number($("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, ""))[0].value);
         j++;
     }
     gainedLevels = new Array(itemCount).fill(0);
