@@ -44,8 +44,8 @@ itemObjs = {
     "Awakening Armor":      new Item(34, 70,       10,   67 ),
     "Awakening Sword":      new Item(35, 70,       10,   67 ),
     "Gold Box":             new Item(36, 30000,    0.9,  2  ),
-    "Awakening Armor 2":    new Item(37, 30,       12,   70 ),
-    "Awakening Sword 2":    new Item(38, 30,       12,   70 ),
+    "Awakening Armor+":     new Item(37, 30,       12,   70 ),
+    "Awakening Sword+":     new Item(38, 30,       12,   70 ),
     "Guild Hat":            new Item(39, 16,       6,    26 ),
     "Mjolnir":              new Item(40, 31,       12,   12 ),
     "Dark Knight Armor":    new Item(41, 5,        15,   13 ),
@@ -63,7 +63,7 @@ itemObjs = {
     "Red Hand":             new Item(53, 151,      30,   90 )
 }
 
-names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon’s Staff", "Solomon’s Key", "Excalibur", "Aegis", "Caduceus", "Philosopher’s Stone", "Hydra’s Poison Arrow", "Durandal", "Mistilteinn", "A King's Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour", "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor 2", "Awakening Sword 2", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate", "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand"];
+names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon’s Staff", "Solomon’s Key", "Excalibur", "Aegis", "Caduceus", "Philosopher’s Stone", "Hydra’s Poison Arrow", "Durandal", "Mistilteinn", "A King's Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour", "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor+", "Awakening Sword+", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate", "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand"];
 
 caps = names.map(function(index) {
     return itemObjs[index].cap;
@@ -96,7 +96,7 @@ function acquireItem(curItems, id, noBuy) {
 }
 
 function isntMaxed(curItems, id) {
-    return caps[id] == 0 || curItems[id] < caps[id];
+    return caps[id] == 0 || curItems[id] != caps[id];
 }
 
 function randomRangeInt(min, max) {
@@ -543,7 +543,7 @@ function simulateRun(curItems, beginFloor, endFloor) {
     } else {
         lv = curItems[2];
         flag = true;
-        if (lv >= 100 && random01(engine) <= 0.28 || lv >= 150 && random01(engine) <= 0.34 || (lv >= 200 && random01(engine) <= 0.38 || lv >= 250 && random01(engine) <= 0.5))
+        if (lv >= 100 && random01(engine) <= 0.28 || lv >= 150 && random01(engine) <= 0.34 || lv >= 200 && random01(engine) <= 0.38 || lv >= 250 && random01(engine) <= 0.5)
             flag = false;
         if (flag) {
             var num2 = random01(engine);
@@ -574,13 +574,13 @@ function simulateRun(curItems, beginFloor, endFloor) {
     chests[12 + randomRangeInt(0, 2)] = 1;
     chests[15] = 1;
     chests[16 + randomRangeInt(0, 3)] = 1;
-    if (curItems[40] == 0)
+    if (curItems[39] == 0)
         chests[17] = 1;
     var num4 = 0;
-    var num5 = 20;
-    while (num5*10 <= endFloor) {
-        chests[num5/10] = 0;
-        num2 = 0.12 + num5 / 380;
+    var cur = 20;
+    while (cur*10 <= Math.min(endFloor, 2405)) {
+        chests[cur] = 0;
+        num2 = 0.12 + cur / 380;
         if (num2 > 0.2)
             num2 = num2 * 0.8 + 0.04;
         if (num2 > 0.25)
@@ -591,48 +591,41 @@ function simulateRun(curItems, beginFloor, endFloor) {
         if (num3 >= 0.42)
             num3 = 0.42;
         if (random01(engine) < num3) {
-            chests[num5] = 1;
+            chests[cur] = 1;
             ++num4;
         }
-        if (num5 % 5 == 0) {
-            chests[num5] = 1;
-            if (num5 % 10 == 0) {
-                if (endFloor < num5/10)
-                    chests[num5] = num5 != 20 ? (num5 % 50 != 0 ? 3 : 4) : 2;
+        if (cur % 5 == 0) {
+            chests[cur] = 1;
+            if (cur % 10 == 0) {
+                if (endFloor < cur/10) // TODO record floor instead
+                    chests[cur] = cur != 20 ? (cur % 50 != 0 ? 3 : 4) : 2;
                 else if (random01(engine) < 0.25)
-                    chests[num5] = 2;
-                else if (random01(engine) < 0.22 && num5 % 50 == 0)
-                    chests[num5] = 3;
+                    chests[cur] = 2;
+                else if (random01(engine) < 0.22 && cur % 50 == 0)
+                    chests[cur] = 3;
             }
         }
-        if (num5 % 10 == 0 && num5 >= 30) {
+        if (cur % 10 == 0 && cur >= 30) {
             if (num4 == 0) {
-                chests[num5 - 5 + randomRangeInt(1, 3)] = 1;
-                chests[num5 - 5 - randomRangeInt(1, 3)] = 1;
-            } else if (num4 == 1)
-                chests[num5 - 5] = 1;
-            else if (num4 > 5) {
-                chests[num5 - 9] = 0;
-                chests[num5 - 8] = 0;
-                chests[num5 - 7] = 0;
-                chests[num5 - 6] = 0;
-                chests[num5 - 4] = 0;
-                chests[num5 - 3] = 0;
-                chests[num5 - 2] = 0;
-                chests[num5 - 1] = 0;
-                chests[num5 - 5 + randomRangeInt(1, 5)] = 1;
-                chests[num5 - 5 - randomRangeInt(1, 5)] = 1;
-                chests[num5 - 5 + randomRangeInt(1, 5)] = 1;
-                chests[num5 - 5 - randomRangeInt(1, 5)] = 1;
-                chests[num5 - 5 + randomRangeInt(1, 5)] = 1;
-                chests[num5 - 5 - randomRangeInt(1, 5)] = 1;
+                chests[cur - 5 + randomRangeInt(1, 3)] = 1;
+                chests[cur - 5 - randomRangeInt(1, 3)] = 1;
+            } else if (num4 == 1) {
+                chests[cur - 5] = 1;
+            } else if (num4 > 5) {
+                for (var j = 9; j > 0; j--) {
+                    chests[cur - j] = 0;
+                }
+                for (var j = 0; j < 3; j++) {
+                    chests[cur - 5 + randomRangeInt(1, 5)] = 1;
+                    chests[cur - 5 - randomRangeInt(1, 5)] = 1;
+                }
             }
             num4 = 0;
         }
-        num5 += 10;
+        cur++;
     }
     for (var i in chests) {
-            if (i*10 > beginFloor && i*10 <= endFloor) {
+        if (i*10 > beginFloor && i*10 <= endFloor) {
             for (var j = 0; j < chests[i]; j++) {
                 simulateChest(curItems, i*10);
             }
@@ -1074,7 +1067,7 @@ function restoreGUI() {
 }
 
 // That function is pretty ugly, but it does the job faster than checking every iteration what parameters are set
-function mainLoop() {    
+function mainLoop() {
     runType = $("input[name='is-full-run']:checked")[0].id;
     resets = Number($("#resets")[0].value);
     if (runType === "full-run") {
@@ -1099,7 +1092,7 @@ function mainLoop() {
                 }
             }
         } else if (questType === "normal-quest") {
-            guildHatStat = curItems[39] == 0 ? 0 : curItems[39] + 24;
+            guildHatStat = items[39] == 0 ? 0 : items[39] + 24;
             if ($("#reset-chests")[0].checked) {
                 if ($("#floor-chests")[0].checked) {
                     sim_sq_re_fl();
@@ -1155,7 +1148,7 @@ function mainLoop() {
 function debugInit() {
     j = 0;
     for (var i in itemObjs) {
-        items[j] = Number($("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, ""))[0].value);
+        items[j] = Number($("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, ""))[0].value);
         j++;
     }
     gainedLevels = new Array(itemCount).fill(0);
