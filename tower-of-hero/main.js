@@ -351,7 +351,7 @@ function simulateChest(curItems, floor, noBuy) {
         else if (floor < 1401) {
             if (lv >= 22 && random40Bool(engine))
                 itemID1 = 2;
-            else if (lv >= 24 random40Bool(engine))
+            else if (lv >= 24 && random40Bool(engine))
                 itemID1 = 2;
             else if (lv >= 26 && random40Bool(engine))
                 itemID1 = 2;
