@@ -1,66 +1,76 @@
-function Item(id, cap, droprank, droprank2) {
+function Item(id, cap, droprank, droprank2, i1, i2, limitI1, limitLine) {
     this.id = id;
     this.cap = cap;
     this.droprank = droprank;
     this.droprank2 = droprank2;
+    this.i1 = i1;
+    this.i2 = i2;
+    this.limitI1 = limitI1;
+    this.limitLine = limitLine;
 }
 
 itemObjs = {
-    //                               id  cap       rank  rank2
-    "Lance":                new Item(0,  20,       1,    9  ),
-    "Earth Armour":         new Item(1,  Infinity, 1,    2  ),
-    "Claymore":             new Item(2,  Infinity, 0.05, 1.5),
-    "Wing Boots":           new Item(3,  30,       1,    11 ),
-    "Training Book":        new Item(4,  20,       3,    10 ),
-    "Golden Gloves":        new Item(5,  Infinity, 2,    1.9),
-    "Rapier":               new Item(6,  25,       1,    11 ),
-    "Halberd":              new Item(7,  Infinity, 3,    5  ),
-    "Red Elixir":           new Item(8,  100,      2,    6  ),
-    "Gold Vessels":         new Item(9,  Infinity, 2,    9  ),
-    "Blue Elixir":          new Item(10, 300,      7,    17 ),
-    "Green Elixir":         new Item(11, 10,       7,    14 ),
-    "Coat of Gold":         new Item(12, 300,      5,    11 ),
-    "Golden Rod":           new Item(13, 10,       5,    9  ),
-    "Solomon’s Staff":      new Item(14, 300,      3,    8  ),
-    "Solomon’s Key":        new Item(15, 10,       4,    3  ),
-    "Excalibur":            new Item(16, 300,      4,    9  ),
-    "Aegis":                new Item(17, 10,       3,    2  ),
-    "Caduceus":             new Item(18, 600,      4,    11 ),
-    "Philosopher’s Stone":  new Item(19, Infinity, 4,    3  ),
-    "Hydra’s Poison Arrow": new Item(20, 10,       5,    3  ),
-    "Durandal":             new Item(21, 105,      5,    30 ),
-    "Mistilteinn":          new Item(22, 105,      6,    32 ),
-    "A King's Crown":       new Item(23, 100,      30,   90 ),
-    "Gungnir":              new Item(24, Infinity, 5,    6  ),
-    "Lævateinn":            new Item(25, 12,       10,   50 ),
-    "Gáe Bolg":             new Item(26, 3,        50,   500),
-    "Mithril Sword":        new Item(27, 45,       7,    45 ),
-    "Mithril Armour":       new Item(28, 45,       5,    28 ),
-    "Full Plate":           new Item(29, 15000,    7.5,  5.5),
-    "Flamberge":            new Item(30, 15000,    6.5,  5.5),
-    "Full Helmet":          new Item(31, 15000,    11,   15 ),
-    "Tomahawk":             new Item(32, 15000,    10,   15 ),
-    "Summoning letter":     new Item(33, 10,       7,    10 ),
-    "Awakening Armor":      new Item(34, 70,       10,   67 ),
-    "Awakening Sword":      new Item(35, 70,       10,   67 ),
-    "Gold Box":             new Item(36, 30000,    0.9,  2  ),
-    "Awakening Armor 2":    new Item(37, 30,       12,   70 ),
-    "Awakening Sword 2":    new Item(38, 30,       12,   70 ),
-    "Guild Hat":            new Item(39, 16,       6,    26 ),
-    "Mjolnir":              new Item(40, 31,       12,   12 ),
-    "Dark Knight Armor":    new Item(41, 5,        15,   13 ),
-    "Gate":                 new Item(42, 701,      9,    7  ),
-    "Dark Gate":            new Item(43, 401,      10,   8  ),
-    "Magic Lamp":           new Item(44, 76,       7,    10 ),
-    "Dark Boots":           new Item(45, 85,       8.7,  5  ),
-    "Fire Sword":           new Item(46, Infinity, 999,  999),
-    "Freyr's Sword":        new Item(47, 50000,    20,   20 ),
-    "Flame Pot":            new Item(48, 16,       7,    25 ),
-    "Ice Pot":              new Item(49, 16,       7,    25 ),
-    "Golden Pot":           new Item(50, 11,       7,    25 ),
-    "Black Essence":        new Item(51, 30,       6,    30 ),
-    "Demon Eye":            new Item(52, 151,      12,   12 ),
-    "Red Hand":             new Item(53, 151,      30,   90 )
+    /*
+     * i1 = linear param, i2 = inverse param, limitLine = decay point, limitI1 = i1 past decay
+     * 0 limitLine: lv * (i1 - i2/2) + lv² * i2 / 2
+     * < limitLine: lv * i1
+     * > limitLine: limitLine * i1 + (lv - limitLine) * limitI1
+     */
+    //                               id       cap  rank rank2   i1   i2   lI1 lLine
+    "Lance":                new Item( 0,       20,    1,   9,    5,   0,    2,  10),
+    "Earth Armour":         new Item( 1, Infinity,    1,   2,   20,   5,    0,   0),
+    "Claymore":             new Item( 2, Infinity, 0.05, 1.5, 0.05, 1.5,   20,   5),
+    "Wing Boots":           new Item( 3,       30,    1,  11,    3,   0,    1,   5),
+    "Training Book":        new Item( 4,       20,    3,  10,    2,   0,    1,  10),
+    "Golden Gloves":        new Item( 5, Infinity,    2, 1.9,   15,   0,   10, 200),
+    "Rapier":               new Item( 6,       25,    1,  11,    5,   0,    1,  10),
+    "Halberd":              new Item( 7, Infinity,    3,   5,   10,   0,    5, 100),
+    "Red Elixir":           new Item( 8,      100,    2,   6,    2,   0,    1,  30),
+    "Gold Vessels":         new Item( 9, Infinity,    2,   9,   10,   0,    5, 100),
+    "Blue Elixir":          new Item(10,      300,    7,  17,    5,   0,    2, 100),
+    "Green Elixir":         new Item(11,       10,    7,  14,    5,   0,    0,   0),
+    "Coat of Gold":         new Item(12,      300,    5,  11,    5,   0,    2, 100),
+    "Golden Rod":           new Item(13,       10,    5,   9,    5,   0,    0,   0),
+    "Solomon’s Staff":      new Item(14,      300,    3,   8,    5,   0,    2, 100),
+    "Solomon’s Key":        new Item(15,       10,    4,   3,    5,   0,    0,   0),
+    "Excalibur":            new Item(16,      300,    4,   9,    5,   0,    2, 100),
+    "Aegis":                new Item(17,       10,    3,   2,    5,   0,    0,   0),
+    "Caduceus":             new Item(18,      600,    4,  11,   10,   0,    2, 200),
+    "Philosopher’s Stone":  new Item(19, Infinity,    4,   3,   10,   0,    2, 500),
+    "Hydra’s Poison Arrow": new Item(20,       10,    5,   3,    2,   0,    1,  10),
+    "Durandal":             new Item(21,      105,    5,  30,    2,   0,    1,  20),
+    "Mistilteinn":          new Item(22,      105,    6,  32,    2,   0,    1,  20),
+    "A King's Crown":       new Item(23,      100,   30,  90,    5,   0,    1,  40),
+    "Gungnir":              new Item(24, Infinity,    5,   6,   10,   0,    0,   0),
+    "Lævateinn":            new Item(25,       12,   10,  50,    1,   0,    0,   0),
+    "Gáe Bolg":             new Item(26,        3,   50, 500,    1,   0,    0,   0),
+    "Mithril Sword":        new Item(27,       45,    7,  45,    2,   0,    1,  20),
+    "Mithril Armour":       new Item(28,       45,    5,  28,    2,   0,    1,  20),
+    "Full Plate":           new Item(29,    15000,  7.5, 5.5,  300,  10,    0,   0),
+    "Flamberge":            new Item(30,    15000,  6.5, 5.5,  300,  10,    0,   0),
+    "Full Helmet":          new Item(31,    15000,   11,  15, 1800,  11,    0,   0),
+    "Tomahawk":             new Item(32,    15000,   10,  15, 1800,  11,    0,   0),
+    "Summoning letter":     new Item(33,       10,    7,  10,    1,   0,    0,   0),
+    "Awakening Armor":      new Item(34,       70,   10,  67,   10,   2,    0,   0),
+    "Awakening Sword":      new Item(35,       70,   10,  67,   10,   2,    0,   0),
+    "Gold Box":             new Item(36,    30000,  0.9,   2,    5,   2,    0,   0),
+    "Awakening Armor 2":    new Item(37,       30,   12,  70,   10,   2,    0,   0),
+    "Awakening Sword 2":    new Item(38,       30,   12,  70,   10,   2,    0,   0),
+    "Guild Hat":            new Item(39,       16,    6,  26,   25,   0,    1,   1),
+    "Mjolnir":              new Item(40,       31,   12,  12,  0.2,   0, 0.01,   1),
+    "Dark Knight Armor":    new Item(41,        5,   15,  13,    1,   0,    0,   0),
+    "Gate":                 new Item(42,      701,    9,   7,   22,   0, 0.02,   1),
+    "Dark Gate":            new Item(43,      401,   10,   8,    4,   0, 0.02,   1),
+    "Magic Lamp":           new Item(44,       76,    7,  10,  100,   0,    2,   1),
+    "Dark Boots":           new Item(45,       85,  8.7,   5,    1,   0,  0.5,  30),
+    "Fire Sword":           new Item(46, Infinity,  999, 999,    5,   0,    0,   0),
+    "Freyr's Sword":        new Item(47,    50000,   20,  20,    1,   0,    0,   0),
+    "Flame Pot":            new Item(48,       16,    7,  25,    1,   0,  0.3,   1),
+    "Ice Pot":              new Item(49,       16,    7,  25,    1,   0,  0.3,   1),
+    "Golden Pot":           new Item(50,       11,    7,  25,    1,   0,  0.3,   1),
+    "Black Essence":        new Item(51,       30,    6,  30,    2,   0,  0.4,   5),
+    "Demon Eye":            new Item(52,      151,   12,  12,   10,   0,  0.1,   1),
+    "Red Hand":             new Item(53,      151,   30,  90,    5,   0,  0.1,   1)
 }
 
 names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon’s Staff", "Solomon’s Key", "Excalibur", "Aegis", "Caduceus", "Philosopher’s Stone", "Hydra’s Poison Arrow", "Durandal", "Mistilteinn", "A King's Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour", "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor 2", "Awakening Sword 2", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate", "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand"];
@@ -301,8 +311,23 @@ function simulateChest(curItems, floor, noBuy) {
             itemID1 = 2;
         else if (lv >= 20 && random01(engine) < 0.50005 - floor * 0.00005)
             itemID1 = 2;
-        else if (lv >= 50 && random01(engine) < 0.50005 - floor * 0.00005)
+        else if (lv >= 45 && random01(engine) < 0.50005 - floor * 0.00005)
             itemID1 = 2;
+        else if (floor < 901) {
+            if (lv >= 48 && random40Bool(engine))
+                itemID1 = 2;
+            else if (lv >= 58 && random40Bool(engine))
+                itemID1 = 2;
+            else if (lv >= 68 && random40Bool(engine))
+                itemID1 = 2;
+        } else if (floor < 1101) {
+            if (lv >= 48 && random30Bool(engine))
+                itemID1 = 2;
+            else if (lv >= 58 && random30Bool(engine))
+                itemID1 = 2;
+            else if (lv >= 68 && random30Bool(engine))
+                itemID1 = 2;
+        }
     } else if (itemID1 == 37 || itemID1 == 38) {
         lv = curItems[itemID1];
         if (curItems[itemID1 - 3] == 0 || flag1 || flag3 || (lv <= 0 && floor < 501 || lv >= 1 && floor < 621 + lv * 46))
@@ -317,17 +342,32 @@ function simulateChest(curItems, floor, noBuy) {
             itemID1 = 2;
         else if (lv >= 20 && random01(engine) < 0.50005 - floor * 0.00005)
             itemID1 = 2;
-        else if (lv >= 50 && random01(engine) < 0.50005 - floor * 0.00005)
-            itemID1 = 2;
         else if (lv >= 20 && randomBool(engine))
             itemID1 = 1;
         else if (lv >= 25 && random25Bool(engine))
             itemID1 = 1;
         else if (lv >= 28 && random25Bool(engine))
             itemID1 = 1;
+        else if (floor < 1401) {
+            if (lv >= 22 && random40Bool(engine))
+                itemID1 = 2;
+            else if (lv >= 24 random40Bool(engine))
+                itemID1 = 2;
+            else if (lv >= 26 && random40Bool(engine))
+                itemID1 = 2;
+        } else if (floor < 1601) {
+            if (lv >= 22 && random30Bool(engine))
+                itemID1 = 2;
+            else if (lv >= 24 && random30Bool(engine))
+                itemID1 = 2;
+            else if (lv >= 26 && random30Bool(engine))
+                itemID1 = 2;
+        }
     } else if (itemID1 == 23) {
         lv = curItems[itemID1];
         if (flag1 || flag3 || lv <= 0 && floor < 251 || lv == 1 && floor < 301 || lv >= 2 && floor < 351 + lv * 35 + (lv < 6 ? 0 : 100))
+            itemID1 = 2;
+        else if (lv >= 91 && random01(engine) < 0.8)
             itemID1 = 2;
         else if (lv >= 20 && random01(engine) > 0.09994 + floor * 0.00006)
             itemID1 = 2;
@@ -339,6 +379,16 @@ function simulateChest(curItems, floor, noBuy) {
             itemID1 = 2;
         else if (lv >= 5 && random01(engine) > 0.0999 + floor * 0.0001)
             itemID1 = 2;
+        else if (floor < 1001) {
+            if (lv >= 20 && random30Bool(engine))
+                itemID1 = 2;
+            else if (lv >= 40 && random30Bool(engine))
+                itemID1 = 2;
+            else if (lv >= 60 && random30Bool(engine))
+                itemID1 = 2;
+            else if (lv >= 80 && (random30Bool(engine))
+                itemID1 = 2;
+        }
     } else if (itemID1 == 25) {
         lv = curItems[itemID1];
         if (flag1 || flag3 || floor < 111 + 90 * lv + lv * lv * 6 + (lv < 7 ? 0 : 150) + (lv < 9 ? 0 : 90 + lv * lv * 0.5))
@@ -684,15 +734,15 @@ function simulateQuest(curItems, beginFloor, endFloor) {
     num1 = 0;
     if (duration >= 11)
         num1 = 1;
-    num2 = Math.trunc(((1 + endFloor * 0.45 + endFloor * 0.75) / 300 + randomRangeFloat(-0.2, 0.2)) * 10);
+    num2 = Math.trunc((1 + endFloor * 1.2) / 30 + randomRangeFloat(-2, 2)); // .45 bestFloorSum + .75 questBestFloorSum
     max1 = num2 - num2 % 10;
     if (max1 > 20)
         max1 = 20;
-    num3 = Math.trunc(((1 + endFloor * 0.45 + endFloor * 0.75) / 300 + randomRangeFloat(-0.2, 0.2)) * 10);
+    num3 = Math.trunc((1 + endFloor * 1.2) / 30 + randomRangeFloat(-2, 2)); // Idem
     num4 = num3 - num3 % 10;
     if (num4 > 10)
         num4 = 10;
-    num5 = (1.0 + endFloor * 0.45 + endFloor * 0.75) / 500 + randomRangeFloat(-0.25, 0.25);
+    num5 = (1.0 + endFloor * 1.2) / 500 + randomRangeFloat(-0.25, 0.25); // Idem
     num6 = Math.trunc(num5 * 10);
     num7 = num6 - num6 % 10;
     num8 = ((1 + endFloor) / 170) + randomRangeFloat(-0.25, 0.25);
@@ -700,14 +750,12 @@ function simulateQuest(curItems, beginFloor, endFloor) {
     if (num9 < 0)
         num9 = 1;
     if (num1 == 0) {
-        kuriaLine[0] = 20 + randm101(max1) + randm10(num9 * 0.25, num9 * 0.8);
-        kuriaLine[1] = kuriaLine[0] + 20 + randm10(num9 * 0.25, num9 * 0.8);
-        kuriaLine[2] = kuriaLine[1] + 10 + num4 + randm101(max1) + randm10(num9 * 0.45, num9 * 0.9 + 1);
-        kuriaLine[3] = kuriaLine[2] + 20 + randm101(max1 + 5) + randm10(num9 * 0.5, num9 * 0.9 + 1);
+        kuriaLine[3] = 70 + num4 + randm101(max1) + randm101(max1 + 5)
+            + randm101(max1) + randm10(num9 * 0.25, num9 * 0.8) + randm10(num9 * 0.25, num9 * 0.8) + randm10(num9 * 0.45, num9 * 0.9 + 1) + randm10(num9 * 0.5, num9 * 0.9 + 1);
         kuriaLine[4] = kuriaLine[3] + 30 + randm101(num7 + num4 + 6) + randm10(num9 * 0.55, num9 + 2);
         kuriaLine[5] = kuriaLine[4] + 50 + num7 + randm101(num7 + num4 + 7) + randm10(num9 * 0.6, num9 + 6);
         for (var index = 6; index < length; ++index) {
-            num11 = randomRangeFloat(0, 1);
+            num11 = random01(engine);
             num12 = 90 + randm101(num7 + num4) + randm10(num9 * 0.35, num9 * 0.7);
             if (num11 < 0.2)
                 num12 = 80 + randm101(num7 + num4 + 4) + randm10(num9 * 0.35, num9 * 0.8);
@@ -726,9 +774,7 @@ function simulateQuest(curItems, beginFloor, endFloor) {
         chestFloor[3] -= chestFloor[3] % 10;
         num10 = 4;
     } else {
-        kuriaLine[0] = 30 + randm101(max1) + randm101(num9 * 0.2, num9 * 0.8);
-        kuriaLine[1] = kuriaLine[0] + 20 + randm101(num9 * 0.25, num9 * 0.8);
-        kuriaLine[2] = kuriaLine[1] + 10 + num4 + randm101(max1) + randm10(num9 * 0.45, num9 * 0.9 + 1);
+        kuriaLine[2] = 60 + num4 + randm101(max1) + randm101(max1) + randm101(num9 * 0.2, num9 * 0.8) + randm101(num9 * 0.25, num9 * 0.8) + randm10(num9 * 0.45, num9 * 0.9 + 1);
         kuriaLine[3] = kuriaLine[2] + 40 + randm101(max1 + 5) + randm10(num9 * 0.5, num9 * 0.95 + 1);
         kuriaLine[4] = kuriaLine[3] + 40 + num7 + randm101(num7 + num4 + 7) + randm10(num9 * 0.6, num9 + 6);
         for (var index = 5; index < length; ++index) {
@@ -753,29 +799,18 @@ function simulateQuest(curItems, beginFloor, endFloor) {
             max2 = 1;
         num11 = randomRangeFloat(0, max2);
         if (num11 > 0.52) {
-            if (num11 < 0.82) {
-                chestCount[index] = 1 + Math.trunc(randomRangeFloat(0, kuriaLine[index] * 0.0065));
-            } else {
-                chestCount[index] = 1 + Math.trunc(randomRangeFloat(0, kuriaLine[index] * 0.005));
-            }
+            chestCount[index] = 1 + Math.trunc(randomRangeFloat(0, kuriaLine[index] * (num11 < 0.82 ? 0.0065 : 0.005)));
         }
         if (chestCount[index] != 0) {
             chestFloor[index] = 150 + randomRangeFloat(kuriaLine[index] + 60, Math.trunc(kuriaLine[index] * 1.4 + 170));
             if (chestFloor[index] > endFloor) {
                 break;
             }
-            if (randomRangeFloat(0, max2) < 0.75 || chestFloor[index] < 200)
-                chestFloor[index] -= chestFloor[index] % 10;
-            else
-                chestFloor[index] -= chestFloor[index] % 50;
+            chestFloor[index] -= chestFloor[index] % (randomRangeFloat(0, max2) < 0.75 || chestFloor[index] < 200 ? 10 : 50);
         }
-        if (index < 2) {
-            if (chestCount[index] > 1)
-                chestCount[index] = 1;
-        } else {
-            if (chestCount[index] > 2)
-                chestCount[index] = 2;
-        }
+        var m = index < 2 ? 1 : 2;
+        if (chestCount[index] > m)
+            chestCount[index] = m;
     }
     for (var i = 0; i < length; i++) {
         if (chestFloor[i] > beginFloor) {
@@ -1313,7 +1348,7 @@ function removePreset() {
 
 $(function () {
     $('[data-toggle="tooltip"]').tooltip();
-    $("#version").append("1.7.4");
+    $("#version").append("1.7.5");
     
     engine = Random.engines.mt19937().autoSeed();
     random01 = Random.real(0, 1, false);
