@@ -51,8 +51,8 @@ $(function () {
         updateValue(data.counts.avg, "avg-count", true, 2);
         updateValue(data.counts.med, "med-count", true);
         
-        updateTable(data.counts.mostCommon, "most-common-counts", false, false, true);
-        updateTable(data.counts.leastCommon, "least-common-counts", false, false, true);
+        updateTableNR(data.counts.mostCommon, "most-common-counts", false, true);
+        updateTableNR(data.counts.leastCommon, "least-common-counts", false, true);
         
         updateValue(data.replyTime.started, "started", true, 2, true);
         updateValue(data.replyTime.fastest, "fastest-count", true, 2, true);
@@ -81,8 +81,8 @@ $(function () {
         updateValue(data.gets.avg, "avg-get", true, 2);
         updateValue(data.gets.med, "med-get", true);
         
-        updateTable(data.gets.mostCommon, "most-common-gets", false, false, true);
-        updateTable(data.gets.leastCommon, "least-common-gets", false, false, true);
+        updateTableNR(data.gets.mostCommon, "most-common-gets", false, true);
+        updateTableNR(data.gets.leastCommon, "least-common-gets", false, true);
         
         updateValue(data.gets.fastest.time, "fastest-get", true, 2, true);
         $("#fastest-get-direction").html(data.gets.fastest.begin < data.gets.fastest.end ? "up" : "down")
@@ -100,6 +100,7 @@ $(function () {
         updateValue(data.gets.longest.end, "longest-get-end");
         updateValue(data.gets.avgLen, "avg-get-len", true, 2);
         updateValue(data.gets.medLen, "med-get-len", true);
+        updateValue(data.gets.lastLen, "last-get-percent-len");
         updateValue(data.getSign.maxUpStreak.length, "max-up-get-streak", true);
         updateValue(data.getSign.maxUpStreak.begin, "max-up-get-streak-begin");
         updateValue(data.getSign.maxUpStreak.end, "max-up-get-streak-end");
@@ -117,8 +118,8 @@ $(function () {
         updateValue(data.getSign.maxPosStreak, "max-pos-get-streak", true);
         updateValue(data.getSign.maxNegStreak, "max-neg-get-streak", true);
         
-        updateTable(data.oneStalemates, "one-stalemates");
-        updateTable(data.twoStalemates, "two-stalemates", true);
+        updateTableNR(data.oneStalemates, "one-stalemates");
+        updateTableNR(data.twoStalemates, "two-stalemates", true);
         
         updateValue(data.deletedCounts, "deleted-counts", true);
         updateValue(data.forks, "forks", true);
@@ -126,25 +127,27 @@ $(function () {
         updateValue(data.users.avg, "avg-usr", true, 2);
         updateValue(data.users.med, "med-usr", true);
         
-        updateTable(data.users.top20, "top-20-usrs", false, true);
-        updateTable(data.users.topGets, "top-usr-gets", false, true);
+        updateTableR(data.users.top20, "top-20-usrs");
+        updateTableR(data.users.topGets, "top-usr-gets");
         updateValue(data.users.topGets.threshold, "usr-min-gets");
-        updateTable(data.users.topAssists, "top-usr-assists", false, true);
+        updateTableR(data.users.topAssists, "top-usr-assists");
         updateValue(data.users.topAssists.threshold, "usr-min-assists");
         
-        updateTable(data.users.fastest, "top-usr-speed", false, true);
+        updateTableR(data.users.fastest, "top-usr-speed");
         updateValue(data.users.fastest.threshold, "usr-min-counts");
         
-        updateTable(data.users.fastestMed, "top-usr-med-speed", false, true);
+        updateTableR(data.users.fastestMed, "top-usr-med-speed");
         
-        updateTable(data.users.speedScore, "top-usr-speed-score", false, true);
+        updateTableR(data.users.speedScore, "top-usr-speed-score");
         
-        updateTable(data.top100, "top-100-usrs", false, true);
+        updateTableR(data.top100, "top-100-usrs");
+        
+        updateTableR(data.teams, "top-team-score-nolink")
 });
 
 function updateValue(value, id, hasVariation, digits, hasUnit) {
     // Try to read "digits" from parameter, if it fails try to read from
-    hasDigits = typeof digits !== "undefined" && digits !== 0 || typeof (digits = value.precision) !== "undefined"; JSON
+    hasDigits = typeof digits !== "undefined" && digits !== 0 || typeof (digits = value.precision) !== "undefined"; // JSON
     if (hasVariation) {
         valueCur = value.cur;
         variation = valueCur - value.prev;
@@ -190,14 +193,6 @@ function hasSameValue(a, b, isTwo) {
     return a[1] === b[1] && (!isTwo || isTwo && a[2] === b[2]);
 }
 
-function updateTable(values, id, isTwo, hasRanking, canValueChange) {
-    if (hasRanking) {
-        updateTableR(values, id, isTwo)
-    } else {
-        updateTableNR(values, id, isTwo, canValueChange)
-    }
-}
-
 function updateTableNR(values, id, isTwo, canValueChange) {
     var col1, col2, col3;
     for (var value = 0; value < values.cur.length; value++) {
@@ -225,12 +220,12 @@ function updateTableNR(values, id, isTwo, canValueChange) {
     }
 }
 
-function getRanks(values, isTwo) {
+function getRanks(values) {
     var res = [], tiesBegin = [], tiesEnd = [], cnt = 0, ties = 0;
     for (var value = 0; value < values.length; value++) {
         cnt++;
         res.push([values[value][0], cnt].concat(values[value].slice(1)));
-        if (value != 0 && hasSameValue(values[value - 1], values[value], isTwo)) {
+        if (value != 0 && hasSameValue(values[value - 1], values[value], false)) {
             cnt--;
             if (ties == 0) {
                 tiesBegin.push(value);
@@ -252,9 +247,9 @@ function getRanks(values, isTwo) {
     return [res, tiesBegin, tiesEnd];
 }
 
-function updateTableR(values, id, isTwo) {
-    dataPrev = getRanks(values.prev, isTwo)[0];
-    ranks = getRanks(values.cur, isTwo);
+function updateTableR(values, id) {
+    dataPrev = getRanks(values.prev)[0];
+    ranks = getRanks(values.cur);
     dataCur = ranks[0];
     var col1, col2, col3, delta;
     for (var value = 0; value < values.cur.length; value++) {
@@ -279,14 +274,8 @@ function updateTableR(values, id, isTwo) {
             }
         }
         var curCol = 2;
-        if (isTwo) {
-            col1 = values.cur[value][0] + " and " + values.cur[value][1];
-            col2 = values.cur[value][2];
-            curCol++;
-        } else {
-            col1 = values.cur[value][0];
-            col2 = values.cur[value][1];
-        }
+        col1 = values.cur[value][0];
+        col2 = values.cur[value][1];
         while (curCol < values.cur[value].length) { // Append remaining columns if necessary
             col2 += "</td><td>" + values.cur[value][curCol];
             curCol++;
@@ -300,7 +289,9 @@ function updateTableR(values, id, isTwo) {
         }
         border += "'";
         if (col1 !== "[deleted]") {
-            col1 = "<a href='http://reddit.com/u/" + col1 + "'>" + col1 + "</a>";
+            if (!~id.indexOf("-nolink")) {
+                col1 = "<a href='http://reddit.com/u/" + col1 + "'>" + col1 + "</a>";
+            }
         } else {
             col1 = "Total for [deleted] users (not updated retroactively)";
         }
