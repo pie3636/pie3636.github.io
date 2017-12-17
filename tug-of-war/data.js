@@ -13,7 +13,6 @@ data = {
     },
     comment: "- We have been staying around zero for a few threads now, with a few fast runs but no significant progress being made on either side\n\
               - Zero has been counted half as much during the last month than during the entire Tug of War history until then\n\
-              - A status quo has been met upon reaching zero\n\
               - We have reached an exact average of 500 comments per thread\n\
               - /u/Urbul has reached the second place (up from the fourth) in terms of total counts\n\
               - /u/amazingpikachu_38 has significantly improved on his average reply time, gaining 30 ranks, and 63 ranks in the speed score\n\
