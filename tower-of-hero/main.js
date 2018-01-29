@@ -698,9 +698,6 @@ function simulateReset(curItems, endFloor) {
     for (var i = 0; i < num3; ++i) {
         num1 = randomRangeInt(100, endFloor);
         num2 = num1 - num1 % 10;
-        if (num2 < 100) {
-            num2 = 100;
-        }
         simulateChest(curItems, num2);
     }
 }

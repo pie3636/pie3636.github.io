@@ -138,7 +138,7 @@ class Solver {
                         case 8:
                             return "(4!!)";
                         case 9:
-                            return "s(p(4)!!)";
+                            return "π(4!)";
                         case 10:
                             return "s(C(4))";
                         case 11:
