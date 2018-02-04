@@ -24,6 +24,7 @@
 #define COST_FIBONACCI 2
 #define COST_DIVISOR_SUM 2
 #define COST_PRIMORIAL 3
+#define COST_PRIME_COUNT 3
 
 /*
     MODULO: 1,
@@ -79,7 +80,7 @@ int main() {
     std::string res;
 
 #ifdef RELEASE
-    std::cout << "4-4-4-4 heuristical solver v. 0.19919.0008 (tested up to 10,000)" << std::endl;
+    std::cout << "4-4-4-4 heuristical solver v. 0.19919.0009 (tested up to 10,000)" << std::endl;
     std::cout << "Message /u/pie3636 if you find any incorrect values" << std::endl;
     std::cout << std::endl;
     std::cout << "Note: Some pairs of parentheses in the answer may be unnecessary." << std::endl;

@@ -430,7 +430,8 @@ class Solver {
                     {"Ω", COST_BIG_OMEGA},
                     {"P", COST_PRIME_NUMBER},
                     {"F", COST_FIBONACCI},
-                    {"s", COST_DIVISOR_SUM}
+                    {"s", COST_DIVISOR_SUM},
+                    {"π", COST_PRIME_COUNT}
             };
             int cost = 0;
             for (auto i : costs) {
