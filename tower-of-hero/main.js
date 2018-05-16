@@ -1479,7 +1479,7 @@ function removePreset() {
 
 $(function () {
     $('[data-toggle="tooltip"]').tooltip();
-    $("#version").append("1.7.5");
+    $("#version").append("1.8.0");
     
     engine = Random.engines.mt19937().autoSeed();
     random01 = Random.real(0, 1, false);
