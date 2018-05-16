@@ -19,7 +19,7 @@ itemObjs = {
     //                               id       cap  rank rank2   i1   i2   lI1 lLine
     "Lance":                new Item( 0,       20,    1,   9,    5,   0,    2,  10),
     "Earth Armour":         new Item( 1, Infinity,    1,   2,   20,   5,    0,   0),
-    "Claymore":             new Item( 2, Infinity, 0.05, 1.5, 0.05, 1.5,   20,   5),
+    "Claymore":             new Item( 2, Infinity, 0.05, 1.5,   20,   5,    0,   0),
     "Wing Boots":           new Item( 3,       30,    1,  11,    3,   0,    1,   5),
     "Training Book":        new Item( 4,       20,    3,  10,    2,   0,    1,  10),
     "Golden Gloves":        new Item( 5, Infinity,    2, 1.9,   15,   0,   10, 200),
@@ -31,13 +31,13 @@ itemObjs = {
     "Green Elixir":         new Item(11,       10,    7,  14,    5,   0,    0,   0),
     "Coat of Gold":         new Item(12,      300,    5,  11,    5,   0,    2, 100),
     "Golden Rod":           new Item(13,       10,    5,   9,    5,   0,    0,   0),
-    "Solomon’s Staff":      new Item(14,      300,    3,   8,    5,   0,    2, 100),
-    "Solomon’s Key":        new Item(15,       10,    4,   3,    5,   0,    0,   0),
+    "Solomon's Staff":      new Item(14,      300,    3,   8,    5,   0,    2, 100),
+    "Solomon's Key":        new Item(15,       10,    4,   3,    5,   0,    0,   0),
     "Excalibur":            new Item(16,      300,    4,   9,    5,   0,    2, 100),
     "Aegis":                new Item(17,       10,    3,   2,    5,   0,    0,   0),
     "Caduceus":             new Item(18,      600,    4,  11,   10,   0,    2, 200),
-    "Philosopher’s Stone":  new Item(19, Infinity,    4,   3,   10,   0,    2, 500),
-    "Hydra’s Poison Arrow": new Item(20,       10,    5,   3,    2,   0,    1,  10),
+    "Philosopher's Stone":  new Item(19, Infinity,    4,   3,   10,   0,    2, 500),
+    "Hydra's Poison Arrow": new Item(20,       10,    5,   3,    5,   0,    1,  10),
     "Durandal":             new Item(21,      105,    5,  30,    2,   0,    1,  20),
     "Mistilteinn":          new Item(22,      105,    6,  32,    2,   0,    1,  20),
     "A King's Crown":       new Item(23,      100,   30,  90,    5,   0,    1,  40),
@@ -46,10 +46,10 @@ itemObjs = {
     "Gáe Bolg":             new Item(26,        3,   50, 500,    1,   0,    0,   0),
     "Mithril Sword":        new Item(27,       45,    7,  45,    2,   0,    1,  20),
     "Mithril Armour":       new Item(28,       45,    5,  28,    2,   0,    1,  20),
-    "Full Plate":           new Item(29,    15000,  7.5, 5.5,  300,  10,    0,   0),
-    "Flamberge":            new Item(30,    15000,  6.5, 5.5,  300,  10,    0,   0),
-    "Full Helmet":          new Item(31,    15000,   11,  15, 1800,  11,    0,   0),
-    "Tomahawk":             new Item(32,    15000,   10,  15, 1800,  11,    0,   0),
+    "Full Plate":           new Item(29,        0,  7.5, 5.5,  300,  10,    0,   0),
+    "Flamberge":            new Item(30,        0,  6.5, 5.5,  300,  10,    0,   0),
+    "Full Helmet":          new Item(31,        0,   11,  15, 1800,  11,    0,   0),
+    "Tomahawk":             new Item(32,        0,   10,  15, 1800,  11,    0,   0),
     "Summoning letter":     new Item(33,       10,    7,  10,    1,   0,    0,   0),
     "Awakening Armor":      new Item(34,       70,   10,  67,   10,   2,    0,   0),
     "Awakening Sword":      new Item(35,       70,   10,  67,   10,   2,    0,   0),
@@ -63,17 +63,19 @@ itemObjs = {
     "Dark Gate":            new Item(43,      401,   10,   8,    4,   0, 0.02,   1),
     "Magic Lamp":           new Item(44,       76,    7,  10,  100,   0,    2,   1),
     "Dark Boots":           new Item(45,       85,  8.7,   5,    1,   0,  0.5,  30),
-    "Fire Sword":           new Item(46, Infinity,  999, 999,    5,   0,    0,   0),
+    "Fire Sword":           new Item(46,    30000,  999, 999,    5,   0,    0,   0),
     "Freyr's Sword":        new Item(47,    50000,   20,  20,    1,   0,    0,   0),
     "Flame Pot":            new Item(48,       16,    7,  25,    1,   0,  0.3,   1),
     "Ice Pot":              new Item(49,       16,    7,  25,    1,   0,  0.3,   1),
     "Golden Pot":           new Item(50,       11,    7,  25,    1,   0,  0.3,   1),
     "Black Essence":        new Item(51,       30,    6,  30,    2,   0,  0.4,   5),
     "Demon Eye":            new Item(52,      151,   12,  12,   10,   0,  0.1,   1),
-    "Red Hand":             new Item(53,      151,   30,  90,    5,   0,  0.1,   1)
+    "Red Hand":             new Item(53,      151,   30,  90,    5,   0,  0.1,   1),
+    "Veteran's Hat":        new Item(54,       10,   30,  90,    3,   0,    0,   0),
+    "Blue Crystal":         new Item(55,       11,   6,   32,  100,   0,   10,   1)
 }
 
-names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon’s Staff", "Solomon’s Key", "Excalibur", "Aegis", "Caduceus", "Philosopher’s Stone", "Hydra’s Poison Arrow", "Durandal", "Mistilteinn", "A King's Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour", "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor 2", "Awakening Sword 2", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate", "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand"];
+names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon's Staff", "Solomon's Key", "Excalibur", "Aegis", "Caduceus", "Philosopher's Stone", "Hydra's Poison Arrow", "Durandal", "Mistilteinn", "A King's Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour", "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor 2", "Awakening Sword 2", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate", "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand", "Veteran's Hat", "Blue Crystal"];
 
 caps = names.map(function(index) {
     return itemObjs[index].cap;
@@ -130,6 +132,43 @@ function refSort(targetData, refData) {
     return indices.map(function(index) {
         return targetData[index];
     });
+}
+
+function Hosei1OR2(itemID) {
+    if (itemID != 1 && itemID != 2)
+        return itemID;
+    return random75Bool(engine) ? 2 : 1;
+}
+
+function ATKHPItemHosei(curitems, itemID, t2) {
+    lv = curItems[lv];
+    if (lv >= 15000 && random85Bool(engine))
+        itemID = t2;
+    else if (lv >= 15100 && randomBool(engine))
+        itemID = t2;
+    else if (lv >= 15250 && random40Bool(engine))
+        itemID = t2;
+    else if (lv >= 15500 && random30Bool(engine))
+        itemID = t2;
+    else if (lv >= 15750 && random25Bool(engine))
+        itemID = t2;
+    else if (lv >= 16000 && random85Bool(engine))
+        itemID = t2;
+    else if (lv >= 16500 && random30Bool(engine))
+        itemID = t2;
+    else if (lv >= 17000 && random80Bool(engine))
+        itemID = t2;
+    else if (lv >= 18000 && random60Bool(engine))
+        itemID = t2;
+    else if (lv >= 19000 && random70Bool(engine))
+        itemID = t2;
+    else if (lv >= 20000 && random90Bool(engine))
+        itemID = t2;
+    else if (lv >= 25000 && random90Bool(engine))
+        itemID = t2;
+    else if (lv >= 30000 && random90Bool(engine))
+        itemID = t2;
+    return itemID;
 }
 
 function doubleRefSort(target1, target2, refData) {
@@ -217,320 +256,407 @@ function simulateChest(curItems, floor, noBuy) {
     else if (floor > 350 && random01(engine) < 0.006)
         floor = 1000;
     ranks = getRanks(curItems);
-    max = floor * 0.0008 + randomRangeFloat(0.0008, 0.0508);
-    if (max > 0.9)
-        max = 0.9;
-    itemID1 = ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, max))];
+    num1 = floor * 0.0008 + randomRangeFloat(0.0008, 0.0508);
+    if (num1 > 0.9)
+        num1 = 0.9;
+    itemID1 = ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, num1))];
     if (itemID1 == 36 && resets == 0)
         itemID1 = 2;
     if (itemID1 == 1 || itemID1 == 2) {
         lv = curItems[itemID1];
-        if (lv >= 400 && random01(engine) <= 0.75 && curItems[36] <= lv * 0.65)
+        if (lv >= 400 && random75Bool(engine) && curItems[36] <= lv * 0.65)
             itemID1 = 36;
     }
     if (curItems[39] == 0 && floor > 156 + randomRangeInt(0, randomRangeInt(10, 110)))
         itemID1 = 39;
-    num1 = random01(engine);
-    if (num1 <= 0.045)
+    num2 = random01(engine);
+    if (num2 <= 0.045)
         floor += 50;
-    else if (num1 <= 0.07)
+    else if (num2 <= 0.07)
         floor += 100;
-    else if (num1 <= 0.075)
+    else if (num2 <= 0.075)
         floor += 150;
     flag1 = random01(engine) > 0.164;
     flag2 = floor % 100 != 0;
     flag3 = floor % 50 != 0;
     flag4 = !flag3;
     if (itemID1 == 26) {
-        lv = curItems[26];
-        if (flag1 || flag2 || lv <= 0 && floor < 501 || (lv <= 1 && floor < 1101 || lv >= 2 && floor < 1501) || lv >= 2 && random01(engine) > 0.4999 + floor * 0.0001) {
-            itemID1 = ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, max * 0.94))];
+        lv2 = curItems[26];
+        if (flag1 || flag2 || lv2 <= 0 && floor < 501 || (lv2 <= 1 && floor < 1101 || lv2 >= 2 && floor < 1501) || lv2 >= 2 && random01(engine) > 0.4999 + floor * 0.0001) {
+            itemID1 = ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, num1 * 0.94))];
             if (itemID1 == 26)
                 itemID1 = 2;
         }
     } else if (itemID1 == 36 && (flag4 && random20Bool(engine) || floor > 501))
-        itemID1 = ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, max * 0.94))];
+        itemID1 = ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, num1 * 0.94))];
     if (itemID1 == 47) {
-        lv1 = curItems[25];
-        if (lv1 <= 2) {
-            itemID1 = ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, max * 0.7))];
+        lv2 = curItems[25];
+        if (lv2 <= 2) {
+            itemID1 = ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, num1 * 0.7))];
             if (itemID1 == 47)
                 itemID1 = 2;
         } else {
-            lv2 = curItems[itemID1];
-            if (flag3 || floor < 111 + 7 * lv2 - lv1 * 5 && random01(engine) < 0.98 - lv1 * 0.005) {
-                itemID1 = ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, max * 0.7))];
+            lv3 = curItems[itemID1];
+            if (flag3 || floor < 111 + 7 * lv3 - lv2 * 5 && random01(engine) < 0.98 - lv2 * 0.005) {
+                itemID1 = ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, num1 * 0.7))];
                 if (itemID1 == 47)
                     itemID1 = 2;
             }
-            if (lv2 >= 10000 && random30Bool(engine))
+            if (lv3 >= 10000 && random30Bool(engine))
                 itemID1 = 2;
-            if (lv2 >= 20000 && random20Bool(engine))
+            if (lv3 >= 20000 && random20Bool(engine))
                 itemID1 = 2;
-            if (lv2 >= 30000 && random30Bool(engine))
+            if (lv3 >= 30000 && random30Bool(engine))
                 itemID1 = 2;
-            if (lv2 >= 40000 && random30Bool(engine))
+            if (lv3 >= 40000 && random30Bool(engine))
                 itemID1 = 2;
         }
     }
     if (itemID1 == 4) {
-        lv = curItems[itemID1];
-        if (lv > 9 && (flag1 || flag3 || floor < 151 + 40 * lv))
+        lv2 = curItems[itemID1];
+        if (lv2 > 9 && (flag1 || flag3 || floor < 151 + 40 * lv2))
             itemID1 = 2;
     } else if (itemID1 == 3) {
-        lv = curItems[itemID1];
-        if (lv >= 15 && randomBool(engine))
+        lv2 = curItems[itemID1];
+        if (lv2 >= 15 && randomBool(engine))
             itemID1 = 1;
-        if (lv >= 21 && random40Bool(engine))
+        if (lv2 >= 21 && random40Bool(engine))
             itemID1 = 1;
-        if (lv >= 24 && random30Bool(engine))
+        if (lv2 >= 24 && random30Bool(engine))
             itemID1 = 1;
-        if (lv >= 27 && random30Bool(engine))
+        if (lv2 >= 27 && random30Bool(engine))
             itemID1 = 1;
     } else if (itemID1 == 6) {
-        lv = curItems[itemID1];
-        if (lv > 20 && (flag1 || flag3 || floor < 301))
+        lv2 = curItems[itemID1];
+        if (lv2 > 20 && (flag1 || flag3 || floor < 301))
             itemID1 = 1;
-        if (lv >= 15 && randomBool(engine))
+        if (lv2 >= 15 && randomBool(engine))
             itemID1 = 1;
-        if (lv >= 18 && randomBool(engine))
+        if (lv2 >= 18 && randomBool(engine))
             itemID1 = 1;
-        if (lv >= 22 && randomBool(engine))
+        if (lv2 >= 22 && randomBool(engine))
             itemID1 = 1;
+    } else if (itemID1 == 55) {
+        lv2 = curItems[itemID1]
+        if (lv2 >= 2 && random30Bool(engine))
+            itemID1 = 1;
+        if (lv2 >= 4 && random70Bool(engine))
+            itemID1 = 1;
+        if (lv2 >= 5 && random90Bool(engine))
+            itemID1 = 1;
+        if (lv2 >= 7 && random90Bool(engine))
+            itemID1 = 1;
+        if (flag3)
+            itemID1 = 1;
+        itemID1 = Hosei1OR2(itemID1);
     } else if (itemID1 == 34 || itemID1 == 35) {
-        lv = curItems[itemID1];
-        if (flag1 || flag3 || lv <= 0 && floor < 351 || lv >= 1 && floor < 461 + lv * 40)
+        lv2 = curItems[itemID1];
+        if (flag1 || flag3 || lv2 <= 0 && floor < 351 || lv2 >= 1 && floor < 461 + lv2 * 40)
             itemID1 = 2;
-        else if (lv >= 2 && random01(engine) < 0.30005 - floor * 0.00005)
+        else if (lv2 >= 2 && random01(engine) < 0.30005 - floor * 0.00005)
             itemID1 = 2;
-        else if (lv >= 3 && random01(engine) < 0.40005 - floor * 0.00005)
+        else if (lv2 >= 3 && random01(engine) < 0.40005 - floor * 0.00005)
             itemID1 = 2;
-        else if (lv >= 5 && random01(engine) < 0.50005 - floor * 0.00005)
+        else if (lv2 >= 5 && random01(engine) < 0.50005 - floor * 0.00005)
             itemID1 = 2;
-        else if (lv >= 10 && random01(engine) < 0.50005 - floor * 0.00005)
+        else if (lv2 >= 10 && random01(engine) < 0.50005 - floor * 0.00005)
             itemID1 = 2;
-        else if (lv >= 20 && random01(engine) < 0.50005 - floor * 0.00005)
+        else if (lv2 >= 20 && random01(engine) < 0.50005 - floor * 0.00005)
             itemID1 = 2;
-        else if (lv >= 45 && random01(engine) < 0.50005 - floor * 0.00005)
+        else if (lv2 >= 45 && random01(engine) < 0.50005 - floor * 0.00005)
             itemID1 = 2;
         else if (floor < 901) {
-            if (lv >= 48 && random40Bool(engine))
+            if (lv2 >= 48 && random40Bool(engine))
                 itemID1 = 2;
-            else if (lv >= 58 && random40Bool(engine))
+            else if (lv2 >= 58 && random40Bool(engine))
                 itemID1 = 2;
-            else if (lv >= 68 && random40Bool(engine))
+            else if (lv2 >= 68 && random40Bool(engine))
                 itemID1 = 2;
         } else if (floor < 1101) {
-            if (lv >= 48 && random30Bool(engine))
+            if (lv2 >= 48 && random30Bool(engine))
                 itemID1 = 2;
-            else if (lv >= 58 && random30Bool(engine))
+            else if (lv2 >= 58 && random30Bool(engine))
                 itemID1 = 2;
-            else if (lv >= 68 && random30Bool(engine))
+            else if (lv2 >= 68 && random30Bool(engine))
                 itemID1 = 2;
         }
     } else if (itemID1 == 37 || itemID1 == 38) {
-        lv = curItems[itemID1];
-        if (curItems[itemID1 - 3] == 0 || flag1 || flag3 || (lv <= 0 && floor < 501 || lv >= 1 && floor < 621 + lv * 46))
+        lv2 = curItems[itemID1];
+        if (curItems[itemID1 - 3] == 0 || flag1 || flag3 || (lv2 <= 0 && floor < 501 || lv2 >= 1 && floor < 621 + lv2 * 46))
             itemID1 = 2;
-        else if (lv >= 2 && random01(engine) < 0.40005 - floor * 0.00005)
+        else if (lv2 >= 2 && random01(engine) < 0.40005 - floor * 0.00005)
             itemID1 = 2;
-        else if (lv >= 3 && random01(engine) < 0.50005 - floor * 0.00005)
+        else if (lv2 >= 3 && random01(engine) < 0.50005 - floor * 0.00005)
             itemID1 = 2;
-        else if (lv >= 5 && random01(engine) < 0.70005 - floor * 0.00005)
+        else if (lv2 >= 5 && random01(engine) < 0.70005 - floor * 0.00005)
             itemID1 = 2;
-        else if (lv >= 10 && random01(engine) < 0.50005 - floor * 0.00005)
+        else if (lv2 >= 10 && random01(engine) < 0.50005 - floor * 0.00005)
             itemID1 = 2;
-        else if (lv >= 20 && random01(engine) < 0.50005 - floor * 0.00005)
+        else if (lv2 >= 20 && random01(engine) < 0.50005 - floor * 0.00005)
             itemID1 = 2;
-        else if (lv >= 20 && randomBool(engine))
+        else if (lv2 >= 20 && randomBool(engine))
             itemID1 = 1;
-        else if (lv >= 25 && random25Bool(engine))
+        else if (lv2 >= 25 && random25Bool(engine))
             itemID1 = 1;
-        else if (lv >= 28 && random25Bool(engine))
+        else if (lv2 >= 28 && random25Bool(engine))
             itemID1 = 1;
         else if (floor < 1401) {
-            if (lv >= 22 && random40Bool(engine))
+            if (lv2 >= 22 && random40Bool(engine))
                 itemID1 = 2;
-            else if (lv >= 24 && random40Bool(engine))
+            else if (lv2 >= 24 && random40Bool(engine))
                 itemID1 = 2;
-            else if (lv >= 26 && random40Bool(engine))
+            else if (lv2 >= 26 && random40Bool(engine))
                 itemID1 = 2;
         } else if (floor < 1601) {
-            if (lv >= 22 && random30Bool(engine))
+            if (lv2 >= 22 && random30Bool(engine))
                 itemID1 = 2;
-            else if (lv >= 24 && random30Bool(engine))
+            else if (lv2 >= 24 && random30Bool(engine))
                 itemID1 = 2;
-            else if (lv >= 26 && random30Bool(engine))
-                itemID1 = 2;
-        }
-    } else if (itemID1 == 23) {
-        lv = curItems[itemID1];
-        if (flag1 || flag3 || lv <= 0 && floor < 251 || lv == 1 && floor < 301 || lv >= 2 && floor < 351 + lv * 35 + (lv < 6 ? 0 : 100))
-            itemID1 = 2;
-        else if (lv >= 91 && random01(engine) < 0.8)
-            itemID1 = 2;
-        else if (lv >= 20 && random01(engine) > 0.09994 + floor * 0.00006)
-            itemID1 = 2;
-        else if (lv >= 16 && random01(engine) > 0.09992 + floor * 0.00008)
-            itemID1 = 2;
-        else if (lv >= 12 && random01(engine) > 0.0999 +  floor * 0.0001)
-            itemID1 = 2;
-        else if (lv >= 8 && random01(engine) > 0.0999 + floor * 0.0001)
-            itemID1 = 2;
-        else if (lv >= 5 && random01(engine) > 0.0999 + floor * 0.0001)
-            itemID1 = 2;
-        else if (floor < 1001) {
-            if (lv >= 20 && random30Bool(engine))
-                itemID1 = 2;
-            else if (lv >= 40 && random30Bool(engine))
-                itemID1 = 2;
-            else if (lv >= 60 && random30Bool(engine))
-                itemID1 = 2;
-            else if (lv >= 80 && random30Bool(engine))
+            else if (lv2 >= 26 && random30Bool(engine))
                 itemID1 = 2;
         }
-    } else if (itemID1 == 25) {
-        lv = curItems[itemID1];
-        if (flag1 || flag3 || floor < 111 + 90 * lv + lv * lv * 6 + (lv < 7 ? 0 : 150) + (lv < 9 ? 0 : 90 + lv * lv * 0.5))
-            itemID1 = 2;
-        else if (lv >= 9 && randomBool(engine))
-            itemID1 = 2;
-    } else if (itemID1 == 21 || itemID1 == 22) {
-        lv = curItems[itemID1];
-        num2 = 101 + 36 * lv + (lv < 3 ? 0 : 100) + (lv < 5 ? 0 : 70) + (lv < 10 ? 0 : 90) + (lv < 25 ? 0 : 80) + (lv < 35 ? 0 : 80);
-        if (num2 > 1199)
-            num2 = num2 * 0.5 + 599.5;
-        if (num2 > 1499)
-            num2 = num2 * 0.5 + 749.5;
-        if (num2 > 1899)
-            num2 = num2 * 0.5 + 949.5;
-        if (flag1 || flag2 || floor < num2 + 1)
-            itemID1 = 2;
-        else if (lv >= 25 && random30Bool(engine))
-            itemID1 = 2;
-    } else if (itemID1 == 27 || itemID1 == 28) {
-        lv = curItems[itemID1];
-        if (flag1 || flag2 || floor < 133 + 33 * lv + (lv < 3 ? 0 : 100) + (lv < 5 ? 0 : 80) + (lv < 10 ? 0 : 90) + (lv < 25 ? 0 : 90) + (lv < 35 ? 0 : 80))
-            itemID1 = 2;
-        else if (lv >= 25 && random30Bool(engine))
-            itemID1 = 2;
+    } else switch (itemID1) {
+        case 23:
+            lv4 = curItems[itemID1];
+            if (flag1 || flag3 || lv4 <= 0 && floor < 251 || lv4 == 1 && floor < 301 || lv4 >= 2 && floor < 351 + lv4 * 35 + (lv4 < 6 ? 0 : 100)) {
+                itemID1 = 2;
+                break;
+            }
+            if (lv4 >= 91 && random80Bool(engine)) {
+                itemID1 = 2;
+                break;
+            }
+            if (lv4 >= 20 && random01(engine) > 0.09994 + floor * 0.00006) {
+                itemID1 = 2;
+                break;
+            }
+            if (lv4 >= 16 && random01(engine) > 0.19992 + floor * 0.00008) {
+                itemID1 = 2;
+                break;
+            }
+            if (lv4 >= 12 && random01(engine) > 0.2999 + floor * 0.0001) {
+                itemID1 = 2;
+                break;
+            }
+            if (lv4 >= 8 && random01(engine) > 0.4999 + floor * 0.0001) {
+                itemID1 = 2;
+                break;
+            }
+            if (lv4 >= 5 && random01(engine) > 0.7999 + floor * 0.0001) {
+                itemID1 = 2;
+                break;
+            } if (floor < 1000) {
+                if (lv4 >= 20 && random30Bool(engine)) {
+                    itemID1 = 2;
+                    break;
+                }
+                if (lv4 >= 40 && random30Bool(engine)) {
+                    itemID1 = 2;
+                    break;
+                }
+                if (lv4 >= 60 && random30Bool(engine)) {
+                    itemID1 = 2;
+                    break;
+                }
+                if (lv4 >= 80 && random30Bool(engine)) {
+                    itemID1 = 2;
+                    break;
+                }
+                break;
+            }
+            break;
+        case 25:
+            lv5 = curItems[itemID1];
+            if (flag1 || flag3 || floor < (111 + 90 * lv5 + lv5 * lv5 * 6 + (lv5 < 7 ? 0 : 150)) + (lv5 < 9 ? 0 : 90 + (lv5 * lv5) * 0.5)) {
+                itemID1 = 2;
+                break;
+            }
+            if (lv5 >= 9 && Random.get_value() < 0.5) {
+                itemID1 = 2;
+                break;
+            }
+            break;
+        default:
+            if (itemID1 == 21 || itemID1 == 22) {
+              lv2 = curItems[itemID1];
+              num3 = 100 + 36 * lv2 + (lv2 < 3 ? 0 : 100) + (lv2 < 5 ? 0 : 70) + (lv2 < 10 ? 0 : 90) + (lv2 < 25 ? 0 : 80) + (lv2 < 35 ? 0 : 80);
+                if (num3 > 1199)
+                    num3 = num3 * 0.5 + 599.5;
+                if (num3 > 1499)
+                    num3 = num3 * 0.5 + 749.5;
+                if (num3 > 1899)
+                    num3 = num3 * 0.5 + 949.5;
+                if (flag1 || flag2 || floor < num3 + 1) {
+                    itemID1 = 2;
+                    break;
+                }
+                if (lv2 >= 25 && random30Bool(engine)) {
+                    itemID1 = 2;
+                    break;
+                }
+                break;
+            }
+            if (itemID1 == 27 || itemID1 == 28) {
+                lv2 = curItems[lv];
+                num3 = 132 + 33 * lv2 + (lv2 < 3 ? 0 : 100) + (lv2 < 5 ? 0 : 80) + (lv2 < 10 ? 0 : 90) + (lv2 < 25 ? 0 : 90) + (lv2 < 35 ? 0 : 80);
+                if (flag1 || flag2 || floor < num3 + 1) {
+                    itemID1 = 2;
+                    break;
+                }
+                if (lv2 >= 25 && random30Bool(engine)) {
+                    itemID1 = 2;
+                    break;
+                }
+                break;
+            }
+            break;
     }
     if (itemID1 == 48) {
-        lv = curItems[itemID1];
-        if (lv >= 1) {
-            if (flag3 || floor < 241 + 41 * lv)
+        lv2 = curItems[itemID1];
+        if (lv2 >= 1) {
+            if (flag3 || floor < 241 + 41 * lv2)
                 itemID1 = 2;
         } else if (floor < 141)
             itemID1 = 2;
     } else if (itemID1 == 49) {
-        lv = curItems[itemID1];
-        if (flag3 || floor < 231 + 45 * lv)
+        lv2 = curItems[itemID1];
+        if (flag3 || floor < 231 + 45 * lv2)
             itemID1 = 2;
     } else if (itemID1 == 50) {
-        lv = curItems[itemID1];
-        if (flag3 || floor < 211 + 49 * lv)
+        lv2 = curItems[itemID1];
+        if (flag3 || floor < 211 + 49 * lv2)
             itemID1 = 2;
     } else if (itemID1 == 51) {
-        lv = curItems[itemID1];
-        if (lv >= 1) {
-            if (floor < 201 + 35 * lv)
+        lv2 = curItems[itemID1];
+        if (lv2 >= 1) {
+            if (floor < 201 + 35 * lv2)
                 itemID1 = 2;
         } else if (floor < 161)
             itemID1 = 2;
-        if (lv >= 24 && random30Bool(engine))
+        if (lv2 >= 24 && random30Bool(engine))
             itemID1 = 2;
-        if (lv >= 26 && random30Bool(engine))
+        if (lv2 >= 26 && random30Bool(engine))
             itemID1 = 2;
     } else if (itemID1 == 53) {
-        lv = curItems[itemID1];
-        if (flag1 || flag3 || floor < 761 + 5 * lv)
+        lv2 = curItems[itemID1];
+        if (flag1 || flag3 || floor < 761 + 5 * lv2)
             itemID1 = 2;
-        else if (lv >= 2 && random01(engine) < 0.1)
+        else if (lv2 >= 2 && random10Bool(engine))
             itemID1 = 2;
-        else if (lv >= 3 && random30Bool(engine))
+        else if (lv2 >= 3 && random30Bool(engine))
             itemID1 = 2;
-        else if (lv >= 10 && random01(engine) < 0.15)
+        else if (lv2 >= 10 && random15Bool(engine))
             itemID1 = 1;
-        else if (lv >= 50 && random25Bool(engine))
+        else if (lv2 >= 50 && random25Bool(engine))
             itemID1 = 1;
-        else if (lv >= 80 && random25Bool(engine))
+        else if (lv2 >= 80 && random25Bool(engine))
             itemID1 = 2;
     }
     if (itemID1 == 33) {
-        lv = curItems[itemID1];
-        if (floor < 20 * lv * (lv - 1) - 99)
+        lv2 = curItems[itemID1];
+        if (floor < 20 * lv2 * (lv2 - 1) - 99)
             itemID1 = 2;
     } else if (itemID1 == 39) {
-        lv = curItems[itemID1];
-        if (lv != 0) {
+        lv2 = curItems[itemID1];
+        if (lv2 != 0) {
             num2 = 0;
-            if (lv >= 10)
-                num2 = 150 + lv * 8;
-            if (lv >= 5)
-                num2 = 20 + lv * 8;
-            if (floor < 181 + lv * 36 + num2)
+            if (lv2 >= 10)
+                num2 = 150 + lv2 * 8;
+            if (lv2 >= 5)
+                num2 = 20 + lv2 * 8;
+            if (floor < 181 + lv2 * 36 + num2)
                 itemID1 = 2;
-            if (lv >= 10 && random45Bool(engine))
+            if (lv2 >= 10 && random45Bool(engine))
                 itemID1 = 2;
-            if (lv >= 12 && random45Bool(engine))
+            if (lv2 >= 12 && random45Bool(engine))
                 itemID1 = 2;
-            if (lv >= 14 && random45Bool(engine))
+            if (lv2 >= 14 && random45Bool(engine))
                 itemID1 = 2;
         }
+    } else if (itemID1 == 54) {
+        if (lv1 <= 14)
+            itemID1 = 2;
+        if (lv1 <= 15 && random70Bool(engine))
+            itemID1 = 1;
+        lv2 = curItems[itemID1];
+        if (floor < 851 + lv2 * 80)
+            itemID1 = 1;
+        else if (flag2)
+            itemID1 = 2;
+        else if (lv2 >= 1 && random40Bool(engine))
+            itemID1 = 2;
+        else if (lv2 >= 3 && random60Bool(engine))
+            itemID1 = 2;
+        else if (lv2 >= 5 && random40Bool(engine))
+            itemID1 = 1;
+        else if (lv2 >= 6 && random90Bool(engine))
+            itemID1 = 1;
+        else if (lv2 >= 7 && random40Bool(engine))
+            itemID1 = 2;
+        else if (lv2 >= 9 && random90Bool(engine))
+            itemID1 = 2;
+        itemID1 = Hosei1OR2(itemID1);
     } else if (itemID1 == 40) {
-        lv = curItems[itemID1];
-        if (floor < 251 + 39 * lv)
+        lv2 = curItems[itemID1];
+        if (floor < 251 + 39 * lv2)
             itemID1 = 1;
     } else if (itemID1 == 41) {
-        lv1 = curItems[40];
-        lv2 = curItems[itemID1];
-        if (lv1 == 0 || floor < 291 + 190 * lv2)
+        lv2 = curItems[40];
+        lv3 = curItems[itemID1];
+        if (lv2 == 0 || floor < 291 + 190 * lv3)
             itemID1 = 1;
     } else if (itemID1 == 42) {
-        lv1 = curItems[40];
-        lv2 = curItems[itemID1];
-        if (lv1 == 0 || floor < 221 + 2.4 * lv2)
+        lv2 = curItems[40];
+        lv3 = curItems[itemID1];
+        if (lv2 == 0 || floor < 221 + 2.4 * lv3)
             itemID1 = 1;
-        if (lv2 >= 350 && random30Bool(engine))
+        if (lv3 >= 350 && random30Bool(engine))
             itemID1 = 2;
-        if (lv2 >= 500 && random40Bool(engine))
+        if (lv3 >= 500 && random40Bool(engine))
             itemID1 = 2;
-        if (lv2 >= 600 && randomBool(engine))
+        if (lv3 >= 600 && randomBool(engine))
             itemID1 = 2;
     } else if (itemID1 == 43) {
-        lv1 = curItems[40];
-        lv2 = curItems[42];
-        lv3 = curItems[itemID1];
-        if (lv1 == 0 || lv2 == 0 || floor < 321 + 4.6 * lv3)
+        lv2 = curItems[40];
+        lv3 = curItems[42];
+        lv6 = curItems[itemID1];
+        if (lv2 == 0 || lv3 == 0 || floor < 321 + 4.6 * lv6)
             itemID1 = 1;
-        if (lv3 >= 200 && random40Bool(engine))
+        if (lv6 >= 200 && random40Bool(engine))
             itemID1 = 2;
-        if (lv3 >= 300 && randomBool(engine))
+        if (lv6 >= 300 && randomBool(engine))
             itemID1 = 2;
     } else if (itemID1 == 52) {
-        lv1 = curItems[40];
-        lv2 = curItems[43];
-        lv3 = curItems[itemID1];
-        if (lv1 == 0 || lv2 <= 10 || floor < 501 + 12 * lv3)
+        lv2 = curItems[40];
+        lv3 = curItems[43];
+        lv6 = curItems[itemID1];
+        if (lv2 == 0 || lv3 <= 10 || floor < 501 + 12 * lv6)
             itemID1 = 1;
-        if (lv3 >= 25 && random40Bool(engine))
+        if (lv6 >= 25 && random40Bool(engine))
             itemID1 = 2;
-        if (lv3 >= 50 && random30Bool(engine))
+        if (lv6 >= 50 && random30Bool(engine))
             itemID1 = 2;
-        if (lv3 >= 75 && random40Bool(engine))
+        if (lv6 >= 75 && random40Bool(engine))
             itemID1 = 2;
     }
     if (itemID1 == 10 || itemID1 == 12 || (itemID1 == 14 || itemID1 == 16)) {
         if (curItems[itemID1] >= 210 && random70Bool(engine))
             itemID1 = 2;
-    } else if (itemID1 == 44) {
-        lv = curItems[itemID1];
-        if (lv >= 1 && floor < 101 + 4 * lv + (lv < 5 ? 0 : 50) + (lv < 10 ? 0 : 70) + (lv < 40 ? 0 : 70) + (lv < 60 ? 0 : 70) + (lv < 70 ? 0 : 70))
-            itemID1 = 2;
-    } else if (itemID1 == 45) {
-        lv = curItems[itemID1];
-        if (floor < 451 + 6 * lv)
-            itemID1 = 1;
+    } else switch (itemID1) {
+        case 44:
+            lv7 = curItems[itemID1];
+            if (lv7 >= 1 && floor < 101 + 4 * lv7 + (lv7 < 5 ? 0 : 50) + (lv7 < 10 ? 0 : 70) + (lv7 < 40 ? 0 : 70) + (lv7 < 60 ? 0 : 70) + (lv7 < 70 ? 0 : 70)) {
+                itemID1 = 2;
+                break;
+            }
+            break;
+        case 45:
+            lv8 = curItems[itemID1];
+            if (floor < 451 + 6 * lv8) {
+                itemID1 = 1;
+                break;
+            }
+            break;
     }
     if (itemID1 == 31 && floor <= 600)
         itemID1 = 29;
@@ -540,13 +666,13 @@ function simulateChest(curItems, floor, noBuy) {
         itemID1 = 1;
     if (itemID1 == 1) {
         if (flag4 && floor >= 500)
-            itemID1 = random20Bool(engine) ? ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, max * 0.6))] : 29;
+            itemID1 = random20Bool(engine) ? ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, num1 * 0.6))] : 29;
     } else if (itemID1 == 2 && flag4 && floor >= 500)
-        itemID1 = random20Bool(engine) ? ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, max * 0.6))] : 30;
+        itemID1 = random20Bool(engine) ? ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, num1 * 0.6))] : 30;
     if (itemID1 == 26) {
-        lv = curItems[itemID1];
-        if (flag2 || lv <= 0 && floor < 501 || (lv <= 1 && floor < 1101 || lv >= 2 && floor < 1501))
-            itemID1 = ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, max * 0.8))];
+        lv2 = curItems[itemID1];
+        if (flag2 || lv2 <= 0 && floor < 501 || (lv2 <= 1 && floor < 1101 || lv2 >= 2 && floor < 1501))
+            itemID1 = ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, num1 * 0.8))];
     }
     if (itemID1 == 46) {
         max = floor * 0.0006 + randomRangeFloat(0, 0.05);
@@ -573,6 +699,14 @@ function simulateChest(curItems, floor, noBuy) {
         } else if (itemID1 == 2 && curItems[itemID1] >= 1000 && random30Bool(engine))
             itemID1 = 30;
     }
+    if (itemID1 == 31)
+        itemID1 = ATKHPItemHosei(curItems, itemID1, 29);
+    if (itemID1 == 29)
+        itemID1 = ATKHPItemHosei(curItems, itemID1, 1);
+    if (itemID1 == 32)
+        itemID1 = ATKHPItemHosei(curItems, itemID1, 30);
+    if (itemID1 == 30)
+        itemID1 = ATKHPItemHosei(curItems, itemID1, 2);
     if (!isntMaxed(curItems, itemID1))
         itemID1 = random70Bool(engine) ? 2 : 1;
     acquireItem(curItems, itemID1, noBuy);
@@ -649,7 +783,7 @@ function simulateRun(curItems, beginFloor, endFloor) {
             if (cur % 10 == 0) {
                 if (endFloor < cur/10) // TODO record floor instead
                     chests[cur] = cur != 20 ? (cur % 50 != 0 ? 3 : 4) : 2;
-                else if (random01(engine) < 0.25)
+                else if (random25Bool(engine))
                     chests[cur] = 2;
                 else if (random01(engine) < 0.22 && cur % 50 == 0)
                     chests[cur] = 3;
@@ -763,7 +897,7 @@ function simulateQuest(curItems, beginFloor, endFloor) {
             kuriaLine[index] += kuriaLine[index - 1] + num12;
         }
         chestCount[3] = 1;
-        if (duration <= 9 && random01(engine) < 0.6)
+        if (duration <= 9 && random60Bool(engine))
             chestCount[3] = 2;
         else if (duration <= 8)
             chestCount[3] = 2;
@@ -1350,12 +1484,19 @@ $(function () {
     engine = Random.engines.mt19937().autoSeed();
     random01 = Random.real(0, 1, false);
     randomBool = Random.bool();
+    random10Bool = Random.bool(.1);
+    random15Bool = Random.bool(.15);
     random20Bool = Random.bool(.2);
     random25Bool = Random.bool(.25);
     random30Bool = Random.bool(.3);
     random40Bool = Random.bool(.4);
     random45Bool = Random.bool(.45);
+    random60Bool = Random.bool(.6);
     random70Bool = Random.bool(.7);
+    random75Bool = Random.bool(.75);
+    random80Bool = Random.bool(.8);
+    random85Bool = Random.bool(.85);
+    random90Bool = Random.bool(.9);
     
     itemCount = 0;
     
