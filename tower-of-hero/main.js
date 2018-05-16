@@ -574,6 +574,7 @@ function simulateChest(curItems, floor, noBuy) {
                 itemID1 = 2;
         }
     } else if (itemID1 == 54) {
+        lv1 = curItems[itemID1];
         if (lv1 <= 14)
             itemID1 = 2;
         if (lv1 <= 15 && random70Bool(engine))
