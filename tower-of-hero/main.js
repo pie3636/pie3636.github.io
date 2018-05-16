@@ -497,7 +497,7 @@ function simulateChest(curItems, floor, noBuy) {
                 break;
             }
             if (itemID1 == 27 || itemID1 == 28) {
-                lv2 = curItems[lv];
+                lv2 = curItems[itemID1];
                 num3 = 132 + 33 * lv2 + (lv2 < 3 ? 0 : 100) + (lv2 < 5 ? 0 : 80) + (lv2 < 10 ? 0 : 90) + (lv2 < 25 ? 0 : 90) + (lv2 < 35 ? 0 : 80);
                 if (flag1 || flag2 || floor < num3 + 1) {
                     itemID1 = 2;
