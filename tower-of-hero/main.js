@@ -134,43 +134,6 @@ function refSort(targetData, refData) {
     });
 }
 
-function Hosei1OR2(itemID) {
-    if (itemID != 1 && itemID != 2)
-        return itemID;
-    return random75Bool(engine) ? 2 : 1;
-}
-
-function ATKHPItemHosei(curitems, itemID, t2) {
-    lv = curItems[itemID];
-    if (lv >= 15000 && random85Bool(engine))
-        itemID = t2;
-    else if (lv >= 15100 && randomBool(engine))
-        itemID = t2;
-    else if (lv >= 15250 && random40Bool(engine))
-        itemID = t2;
-    else if (lv >= 15500 && random30Bool(engine))
-        itemID = t2;
-    else if (lv >= 15750 && random25Bool(engine))
-        itemID = t2;
-    else if (lv >= 16000 && random85Bool(engine))
-        itemID = t2;
-    else if (lv >= 16500 && random30Bool(engine))
-        itemID = t2;
-    else if (lv >= 17000 && random80Bool(engine))
-        itemID = t2;
-    else if (lv >= 18000 && random60Bool(engine))
-        itemID = t2;
-    else if (lv >= 19000 && random70Bool(engine))
-        itemID = t2;
-    else if (lv >= 20000 && random90Bool(engine))
-        itemID = t2;
-    else if (lv >= 25000 && random90Bool(engine))
-        itemID = t2;
-    else if (lv >= 30000 && random90Bool(engine))
-        itemID = t2;
-    return itemID;
-}
-
 function doubleRefSort(target1, target2, refData) {
     var indices = Object.keys(refData);
     indices.sort(function(indexA, indexB) {
@@ -853,7 +816,7 @@ function randm10(min, max) {
     return num2;
 }
 
-// Also copied directly from the code, with few modifications and little understanding
+// Copied directly from the code, with few modifications. I didn't really understand that part
 function simulateQuest(curItems, beginFloor, endFloor) {
     duration = randomRangeInt(8, 12);
     if (duration == 11) {
@@ -957,9 +920,48 @@ function simulateQuest(curItems, beginFloor, endFloor) {
     }
 }
 
-// Copied directly from the code. I didn't really understand that part
+// Also copied directly from the code
 function okno(zako, id, lv) {
     return (zako || id != 1 && id != 2 && (id != 29 && id != 30) && (id != 31 && id != 32)) && (lv <= 1 || id != -99 && id != 21 && (id != 22 && id != 27) && (id != 28 && id != 34 && (id != 35 && id != 37)) && id != 38) && (id != -99 && id != 23 && (id != 25 && id != 26) && (id != 25 && id != 39 && (id != 40 && id != 44)) && id != 46);
+}
+
+// Also copied directly from the code
+function Hosei1OR2(itemID) {
+    if (itemID != 1 && itemID != 2)
+        return itemID;
+    return random75Bool(engine) ? 2 : 1;
+}
+
+// Also copied directly from the code
+function ATKHPItemHosei(curitems, itemID, t2) {
+    lv = curItems[itemID];
+    if (lv >= 15000 && random85Bool(engine))
+        itemID = t2;
+    else if (lv >= 15100 && randomBool(engine))
+        itemID = t2;
+    else if (lv >= 15250 && random40Bool(engine))
+        itemID = t2;
+    else if (lv >= 15500 && random30Bool(engine))
+        itemID = t2;
+    else if (lv >= 15750 && random25Bool(engine))
+        itemID = t2;
+    else if (lv >= 16000 && random85Bool(engine))
+        itemID = t2;
+    else if (lv >= 16500 && random30Bool(engine))
+        itemID = t2;
+    else if (lv >= 17000 && random80Bool(engine))
+        itemID = t2;
+    else if (lv >= 18000 && random60Bool(engine))
+        itemID = t2;
+    else if (lv >= 19000 && random70Bool(engine))
+        itemID = t2;
+    else if (lv >= 20000 && random90Bool(engine))
+        itemID = t2;
+    else if (lv >= 25000 && random90Bool(engine))
+        itemID = t2;
+    else if (lv >= 30000 && random90Bool(engine))
+        itemID = t2;
+    return itemID;
 }
 
 function getItem(floor, zako) {
@@ -1347,6 +1349,7 @@ function displayResults() {
     if (presetLoading) { // Loading a preset will trigger radio button clicks and call this function
         return;
     }
+    hideCapped = $("#hide-capped")[0].checked;
     sortType = $("input[name='res-sort']:checked")[0].id;
     $("#res-table").html("");
     $("#simulated-count").html(steps);
@@ -1365,15 +1368,19 @@ function displayResults() {
     }
     for (var i = 0; i < itemCount; i++) {
         var str = "<tr><td>" + tabs[1][i] + "</td><td>" + curItems[itemObjs[tabs[1][i]].id] + "</td><td>";
+        var hidden = hideCapped;
         if (!isntMaxed(curItems, itemObjs[tabs[1][i]].id)) {
             str += "<span class='red'>Capped</span></td><td>";
         } else if (tabs[1][i] === "Fire Sword") {
             str += "<span class='red'>Shop only</span></td><td>";
         } else {
+            hidden = false;
             str += tabs[j][i].toFixed(5) + "%</td><td>+" + tabs[2 - j][i].toFixed(2);
         }
         str += "</td></tr>";
-        $("#res-table").append(str);
+        if (!hidden) {
+            $("#res-table").append(str);
+        }
     }
 }
 
@@ -1417,13 +1424,14 @@ function importPreset() {
         $("#single-floor")[0].value = toImport[4];
         $("#reset-chests").prop("checked", toImport[5]);
         $("#floor-chests").prop("checked", toImport[6]);
-        $("#floor-min")[0].value = toImport[7];
-        $("#floor-max")[0].value = toImport[8];
-        $("#" + toImport[9]).prop("checked", true).trigger("click");
-        for (var i = 8; i < 15; i++) {
+        $("#hide-capped").prop("checked", toImport[7]);
+        $("#floor-min")[0].value = toImport[8];
+        $("#floor-max")[0].value = toImport[9];
+        $("#" + toImport[10]).prop("checked", true).trigger("click");
+        for (var i = 9; i < 19; i++) {
             $("#" + i).value = toImport[i + 2];
         }
-        $("#" + toImport[18]).prop("checked", true).trigger("click");
+        $("#" + toImport[19]).prop("checked", true).trigger("click");
         
         $("#import").modal("hide");
         presetLoading = false;
@@ -1449,6 +1457,7 @@ function exportPreset() {
         Number($("#single-floor")[0].value),
         $("#reset-chests")[0].checked,
         $("#floor-chests")[0].checked,
+        $("#hide-capped")[0].checked,
         Number($("#floor-min")[0].value),
         Number($("#floor-max")[0].value),
         $("input[name='quest']:checked")[0].id,
