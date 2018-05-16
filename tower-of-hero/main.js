@@ -46,10 +46,10 @@ itemObjs = {
     "Gáe Bolg":             new Item(26,        3,   50, 500,    1,   0,    0,   0),
     "Mithril Sword":        new Item(27,       45,    7,  45,    2,   0,    1,  20),
     "Mithril Armour":       new Item(28,       45,    5,  28,    2,   0,    1,  20),
-    "Full Plate":           new Item(29,        0,  7.5, 5.5,  300,  10,    0,   0),
-    "Flamberge":            new Item(30,        0,  6.5, 5.5,  300,  10,    0,   0),
-    "Full Helmet":          new Item(31,        0,   11,  15, 1800,  11,    0,   0),
-    "Tomahawk":             new Item(32,        0,   10,  15, 1800,  11,    0,   0),
+    "Full Plate":           new Item(29, Infinity,  7.5, 5.5,  300,  10,    0,   0),
+    "Flamberge":            new Item(30, Infinity,  6.5, 5.5,  300,  10,    0,   0),
+    "Full Helmet":          new Item(31, Infinity,   11,  15, 1800,  11,    0,   0),
+    "Tomahawk":             new Item(32, Infinity,   10,  15, 1800,  11,    0,   0),
     "Summoning letter":     new Item(33,       10,    7,  10,    1,   0,    0,   0),
     "Awakening Armor":      new Item(34,       70,   10,  67,   10,   2,    0,   0),
     "Awakening Sword":      new Item(35,       70,   10,  67,   10,   2,    0,   0),
@@ -141,7 +141,7 @@ function Hosei1OR2(itemID) {
 }
 
 function ATKHPItemHosei(curitems, itemID, t2) {
-    lv = curItems[lv];
+    lv = curItems[itemID];
     if (lv >= 15000 && random85Bool(engine))
         itemID = t2;
     else if (lv >= 15100 && randomBool(engine))
