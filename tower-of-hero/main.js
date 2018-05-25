@@ -9,6 +9,10 @@ function Item(id, cap, droprank, droprank2, i1, i2, limitI1, limitLine) {
     this.limitLine = limitLine;
 }
 
+versionStr = "1.8.0";
+
+// TODO Alphab sort, +1/+10, presets, guide next to it
+
 itemObjs = {
     /*
      * i1 = linear param, i2 = inverse param, limitLine = decay point, limitI1 = i1 past decay
@@ -773,6 +777,7 @@ function simulateRun(curItems, beginFloor, endFloor) {
         cur++;
     }
     for (var i in chests) {
+        console.log(beginFloor, endFloor);
         if (i*10 > beginFloor && i*10 <= endFloor) {
             for (var j = 0; j < chests[i]; j++) {
                 simulateChest(curItems, i*10);
@@ -1241,7 +1246,7 @@ function mainLoop() {
     resets = Number($("#resets")[0].value);
     if (runType === "full-run") {
         questType = $("input[name='quest']:checked")[0].id;
-        beginFloor = $("#floor-min")[0].value + 10;
+        beginFloor = Number($("#floor-min")[0].value) + 1;
         endFloor = $("#floor-max")[0].value;
         questValues = [Number($("#8min")[0].value), Number($("#9min")[0].value), Number($("#10min")[0].value), Number($("#11min")[0].value), Number($("#12min")[0].value), Number($("#13min")[0].value), Number($("#14min")[0].value), Number($("#15min")[0].value)];
         if (questType === "no-quest") {
@@ -1366,6 +1371,7 @@ function displayResults() {
         $("#err-wrong-sort").show();
         return;
     }
+    curItems = items.slice();
     for (var i = 0; i < itemCount; i++) {
         var str = "<tr><td>" + tabs[1][i] + "</td><td>" + curItems[itemObjs[tabs[1][i]].id] + "</td><td>";
         var hidden = hideCapped;
@@ -1489,7 +1495,7 @@ function removePreset() {
 
 $(function () {
     $('[data-toggle="tooltip"]').tooltip();
-    $("#version").append("1.8.0");
+    $("#version").append(versionStr);
     
     engine = Random.engines.mt19937().autoSeed();
     random01 = Random.real(0, 1, false);
