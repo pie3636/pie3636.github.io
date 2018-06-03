@@ -11,7 +11,7 @@ $(function () {
         $("#loading").remove();
         currentTab = "charts";
         changeTab("charts");
-        
+
         $("#version").append(data.lastData);
         $("#version-mobile").append(data.lastData.substr(0, 7));
         $("#updateAnnouncementVersion").html(data.lastUpdate);
@@ -20,7 +20,7 @@ $(function () {
         $(window).on("resize", function() {
             $('.modal:visible').each(centerModal);
         });
-        
+
         var storedVersion = localStorage.storedVersion;
         if (typeof storedVersion === "undefined" || storedVersion !== data.lastUpdate) {
             $("#updateAnnouncement").show();
@@ -29,19 +29,19 @@ $(function () {
             $("#updateAnnouncement").hide();
             localStorage.storedVersion = data.lastUpdate;
         });
-        
+
         /******************** Data inclusion ********************/
-        
+
         if (data.comment !== "") {
             $("#comment").html(data.comment.replace(/\n/g, "<br />"));
             $("#comment-panel").show();
         }
-        
+
         for (var i in data.charts) {
             $("#charts-link-" + i).attr("href", data.charts[i]);
             $("#charts-img-" + i).attr("src", data.charts[i]);
         }
-        
+
         updateValue(data.counts.total, "total-counts", true);
         updateValue(data.counts.ofMain, "of-main-counts-percent", true);
         updateValue(data.counts.min, "min-count", true);
@@ -50,10 +50,10 @@ $(function () {
         updateValue(data.counts.ofMaxRange, "of-max-count-range", true, 2);
         updateValue(data.counts.avg, "avg-count", true, 2);
         updateValue(data.counts.med, "med-count", true);
-        
+
         updateTableNR(data.counts.mostCommon, "most-common-counts", false, true);
         updateTableNR(data.counts.leastCommon, "least-common-counts", false, true);
-        
+
         updateValue(data.replyTime.started, "started", true, 2, true);
         updateValue(data.replyTime.fastest, "fastest-count", true, 2, true);
         updateValue(data.replyTime.slowest, "slowest-count", true, 2, true);
@@ -80,10 +80,10 @@ $(function () {
         updateValue(data.gets.count, "total-gets", true);
         updateValue(data.gets.avg, "avg-get", true, 2);
         updateValue(data.gets.med, "med-get", true);
-        
+
         updateTableNR(data.gets.mostCommon, "most-common-gets", false, true);
         updateTableNR(data.gets.leastCommon, "least-common-gets", false, true);
-        
+
         updateValue(data.gets.fastest.time, "fastest-get", true, 2, true);
         $("#fastest-get-direction").html(data.gets.fastest.begin < data.gets.fastest.end ? "up" : "down")
         updateValue(data.gets.fastest.begin, "fastest-get-begin");
@@ -117,31 +117,32 @@ $(function () {
         updateValue(data.getSign.ofZero, "of-gets-zero", true, 2);
         updateValue(data.getSign.maxPosStreak, "max-pos-get-streak", true);
         updateValue(data.getSign.maxNegStreak, "max-neg-get-streak", true);
-        
+
         updateTableNR(data.oneStalemates, "one-stalemates");
         updateTableNR(data.twoStalemates, "two-stalemates", true);
-        
+
         updateValue(data.deletedCounts, "deleted-counts", true);
         updateValue(data.forks, "forks", true);
         updateValue(data.users.count, "total-usrs", true);
         updateValue(data.users.avg, "avg-usr", true, 2);
         updateValue(data.users.med, "med-usr", true);
-        
+
         updateTableR(data.users.top20, "top-20-usrs");
         updateTableR(data.users.topGets, "top-usr-gets");
         updateValue(data.users.topGets.threshold, "usr-min-gets");
         updateTableR(data.users.topAssists, "top-usr-assists");
         updateValue(data.users.topAssists.threshold, "usr-min-assists");
-        
-        updateTableR(data.users.fastest, "top-usr-speed");
-        updateValue(data.users.fastest.threshold, "usr-min-counts");
-        
+
         updateTableR(data.users.fastestMed, "top-usr-med-speed");
-        
+        updateValue(data.users.fastestMed.threshold, "usr-min-counts");
+
+        updateTableR(data.users.fastest, "top-usr-speed");
+        updateValue(data.users.fastest.threshold, "usr-min-counts2");
+
         updateTableR(data.users.speedScore, "top-usr-speed-score");
-        
+
         updateTableR(data.top100, "top-100-usrs");
-        
+
         updateTableR(data.teams, "top-team-score-nolink")
 });
 
@@ -247,6 +248,23 @@ function getRanks(values) {
     return [res, tiesBegin, tiesEnd];
 }
 
+function getValueAndDelta(value, curVal, prev) {
+    str = curVal[1];
+    for (val in prev) {
+        if (prev[val][0] == curVal[0]) {
+            delta = Math.round(100 * (curVal[1] - prev[val][1])) / 100;
+            if (delta === 0) {
+                str += " (=)";
+            } else if (delta > 0) {
+                str += " (<span class='green'>+ " + delta + "</span>)";
+            } else {
+                str += " (<span class='red'>- " + -delta + "</span>)";
+            }
+        }
+    }
+    return str;
+}
+
 function updateTableR(values, id) {
     dataPrev = getRanks(values.prev)[0];
     ranks = getRanks(values.cur);
@@ -275,7 +293,7 @@ function updateTableR(values, id) {
         }
         var curCol = 2;
         col1 = values.cur[value][0];
-        col2 = values.cur[value][1];
+        col2 = getValueAndDelta(value, values.cur[value], values.prev);
         while (curCol < values.cur[value].length) { // Append remaining columns if necessary
             col2 += "</td><td>" + values.cur[value][curCol];
             curCol++;

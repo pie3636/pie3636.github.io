@@ -57,10 +57,10 @@
         - <strike>User-based charts now display stat variations in addition to rank variations</strike> (to be reimplemented due to data loss)<br /><br />
         You can also check the <a href="#" class="alert-link" onclick="changeTab('changelog')">changelog</a> for more information.
     </div>
-    
+
     <noscript><h1 class="text-center">Oops! The page doesn't seem to load... If your connection is being slow, you can wait some more. Otherwise, please make sure JavaScript is enabled, and try again. If you are using an add-on like NoScript, please whitelist <u>pie3636.github.io</u> in order to access this page.</h1></noscript>
     <h1 class="text-center" id="loading">Loading...</h1>
-    
+
     <div id="charts" style="display:none">
         <div class="panel panel-primary" id="comment-panel" style="display:none">
             <div class="panel-heading">Stats in a nutshell</div>
@@ -109,8 +109,8 @@
             </div>
         </div>
     </div>
-    
-    
+
+
     <div id="counts" style="display:none">
         <br />
         <div class="col-md-12">Note: Values between parenthesis are variations since the last time I posted those stats.</div><br />
@@ -173,12 +173,12 @@
                 <div class="panel panel-info panel-low panel-body">
                     <h2 class="text-center">Count direction</h2>
                     The longest increasing streak lasted <b><span id="max-up-streak"></span><span id="max-up-streak-variation"></span></b> counts.
-                    This is <b><span id="max-up-streak-percent"></span><span id="max-up-streak-percent-variation"></span></b> of the entire range. 
+                    This is <b><span id="max-up-streak-percent"></span><span id="max-up-streak-percent-variation"></span></b> of the entire range.
                     <br /><br />
                     This streak went up from <b><span id="max-up-streak-begin"></span></b> to <b><span id="max-up-streak-end"></span></b>.
                     <br /><br />
                     The longest decreasing streak lasted <b><span id="max-down-streak"></span><span id="max-down-streak-variation"></span></b> counts.
-                    This is <b><span id="max-down-streak-percent"></span><span id="max-down-streak-percent-variation"></span></b> of the entire range. 
+                    This is <b><span id="max-down-streak-percent"></span><span id="max-down-streak-percent-variation"></span></b> of the entire range.
                     <br /><br />
                     This streak went down from <b><span id="max-down-streak-begin"></span></b> to <b><span id="max-down-streak-end"></span></b>.
                     <br /><br />
@@ -246,8 +246,8 @@
             Note that here, "consecutive" means that the value was reached every other count, due to how Tug of War works.
         </div>
     </div>
-    
-    
+
+
     <div id="gets" style="display:none">
         <br />
         <div class="col-md-12">Note: Values between parenthesis are variations since the last time I posted those stats.</div><br />
@@ -351,8 +351,8 @@
             </div>
         </div>
     </div>
-    
-    
+
+
     <div id="users" style="display:none">
         <br />
         <div class="col-md-12">Note: Values between parenthesis are variations since the last time I posted those stats.</div><br />
@@ -451,7 +451,7 @@
             <hr class="hr-large"/>
             <div>
                 <h4 class="text-center">Users with the lowest average reply time</h4>
-                Here are the 100 fastest users amongst the users who have counted at least <b><span id="usr-min-counts"></span></b> times. Note that this calculation uses the average reply time, which might not be the best indicator of speed overall.<br /><br />
+                Here are the 100 fastest users amongst the users who have counted at least <b><span id="usr-min-counts2"></span></b> times. Note that this calculation uses the average reply time, which might not be the best indicator of speed overall.<br /><br />
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -485,8 +485,8 @@
             </div>
         </div>
     </div>
-    
-    
+
+
     <div id="hoc" style="display:none">
         <br />
         <!--<div class="col-md-12">Note: Values between parenthesis are variations since the last time I posted those stats.</div><br />-->
@@ -507,8 +507,8 @@
             </div>
         </div>
     </div>
-    
-    
+
+
     <div id="help" style="display:none; margin-left: 5px; margin-right: 5px">
         <div class="col-md-12">
         <dl class="dl-horizontal">
@@ -537,11 +537,19 @@
         <span class="top6">This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</span>
         </div>
     </div>
-    
-    
+
+
     <div id="changelog" style="display:none; margin-left: 5px; margin-right: 5px">
         <div class="col-md-12">
-            <h5>08 Nov 2017:</h5>
+            <h5>02 Jun 2018:</h5>
+            - Graphs now have a higher size and resolution<br />
+            - User-based charts now display stat variations in addition to rank variations (re-implemented)<br />
+            <hr/><h5>17 Dec 2017:</h5>
+            - Added statistic: last get length in comparison to other gets<br />
+            - Added chart: cumulative contribution of top users<br />
+            - Added chart: top teams by score<br />
+            - <strike>User-based charts now display stat variations in addition to rank variations</strike> (to be reimplemented due to data loss)<br />
+            <hr/><h5>08 Nov 2017:</h5>
             - Added chart: cumulative contribution of top users<br />
             - Added chart: top teams by score<br />
             - User-based charts now display stat variations in addition to rank variations<br />
@@ -578,7 +586,7 @@
             <hr/>
         </div>
     </div>
-    
+
 </div>
 
 
