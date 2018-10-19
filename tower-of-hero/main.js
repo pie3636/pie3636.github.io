@@ -777,7 +777,6 @@ function simulateRun(curItems, beginFloor, endFloor) {
         cur++;
     }
     for (var i in chests) {
-        console.log(beginFloor, endFloor);
         if (i*10 > beginFloor && i*10 <= endFloor) {
             for (var j = 0; j < chests[i]; j++) {
                 simulateChest(curItems, i*10);
@@ -1383,7 +1382,7 @@ function displayResults() {
             hidden = false;
             str += tabs[j][i].toFixed(5) + "%</td><td>+" + tabs[2 - j][i].toFixed(2);
         }
-        str += "</td></tr>";
+        str += "</td><td>" + String(itemObjs[tabs[1][i]].cap).replace("Infinity", "-") + "</td></tr>";
         if (!hidden) {
             $("#res-table").append(str);
         }
@@ -1438,7 +1437,7 @@ function importPreset() {
             $("#" + i).value = toImport[i + 2];
         }
         $("#" + toImport[19]).prop("checked", true).trigger("click");
-        
+
         $("#import").modal("hide");
         presetLoading = false;
     } catch (e) {
@@ -1456,7 +1455,7 @@ function exportPreset() {
         j++;
     }
     toExport = [
-        items, 
+        items,
         $("input[name='is-full-run']:checked")[0].id,
         Number($("#resets")[0].value),
         $("input[name='run-time']:checked")[0].id,
@@ -1496,7 +1495,7 @@ function removePreset() {
 $(function () {
     $('[data-toggle="tooltip"]').tooltip();
     $("#version").append(versionStr);
-    
+
     engine = Random.engines.mt19937().autoSeed();
     random01 = Random.real(0, 1, false);
     randomBool = Random.bool();
@@ -1513,17 +1512,17 @@ $(function () {
     random80Bool = Random.bool(.8);
     random85Bool = Random.bool(.85);
     random90Bool = Random.bool(.9);
-    
+
     itemCount = 0;
-    
+
     for (var i in itemObjs) {
         itemCount++;
     }
-    
+
     presetLoading = false;
-    
-    items = new Array(itemCount).fill(0); // TODO   
-    
+
+    items = new Array(itemCount).fill(0); // TODO
+
     for (var i in itemObjs) {
         itemObjs[i].value = 0; // TODO, also merge with loop under
     }
@@ -1531,7 +1530,7 @@ $(function () {
     for (var i in itemObjs) {
         $("#itemLevels").append("<tr><td>" + i + "</td><td><input type='number' id='" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, "") + "' name='quantity' min='0' max='" + itemObjs[i].cap + "' value='" + itemObjs[i].value + "'></td><tr/>");
     }
-    
+
     $('.modal').on('show.bs.modal', centerModal);
     $("#export").on('shown.bs.modal', function(e) {
         $("#export-code").select();
@@ -1542,13 +1541,13 @@ $(function () {
     $(window).on("resize", function() {
         $('.modal:visible').each(centerModal);
     });
-    
+
     $(".btn").click(function() { // Unfocus buttons
         this.blur();
     });
-    
+
     // Event listeners
-    
+
     $("#full-run").click(function() {
         $("#run-form").show();
         $("#one-floor").hide();
@@ -1566,7 +1565,7 @@ $(function () {
     $("#normal-quest, #always-quest").click(function() {
         $("#quest-form").show();
     });
-    
+
     $("#simulate").click(runSimulation);
     $("#prob, #avg").click(displayResults);
     $("#btn-save").click(savePreset);
@@ -1575,6 +1574,6 @@ $(function () {
     $("#do-import").click(importPreset);
     $("#btn-load").click(loadPreset);
     $("#btn-remove").click(removePreset);
-    
+
     //debugCur();
 });
