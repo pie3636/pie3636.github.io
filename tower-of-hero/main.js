@@ -537,7 +537,7 @@ function simulateChest(curItems, floor, noBuy) {
     } else if (itemID1 == 57) {
         lv2 = curItems[itemID1];
         if (lv2 == 0) {
-            if random90Bool(engine) && (flag3 || floor < 150)
+            if (random90Bool(engine) && (flag3 || floor < 150))
                 itemID1 = 2;
             else if (floor < 226)
                 itemID1 = 2;
