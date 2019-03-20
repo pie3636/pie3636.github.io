@@ -9,7 +9,7 @@ function Item(id, cap, droprank, droprank2, i1, i2, limitI1, limitLine) {
     this.limitLine = limitLine;
 }
 
-versionStr = "1.8.0";
+versionStr = "1.8.6";
 
 // TODO Alphab sort, +1/+10, presets, guide next to it
 
@@ -66,7 +66,7 @@ itemObjs = {
     "Gate":                 new Item(42,      701,    9,    7,   22,   0, 0.02,   1),
     "Dark Gate":            new Item(43,      401,   10,    8,    4,   0, 0.02,   1),
     "Magic Lamp":           new Item(44,       76,    7,   12,  100,   0,    2,   1),
-    "Dark Boots":           new Item(45,       85,  8.7,    6,    1,   0,  0.5,  30),
+    "Dark Boots":           new Item(45,      100,  8.7,    6,    1,   0,  0.5,  30),
     "Fire Sword":           new Item(46,    30000, 9999, 9999,    5,   0,    0,   0),
     "Freyr's Sword":        new Item(47,    50000, 14.5,   18,    1,   0,    0,   0),
     "Flame Pot":            new Item(48,       16,    7,   22,    1,   0,  0.3,   1),
@@ -78,7 +78,7 @@ itemObjs = {
     "Veteran's Hat":        new Item(54,       10,   28,   72,    3,   0,    0,   0),
     "Blue Crystal":         new Item(55,       11,    6,   32,  100,   0,   10,   1),
     "Freyr's Sword 2":      new Item(56,       20,   19, 9999,  500,   0,    0,   0),
-    "Book of Prophesy":     new Item(57,       1,    18,   50,  100,   0,    0,   0)
+    "Book of Prophesy":     new Item(57,       3,    18,  200,  100,   0,    0,   0)
 }
 
 names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon's Staff",
@@ -534,8 +534,16 @@ function simulateChest(curItems, floor, noBuy) {
             itemID1 = 1;
         else if (lv2 >= 80 && random25Bool(engine))
             itemID1 = 2;
-    } else if (itemID1 == 57 && flag3 || floor < 201) {
-        itemID1 = 2;
+    } else if (itemID1 == 57) {
+        lv2 = curItems[itemID1];
+        if (lv2 == 0) {
+            if random90Bool(engine) && (flag3 || floor < 150)
+                itemID1 = 2;
+            else if (floor < 226)
+                itemID1 = 2;
+        }
+        else if (flag2 || floor < 801 + lv2 * 200)
+            itemID1 = 2;
     }
     if (itemID1 == 33) {
         lv2 = curItems[itemID1];
@@ -641,7 +649,14 @@ function simulateChest(curItems, floor, noBuy) {
             break;
         case 45:
             lv8 = curItems[itemID1];
-            if (floor < 451 + 6 * lv8) {
+            num3 = 451 + 6 * lv8;
+            if (lv8 >= 70)
+                num3 += 100;
+            if (lv8 >= 80)
+                num3 += 200;
+            if (lv8 >= 90)
+                num3 += 200;
+            if (floor < num3) {
                 itemID1 = 1;
                 break;
             }
