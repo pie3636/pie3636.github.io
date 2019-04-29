@@ -1,0 +1,529 @@
+﻿/* GLOBAL STYLES */
+*{
+    outline: none;
+    box-sizing: border-box;
+    font-family: 'lato', Arial, sans-serif;
+}
+
+body {
+    color: #5a5a5a;
+}
+
+/* Bootstrap Nav Tab Customize */
+.nav-tabs {
+    border: none;
+    display: table;
+    margin: 0 auto;
+}
+.nav-tabs>li {
+    margin-left: -3px;
+}
+.nav-tabs>li>a {
+    border: 1px solid #e1e1e1;
+    border-radius: 0px;
+    padding: 18px 0;
+    width: 208px;
+    text-align: center;
+    font-weight: bold;
+    color: #282828;
+}
+.nav-tabs>li>a:hover {
+    color: #fff;
+}
+.nav-tabs>li:first-child>a {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.nav-tabs>li:last-child>a {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.nav-tabs>li.active>a, 
+.nav-tabs>li.active>a:hover, 
+.nav-tabs>li.active>a:focus {
+    z-index: 100;
+    color: #fff;
+}
+
+.nav-tabs>li.active>a {
+    color: #fff;
+}
+
+/* Fixed Navbar */
+.navbar {
+    min-height: 80px;
+    background-color: #fff;
+    border: none;
+    -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+    -webkit-transition: all .15s linear;
+    -moz-transition: all .15s linear;
+    -ms-transition: all .15s linear;
+    -o-transition: all .15s linear;
+    transition: all .15s linear;
+    animation-name: slideUp;
+    -webkit-animation-name: slideUp;
+    opacity: 0;
+    margin-top: -80px;
+    margin-bottom: 0px;
+}
+
+.fixednav {
+    opacity: 1;
+    animation-name: slideDown;
+    -webkit-animation-name: slideDown;
+    animation-duration: 0.5s;
+    -webkit-animation-duration: 0.5s;
+    margin-top: 0px;
+}
+
+.navbar-default .navbar-nav>li>a {
+    font-size: 14px;
+    font-weight: bold;
+    color: #282828;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+/* Carousel base class */
+.carousel {
+    height: 650px;
+}
+
+@media screen and (max-width: 768px){
+	.carousel {
+    	height: 530px;
+	}
+}
+
+#myCarousel .item{
+	background-image: url(../images/landscape.jpg);
+	background-position: 0% 35%
+}
+
+@media screen and (max-width: 768px){
+	#myCarousel .item{
+		background-image: url(../images/bg_moutain_mobile.png);
+	}
+}
+
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+    z-index: 10;
+}
+
+/* Declare heights because of positioning of img element */
+.carousel .item {
+    height: 650px;
+    background-color: #777;
+}
+
+@media screen and (max-width: 768px){
+	.carousel .item {
+    	height: 530px;
+	}
+}
+
+.carousel-inner > .item  {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+}
+
+
+/* Thin out the marketing headings */
+.featurette-heading {
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+@media (min-width: 768px) {
+    .featurette-heading {
+        font-size: 50px;
+    }
+}
+
+@media (min-width: 992px) {
+    .featurette-heading {
+        margin-top: 120px;
+    }
+}
+
+
+.blue_theme{
+    color: #0099e6;
+}
+
+section{
+    width: 100%;
+    height: auto;
+}
+
+#myCarousel .carousel-caption{
+    height: 70%;
+    bottom: 0;
+}
+
+@media screen and (max-width: 1100px){
+    #myCarousel .carousel-caption{
+        height: 85%;
+    }
+}
+
+@media screen and (max-width: 768px){
+    #myCarousel .carousel-caption{
+        height: 95%;
+    }
+}
+
+#myCarousel .carousel-caption h1{
+    font-family: 'lato';
+    font-weight: 700;
+    font-size: 50px;
+    margin-bottom: 40px;
+}
+
+.carousel-caption p {
+    font-size: 24px;
+    font-family: 'lato';
+    line-height: 1.4;
+}
+
+@media screen and (max-width: 650px){
+    #myCarousel .carousel-caption h1{
+        font-size: 40px;
+    }
+}
+
+@media screen and (max-width: 400px){
+    #myCarousel .carousel-caption h1{
+        font-size: 30px;
+    }
+}
+
+.carousel_background{
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+footer{
+    margin-top: 40px;
+}
+
+.newsletter{
+    padding-top: 25px;
+    width: 300px;
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.4);
+    padding-bottom: 50px;
+    padding-left: 35px;
+    padding-right: 35px;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    margin-left: -150px;
+    z-index: 10;
+    height: 245px;
+}
+
+@media screen and (max-width: 650px){
+    .newsletter{
+        width: auto;
+        margin-left: 0;
+        left: 0px;
+        right: 0px;
+    }
+}
+
+input.email_newsletter, input.nom_newsletter{
+    background-color: white;
+    color: #333333;
+    padding: 12px 10px;
+    height: 40px;
+    width: 100%;
+    border-radius: 0px;
+    font-size: 16px;
+    display: block;
+    margin: auto;
+    margin-bottom: 25px;
+}
+
+input.submit_newsletter, #contact input[type='submit']{
+    background-color: #0199e6;
+    color: white;
+    height: 40px;
+    width: 100%;
+    border-radius: 3px;
+    text-align: center;
+    transition: all 0.4s ease;
+    font-size: 15px;
+    font-family: 'lato';
+    border: 0;
+    display: block;
+    margin: auto;
+}
+
+input.submit_newsletter:hover, #contact input[type='submit']:hover{
+    background-color: #0188cc;
+}
+
+.social_image{
+    text-align: center;
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+
+.marketing_text p.lead{
+    font-family: lato;
+    font-weight: 300;
+    font-size: 18px;
+    color: black;
+}
+
+.marketing_image img{
+    max-width: 100%;
+    margin-top: 40px;
+    border-radius: 20px;
+}
+
+#success_message{
+    color: white;
+    text-align: center;
+}
+
+#success_message h3{
+    text-align: center;
+    font-weight: bold;
+}
+
+#success_message p{
+    margin: auto;
+    margin-top: 40px;
+    font-size: 16px;
+}
+
+h2.featurette-heading {
+    font-weight: 300;
+    font-family: lato;
+    line-height: 1;
+    letter-spacing: -1px;
+    margin-bottom: 40px;
+}
+
+@media screen and (max-width: 768px){
+	h2.featurette-heading {
+		margin-top: 60px;
+	}
+}
+
+.section_bgimage{
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+	padding-bottom: 100px;
+	color: white;
+	margin-top: 50px;
+}
+
+.section_1{
+    background-color: white;
+}
+
+@media screen and (min-width: 992px){
+	.section_1 .marketing_image{
+		margin-top: 30px;
+	}
+}
+
+.section_2{
+	background-image: url(../images/hololens.jpg);
+}
+
+@media (min-width: 992px) {
+    .section_2 .featurette-heading {
+        margin-top: 200px;
+    }
+}
+
+.section_bgimage .marketing_text p.lead{
+	color: white;
+}
+
+@media screen and (min-width: 992px){
+	.section_3 .marketing_image img{
+		max-width: 400px;
+		float: right;
+		margin-right: 100px;
+		margin-top: 120px;
+	}
+}
+
+.section_4{
+	min-height: 600px;
+	background-position: center bottom !important;
+	background-image: url(../images/go_further.jpg);
+}
+
+@media (min-width: 992px) {
+    .section_4 .featurette-heading {
+        margin-top: 300px;
+    }
+}
+
+.section_5 h2{
+	font-family: 'lato';
+	font-weight: 300;
+}
+
+.section_5 p{
+	font-size: 18px;
+	font-weight: 300;
+	margin-bottom: 40px;
+}
+
+@media screen and (max-width: 768px){
+	.col-sm-5 .marketing_text {
+    	margin-top: 55px;
+	}
+}
+
+@media screen and (max-width: 768px){
+	.section_5 h2{
+		margin-top: 50px;
+	}
+}
+
+.modal{
+	z-index: 5000;
+}
+
+
+/****************************************************************************
+* CONTACT
+****************************************************************************/
+#contact{
+	background-image: url(../img/contact.png);
+	background-repeat: no-repeat;
+	background-size: cover;
+	padding-bottom: 70px;
+	min-height: 705px;
+}
+
+@media screen and (max-width: 768px){
+	#contact{
+		min-height: 735px;
+	}
+}
+
+#contact input, #contact textarea, #contact select {
+	color: #484848;
+	font-size: 15px;
+	line-height: 18px;
+	width: 100%;
+	margin-bottom: 15px;
+	padding: 10px;
+	border-radius: 3px;
+	border: 1px solid #ebebeb;
+	transition: all 0.3s ease;
+}
+
+#contact input:focus, #contact textarea:focus, #contact select:focus{
+	border: 1px solid #0199e6;
+}
+
+#contact input, #contact select{
+	height: 40px;
+}
+
+
+#contact textarea{
+	height: 200px;
+	resize: none;
+}
+
+#success_message_contact{
+	text-align: center;
+	margin-top: 210px;
+}
+
+#success_message_contact h3{
+	font-size: 70px;
+	font-weight: 300;
+	color: #0199e6;
+}
+
+#success_message_contact p{
+	font-weight: 300;
+	font-size: 26px;
+	margin-top: 40px;
+}
+
+
+/****************************************************************************
+* FOOTER
+****************************************************************************/
+footer{
+	width: 100%;
+	background-color: #f2f2f2;
+	min-height: 200px;
+	color: rgb(190, 190, 190);
+	padding-top: 35px;
+}
+
+.social img{
+	width: 50px;
+}
+
+.row_social{
+	margin-top: 30px;
+}
+
+img.twitter{
+	width: 81px;
+    position: relative;
+    bottom: 15px;
+}
+
+@media screen and (max-width: 768px){
+	footer .container > .row .col-sm-3, footer .container > .row .col-sm-4{
+		margin-top: 30px;
+	}
+	
+	footer{
+		padding-bottom: 40px;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

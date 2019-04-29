@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Tower of Hero run simulator">
+<meta name="author" content="pie3636">
+<title>Tower of Hero simulator</title>
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-theme.css" rel="stylesheet">
+<link href="theme.css" rel="stylesheet">
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body role="document">
+<nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        <span class="navbar-brand" id="version"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Tower of Hero simulator - </span>
+    </div>
+</nav>
+
+<div class="container-fluid" role="main" id="main">
+    <div class="alert alert-danger">
+        <span class="glyphicon glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+        <b>Warning:</b> This website is in <b>alpha</b>. In particular, the gold chest simulation, as well as the quest ones, are almost certainly incorrect. The presets are also not yet implemented.<br/>
+        If you notice any discrepancy or wrong value, please message me (<a href="http://reddit.com/user/pie3636">/u/pie3636</a>) so I can fix it. I will keep working on the website in the near future, and particularly fix the broken parts.
+    </div>
+    
+    <div class="panel panel-info panel-body">
+        Use this website to simulate climbs of the Tower. You will be able to see which items you are most likely to get during your next run, as well as how many of them you will get on average.<br/>
+        This website also allows you to save your data to presets so you can come back and not have to re-type all of your item levels. This also lets you experiment with different save states.<br/>
+    </div>
+    <div class="panel panel-info panel-body">
+        <div class="col-md-6 col-left">
+            <div class="row text-center">
+                <h4>Input here your current item levels</h4>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Level</th>
+                    </tr>
+                </thead>
+                <tbody id="itemLevels">
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h3>Simulation parameters</h3>
+            Presets will save your item levels as well as simulation parameters.<br/>
+            Please note that clearing your browser's local storage (for example, with programs such as CCleaner) will erase your presets.<br/>
+            <input type="text" id="presetSave" placeholder="Enter preset name">
+            <span class="left-pad"></span>
+            <button class="btn btn-default" id="btn-save">Save</button>
+            <button class="btn btn-default" id="btn-import">Import</button>
+            <button class="btn btn-default" id="btn-export">Export</button></br>
+            <select id="presetEdit">
+                <option value="" disabled selected>Select an existing preset</option>
+                <option value="default">Standard</option>
+            </select>
+            <span class="left-pad"></span>
+            <button class="btn btn-default" id="btn-load">Load</button>
+            <button class="btn btn-default" id="btn-remove">Remove</button>
+            <hr/>
+            
+            
+            <label>
+                <input type="radio" name="is-full-run" id="full-run" checked/> Simulate an entire run
+            </label>
+            <label>
+                <span class="left-pad"></span>
+                <input type="radio" name="is-full-run" id="gold-chest"/> Simulate one gold chest
+            </label>
+            <label>
+                <span class="left-pad"></span>
+                <input type="radio" name="is-full-run" id="normal-chest"/> Simulate one normal chest<br/>
+            </label><br/>
+            Number of game resets so far: <input type="number" min="0" value="100" id="resets"></br>
+            Computation time (<span data-toggle="tooltip" title="The longer, the more accurate the results" class="tooltip-text" data-placement="left">?</span>):
+                <span class="left-pad"></span>
+                <label>
+                    <input type="radio" name="run-time" id="1s" checked/> 1s
+                </label>
+                <span class="left-pad"></span>
+                <label>
+                    <input type="radio" name="run-time" id="5s"/> 5s
+                </label>
+                <span class="left-pad"></span>
+                <label>
+                    <input type="radio" name="run-time" id="10s"/> 10s
+                </label><br/>
+            <div id="one-floor" style="display: none">
+                Simulate chest on floor: <input type="number" min="50" step="50" value="500" id="single-floor"></br>
+            </div>
+            <hr/>
+            <div id="run-form">
+                <label>
+                    <input type="checkbox" id="reset-chests"/> Include chests obtained on reset (Magic Lamp)
+                </label><br/>
+                
+                <label>
+                    <input type="checkbox" id="floor-chests" checked/> Include chests obtained on floors
+                </label><br/>
+                
+                <label>
+                    <input type="checkbox" id="hide-capped" checked/> Hide capped items and Fire Sword in results window
+                </label><br/>
+                
+                <label>
+                    Simulate from floor
+                    <input type="number" min="0" max="3000" step="10" value="0" id="floor-min">
+                    (exclusive) to
+                    <input type="number" min="10" max="3000" step="10" value="500" id="floor-max">
+                    (inclusive)
+                </label><br/>
+                
+                Simulate quest chests (<span data-toggle="tooltip" title="Never: All runs will be simulated without including quest chests
+                
+Based on Guild Hat chance: A part of the simulated runs, based on your Guild Hat level, will be counted as quest runs (adding quest chests to the total)
+
+Always: Runs will be simulated as if they were all quest runs (adding quest chests to the total)" class="tooltip-text tooltip-left" data-placement="left">?</span>):
+                <span class="left-pad"></span>
+                <label>
+                    <input type="radio" name="quest" id="no-quest" checked/> Never
+                </label>
+                <span class="left-pad"></span>
+                <label>
+                    <input type="radio" name="quest" id="normal-quest"/> Based on Guild Hat chance
+                </label>
+                <span class="left-pad"></span>
+                <label>
+                    <input type="radio" name="quest" id="always-quest"/> Always
+                </label>
+                <hr/>
+                
+                
+                <div id="quest-form" style="display:none">
+                    Quest parameters: Average floor reached (inclusive) in<br/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span class="min50">8 min:</span> <input type="number" min="0" max="3000" step="10" value="400" id="8min"><br/>
+                            <span class="min50">9 min:</span> <input type="number" min="0" max="3000" step="10" value="430" id="9min"><br/>
+                            <span class="min50">10 min:</span> <input type="number" min="0" max="3000" step="10" value="460" id="10min"><br/>
+                            <span class="min50">11 min:</span> <input type="number" min="0" max="3000" step="10" value="490" id="11min"><br/>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="min50">12 min:</span> <input type="number" min="0" max="3000" step="10" value="530" id="12min"><br/>
+                            <span class="min50">13 min:</span> <input type="number" min="0" max="3000" step="10" value="570" id="13min"><br/>
+                            <span class="min50">14 min:</span> <input type="number" min="0" max="3000" step="10" value="610" id="14min"><br/>
+                            <span class="min50">15 min:</span> <input type="number" min="0" max="3000" step="10" value="660" id="15min"><br/>
+                        </div>
+                    </div>
+                    <hr/>
+                </div>
+            </div>
+            
+            
+            <div class="text-center">
+                <button class="btn btn-primary" id="simulate">Simulate!</button><br class="br-high"/>
+                <span id="simulating" style="display: none;">Simulation in progress, please wait...</span>
+                <div id="err-wrong-run" class="panel panel-danger" style="display:none"><div class="panel-body">Error: invalid simulation type</div></div>
+                <div id="err-wrong-quest" class="panel panel-danger" style="display:none"><div class="panel-body">Error: invalid quest mode</div></div>
+                <div id="err-wrong-sort" class="panel panel-danger" style="display:none"><div class="panel-body">Error: invalid sorting mode</div></div>
+                <div id="err-nop" class="panel panel-danger" style="display:none"><div class="panel-body">Error: nothing to simulate (no quest chests, no floor chests, no reset chests)</div></div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    <div id="results" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Simulation results - <span id="simulated-count"></span> simulations, <span id="simulated-item"></span> items/simulation</h4>
+                </div>
+                <div class="modal-body">
+                    <span class="valign">
+                        Sort obtained items by
+                        <span class="left-pad"></span>
+                        <label>
+                            <input type="radio" name="res-sort" id="avg"/> Average count
+                        </label>
+                        <span class="left-pad"></span>
+                        <label>
+                            <input type="radio" name="res-sort" id="prob" checked/> Probability
+                        </label>
+                    </span>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Current level</th>
+                                <th>Probability of getting</th>
+                                <th>Times gotten</th>
+                            </tr>
+                        </thead>
+                        <tbody id="res-table"></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    <div id="export" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Export preset</h4>
+                </div>
+                <div class="modal-body">
+                    Here is your preset code:<br/>
+                    <textarea id="export-code" class="full-size" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    <div id="import" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Import preset</h4>
+                </div>
+                <div class="modal-body">
+                    Paste here your preset code:<br/>
+                    <textarea id="import-code" class="full-size"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <div id="import-error" style="display: none" class="red bottom15"><b>Error:</b> invalid preset code. Please try again <span id="import-error-text"></span></div>
+                    <button type="button" id="do-import" class="btn btn-default btn-center">Import</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="../jquery.min.js"></script>
+<script src="js/random.min.js"></script>
+<script src="js/base64.min.js"></script>
+<script src="js/inflate.js"></script>
+<script src="js/deflate.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="main.js"></script>
+</body>
+</head>
+</html>
+
