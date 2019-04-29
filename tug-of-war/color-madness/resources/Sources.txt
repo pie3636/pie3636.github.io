@@ -1,5 +1,0 @@
-http://opengameart.org/content/sci-fi-platformer-tiles-32x32, opengameart.org, bart
-http://opengameart.org/content/extension-for-sci-fi-platformer-tiles-32x32, opengameart.org, rubberduck
-http://opengameart.org/content/extension-for-dawnblocker-ortho#comment-25867, opengameart.org, rubberduck
-http://opengameart.org/content/dawnblocker-ortho, opengameart.org, Buch --> http://blog-buch.rhcloud.com
-
