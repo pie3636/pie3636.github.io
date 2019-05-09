@@ -9,7 +9,8 @@
 <title>Tug of War statistics</title>
 <link href="css/bootstrap.css" rel="stylesheet">
 <link href="css/bootstrap-theme.css" rel="stylesheet">
-<link href="theme.css" rel="stylesheet">
+<link href="../lib/css/dygraph.css" rel="stylesheet">
+<link href="css/theme.css" rel="stylesheet">
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -51,8 +52,8 @@
         <button type="button" class="close" id="updateAnnouncementClose">x</button>
         <b>Update</b> (<span id="updateAnnouncementVersion"></span>):<br />
         <!--<hr style="margin-top: 5px; margin-bottom: 5px"/>-->
-        - Charts are now generated automatically (no inconsistent crop that varies between updates)<br />
-        - Charts are now saved in SVG, which makes them zoomable and provides you with the raw data if you're willing to parse it<br /><br />
+        - Charts are now dynamic! You can click and drag on them to zoom. A legend in the top right corner also gives you the exact values.<br />
+        - Statistics generation is now dynamic as well! This changes nothing for users, but it means I no longer have to copy paste every single statistic, as they are generated directly in the right format into <a href="js/data.js">this file</a>. This means that data updates are now about three times faster than earlier.<br /><br />
         You can also check the <a href="#" class="alert-link" onclick="changeTab('changelog')">changelog</a> for more information.
     </div>
 
@@ -64,46 +65,40 @@
             <div class="panel-heading">Stats in a nutshell</div>
             <div class="panel-body" id="comment"></div>
         </div>
+        <h2><center>All charts are dynamic. You can click and drag to zoom on a specific portion of a chart.</center></h2>
         <div class="panel panel-info">
             <div class="panel-body">
-                <h1 class="text-center">Historical chart</h1>
-                <a href="img/historical.svg" target="_blank" id="charts-link-temporal"><img id="charts-img-temporal" class="large-img" title="Value of the count over number of counts (click to open in a new tab)" src="img/historical.svg"></img></a>
+                <div id="chart-historical" class="chart"></div>
             </div>
         </div>
         <div class="panel panel-info">
             <div class="panel-body">
-                <h1 class="text-center">Temporal chart</h1>
-                <a href="img/temporal.svg" target="_blank" id="charts-link-historical"><img id="charts-img-historical" class="large-img" title="Value of the count over time. Subdivisions are every 7 and 28 days (click to open in a new tab)" src="img/temporal.svg"></img></a>
+                <div id="chart-temporal" class="chart"></div>
             </div>
         </div>
         <div class="panel panel-info">
             <div class="panel-body">
-                <h1 class="text-center">Frequency chart</h1>
-                <a href="img/difficulty.svg" target="_blank" id="charts-link-frequency"><img id="charts-img-frequency" class="large-img" title="Number of times each number has been counted, on a logarithmic scale (click to open in a new tab)" src="img/difficulty.svg"></img></a>
+                <div id="chart-frequency" class="chart"></div>
             </div>
         </div>
         <div class="panel panel-info">
             <div class="panel-body">
-                <h1 class="text-center">Get length distribution</h1>
-                <a href="img/gets.svg" target="_blank" id="charts-link-getsLength"><img id="charts-img-getsLength" class="large-img" title="Proportion of gets that took longer than X comments (click to open in a new tab)" src="img/gets.svg"></img></a>
+                <div id="chart-gets" class="chart"></div>
             </div>
         </div>
         <div class="panel panel-info">
             <div class="panel-body">
-                <h1 class="text-center">Counts posting time (UTC)</h1>
-                <a href="img/weekly.svg" target="_blank" id="charts-link-weekly"><img id="charts-img-weekly" class="large-img" title="Number of counts posted during each 1 hour slot of the week. All times are UTC (click to open in a new tab)" src="img/weekly.svg"></img></a>
+                <div id="chart-weekly" class="chart"></div>
             </div>
         </div>
         <div class="panel panel-info">
             <div class="panel-body">
-                <h1 class="text-center">Frequency of 1- to 60-seconds replies</h1>
-                <a href="img/timedist.svg" target="_blank" id="charts-link-replyTime"><img id="charts-img-replyTime" class="large-img" title="Percentage of X-seconds replies amongst all counts (click to open in a new tab)" src="img/timedist.svg"></img></a>
+                <div id="chart-timedist" class="chart"></div>
             </div>
         </div>
         <div class="panel panel-info">
             <div class="panel-body">
-                <h1 class="text-center">Cumulative contribution of top users</h1>
-                <a href="img/powerusers.svg" target="_blank" id="charts-link-powerUsers"><img id="charts-img-powerUsers" class="large-img" title="Percentage of all comments posted by top X users (click to open in a new tab)" src="img/powerusers.svg"></img></a>
+                <div id="chart-powerusers" class="chart"></div>
             </div>
         </div>
     </div>
@@ -432,7 +427,7 @@
                     <h4 class="text-center">Users with the highest score</h4>
                     To give a more meaningful ranking of the fastest and most active users, here are the 100 users with the highest "counting score", determined as the sum of the inverse square roots of this user's reply times in seconds.<br />
                     This allows us to include users with very few counts but an overall high speed.<br />
-                    For example, 100 16-second counts are worth as many points as 20 4-seconds counts, or 10 1-second counts.<br /><br />
+                    For example, 100 16-second counts are worth as many points as 50 4-seconds counts, or 25 1-second counts.<br /><br />
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -511,13 +506,12 @@
         <div class="col-md-12">
         <dl class="dl-horizontal">
             <dt>How does it work?</dt>
-            <dd>Regularly (usually when a get is reached), I fetch all the recent count data from Reddit using a small script that I wrote. After making sure everything is right, I then use another script to generate the statistics, that I simply paste into a file. This website then reads this data and displays the statistics in a more aesthetically pleasing way. If you want to see what the raw stat file looks like, take a look <a href="data.js">here</a>.</dd>
+            <dd>Regularly (usually when a get is reached), I fetch all the recent count data from Reddit using a small script that I wrote. After making sure everything is right, I then use another script to generate the statistics, that I simply paste into a file. This website then reads this data and displays the statistics in a more aesthetically pleasing way. If you want to see what the raw stat file looks like, take a look <a href="js/data.js">here</a>.</dd>
             <dt>What's next?</dt>
-            <dd>I plan on adding a lot more statistics soon. In particular, more user-based stats (who participated in most threads, etc). Now that I already have the complete dataset, it is easy to generate those statistics. I also plan on making the site more easy to maintain, although that shouldn't affect the existing design. I might also make the graphs dynamic, however doing that will take a lot of work and time, so don't expect it anytime soon.</dd>
+            <dd>I plan on adding more statistics. In particular, more user-based stats (who participated in most threads, etc). Since I already have the complete dataset, it is easy to generate those statistics.</dd>
             <dt>Is the data reliable?</dt>
-            <dd>All the counts were gathered automatically, and then checked, so this isn't a source of error. However, some human error could be found in the data. For example, it sometimes happened that someone missed a count or counted twice the same number, and it wasn't always noticed. I could unfortunately not leave that as is, due to how the scripts I'm using work, and I had to manually "fix" a few counts here and there, by changing a digit here and there, or sometimes adding or removing a count. This is why if you examine the data carefully, you might sometimes find some discrepancies. I did my best to keep that edition to a minimum and do it in the most coherent way possible, but if you notice that something looks wrong, feel free to message me and I will see if I can change it.</dd>
-            <dt>No graph captions?</dt>
-            <dd>I am quite aware that in general, all graphs should be captioned. The reason why those aren't is simply because I'm using a spreadsheet to generate them, and I then manually take screenshots that I upload to imgur, before embedding it into the site. Since those screenshots can only have the same resolution as my screen, and there is a lot of information to convey in each graph, I try to make the actual graph as big as possible, to have the maximum resolution. This means eliminating everything that's on the sides. If you hover over a graph, you will see a tooltip explaining more in detail what each graph contains. In the future, I will most likely add web-based captions, or switch to dynamic charts.</dd>
+            <dd>All the counts were gathered automatically, and then checked, so this isn't a source of error. However, some slight alterations had to be made to the data. For example, it sometimes happened that someone missed a count or counted twice the same number, and it wasn't always noticed by the users. I could unfortunately not leave that as is, due to how the scripts I'm using to generate statistics work, and I had to manually "fix" a few counts here and there, by changing a digit or sometimes adding or removing a count. This is why if you examine the data carefully, you will find a few discrepancies. I did my best to keep that editing to a minimum and to do it in the most coherent way possible, but if you notice that something looks wrong, feel free to message me and I will see if I can change it. For reference, I estimate about 0.2% of the data (500 counts) were altered this way.</dd>
+            
             <dt>Contact</dt>
             <dd>Have a suggestion on how to improve the website or add more stats? Found a typo? Something looks wrong? Feel free to shoot me an e-mail or a message on Reddit!</dd>
             <dt>Raw data & scripts</dt>
@@ -538,7 +532,10 @@
 
 
     <div id="changelog" style="display:none; margin-left: 5px; margin-right: 5px">
-            <h5>29 Apr 2019:</h5>
+            <h5>5 May 2019:</h5>
+            - Charts are now dynamic! You can click and drag on them to zoom. A legend in the top right corner also gives you the exact values.<br />
+            - Statistics generation is now dynamic as well! This changes nothing for users, but it means I no longer have to copy paste every single statistic, as they are generated directly in the right format into <a href="js/data.js">this file</a>. This means that data updates are now about three times faster than earlier.<br />
+            <hr/><h5>29 Apr 2019:</h5>
             - Charts are now generated automatically (no inconsistent crop that varies between updates)<br />
             - Charts are now saved in SVG, which makes them zoomable and provides you with the raw data if you're willing to parse it<br />
             <hr/><h5>02 Jun 2018:</h5>
@@ -590,9 +587,10 @@
 </div>
 
 
-<script src="../jquery.min.js"></script>
-<script type="text/javascript" src="data.js"></script>
-<script type="text/javascript" src="main.js"></script>
+<script src="../lib/js/dygraph.min.js"></script>
+<script src="../lib/js/jquery.min.js"></script>
+<script type="text/javascript" src="js/data.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
 <script src="js/bootstrap.min.js"></script>
 </body>
 </head>

@@ -23,6 +23,11 @@ h1, h2 {
     margin-bottom: 20px;
 }
 
+.chart {
+    width: 100% !important;
+    height: calc(100vh - 90px) !important;
+}
+
 /* ========== User ranking tables ========== */
 tr.inter-border > td {
     border-top: 1px dashed #eee !important; /* === dashed */
