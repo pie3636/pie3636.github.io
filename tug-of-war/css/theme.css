@@ -39,11 +39,11 @@ tr.inter-border:not(:last-child) > td {
 
 /* Re-instoring solid border for tie delimiters */
 tr.double-border-top > td {
-    border-top: 1px solid #eee !important;
+    border-top: 1px solid #e6e6e6 !important;
 }
 
 tr.double-border-bottom > td {
-    border-bottom: 1px solid #eee !important;
+    border-bottom: 1px solid #e6e6e6 !important;
 }
 /* ========================================= */
 

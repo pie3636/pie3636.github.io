@@ -27,18 +27,18 @@ function readSingleFile(file, i) {
                         ylabel: 'Count value',
                         labels: ["Count", "Value"],
                         legendFormatter: function (data) {
-                            return '<b><span style="color:#0088FF">' + Number(data.x).toLocaleString() + suffix(data.x) + ' count:</span></b> ' + Number(data.series[0].y).toLocaleString();
+                            return '<b><span style="color:#0088FF">' + Number(data.x + 1).toLocaleString() + suffix(data.x + 1) + ' count:</span></b> ' + Number(data.series[0].y).toLocaleString();
                         },
                         axes: {
                             x: {
                                 axisLabelFormatter: function(n) {
                                     return Number(n).toLocaleString();
-                                },
+                                }
                             },
                             y: {
                                 axisLabelFormatter: function(n) {
                                     return Number(n).toLocaleString();
-                                },
+                                }
                             }
                         }
                     };
@@ -64,7 +64,7 @@ function readSingleFile(file, i) {
                             y: {
                                 axisLabelFormatter: function(n) {
                                     return Number(n).toLocaleString();
-                                },
+                                }
                             }
                         },
                         legendFormatter: function (data) {
@@ -82,18 +82,18 @@ function readSingleFile(file, i) {
                         labels: ["Value", "Frequency"],
                         logscale: true,
                         legendFormatter: function (data) {
-                            return '<b><span style="color:#0088FF">' + Number(data.x).toLocaleString() + '</span></b> was counted <b><span style="color:#0088FF">' + data.series[0].y + ' times</span></b>';
+                        return '<b><span style="color:#0088FF">' + Number(data.x).toLocaleString() + '</span></b> was counted <b><span style="color:#0088FF">' + data.series[0].y + ' time' + (data.series[0].y > 1 ? 's' : '') + '</span></b>';
                         },
                         axes: {
                             x: {
                                 axisLabelFormatter: function(n) {
                                     return Number(n).toLocaleString();
-                                },
+                                }
                             },
                             y: {
                                 axisLabelFormatter: function(n) {
                                     return Number(n).toLocaleString();
-                                },
+                                }
                             }
                         }
                     };
@@ -113,7 +113,7 @@ function readSingleFile(file, i) {
                             x: {
                                 axisLabelFormatter: function(n) {
                                     return Number(n).toLocaleString();
-                                },
+                                }
                             },
                             y: {
                                 axisLabelFormatter: function(n) {
@@ -142,7 +142,7 @@ function readSingleFile(file, i) {
                             y: {
                                 axisLabelFormatter: function(n) {
                                     return Number(n).toLocaleString();
-                                },
+                                }
                             }
                         },
                     };
@@ -160,7 +160,7 @@ function readSingleFile(file, i) {
                         axes: {
                             x: {
                                 axisLabelFormatter: function(n) {
-                                    return Math.round(1000*n)/10 + '%';
+                                    return Number(n).toLocaleString();
                                 }
                             },
                             y: {
@@ -179,7 +179,7 @@ function readSingleFile(file, i) {
                         ylabel: 'Percentage of all counts',
                         labels: ["Users", "Counts"],
                         legendFormatter: function (data) {
-                            return '<b><span style="color:#0088FF">' + (100*data.series[0].y).toFixed(2) + '%</span></b> of counts were posted by the top ' + '<b><span style="color:#0088FF">' + Number(data.x).toLocaleString() + '</span></b> users';
+                            return '<b><span style="color:#0088FF">' + (100*data.series[0].y).toFixed(2) + '%</span></b> of counts were posted by the top ' + '<b><span style="color:#0088FF">' + Number(data.x).toLocaleString() + '</span></b> user' + (data.x > 1 ? 's' : '');
                         },
                         logscale: true,
                         axes: {
@@ -198,11 +198,78 @@ function readSingleFile(file, i) {
                         }
                     };
                 break;
+                case 7:
+                    options = {
+                        divName: 'chart-underabove',
+                        title: 'Number of counts above/under a certain number',
+                        xlabel: 'Number',
+                        ylabel: 'Counts above/under',
+                        labels: ["Number", "Counts above", "Counts under"],
+                        legendFormatter: function (data) {
+                            return '<b><span style="color:#0088FF">' + Number(data.series[0].y).toLocaleString() + '</span></b> count' + (data.series[0].y > 1 ? 's were' : ' was') + ' above and <b><span style="color:#0088FF">' + Number(data.series[1].y).toLocaleString() + '</span></b> ' + (data.series[1].y > 1 ? 'were' : 'was') + ' below <b><span style="color:#008800">' + Number(data.x).toLocaleString() + '</span></b>';
+                        },
+                        axes: {
+                            x: {
+                                axisLabelFormatter: function(n) {
+                                    return Number(n).toLocaleString();
+                                }
+                            },
+                            y: {
+                                axisLabelFormatter: function(n) {
+                                    return Number(n).toLocaleString();
+                                },
+                                axisLabelWidth: 75
+                            }
+                        }
+                    };
+                break;
+                case 8:
+                    options = {
+                        divName: 'chart-underabovetime',
+                        title: 'Time spent above/under a certain number',
+                        xlabel: 'Number',
+                        ylabel: 'Time spent above/under',
+                        labels: ["Number", "Time above", "Time under"],
+                        legendFormatter: function (data) {
+                            return 'The count spent <b><span style="color:#0088FF">' + formatTimeDifference(data.series[0].y) + '</span></b> above and <b><span style="color:#0088FF">' + formatTimeDifference(data.series[1].y) + '</span></b> below <b><span style="color:#008800">' + Number(data.x).toLocaleString() + '</span></b>';
+                        },
+                        axes: {
+                            x: {
+                                axisLabelFormatter: function(n) {
+                                    return Number(n).toLocaleString();
+                                }
+                            },
+                            y: {
+                                axisLabelFormatter: function(n) {
+                                    return formatTimeDifference(n, true).split(' ').slice(0, 2).join(' ');
+                                },
+                                axisLabelWidth: 75
+                            }
+                        }
+                    };
+                break;
             }
             new Dygraph(document.getElementById(options.divName), e.target.result, options);
         };
     };
     request.send();
+}
+
+function formatTimeDifference(d) {
+    if (!d) return "0s";
+    str = d % 60 ? (d % 60) + 's' : '';
+    d = Math.floor(d / 60);
+    if (!d) return str;
+    str = d % 60 ? (d % 60) + 'm ' + str : str;
+    d = Math.floor(d / 60);
+    if (!d) return str;
+    str = d % 24 ? (d % 24) + 'h ' + str : str;
+    d = Math.floor(d / 24);
+    if (!d) return str;
+    str = d % 365 ? (d % 365) + 'd ' + str : str;
+    d = Math.floor(d / 365);
+    if (!d) return str;
+    return d + 'y ' + str;
 }
 
 function formatDate(d) {
@@ -227,6 +294,8 @@ $(function () {
         readSingleFile('data/weekly.csv', 4)
         readSingleFile('data/timedist.csv', 5)
         readSingleFile('data/powerusers.csv', 6)
+        readSingleFile('data/underabove.csv', 7)
+        readSingleFile('data/underabovetime.csv', 8)
     
         $('#loading').remove();
         currentTab = 'charts';
@@ -309,7 +378,7 @@ $(function () {
         updateValue(data.gets.slowest.end, 'slowest-get-end');
         updateValue(data.gets.avgTime, 'avg-get-time', true, 2, true);
         updateValue(data.gets.medTime, 'med-get-time', true, 2, true);
-        updateValue(data.gets.longest.length, 'longest-get', true, 2, true);
+        updateValue(data.gets.longest.length, 'longest-get', true);
         $('#longest-get-direction').html(data.gets.longest.begin < data.gets.longest.end ? 'up' : 'down')
         updateValue(data.gets.longest.begin, 'longest-get-begin');
         updateValue(data.gets.longest.end, 'longest-get-end');
@@ -528,7 +597,7 @@ function updateTableR(values, id) {
         } else {
             col1 = 'Total for [deleted] users (not updated retroactively)';
         }
-        $('#' + id).append('<tr' + border + '><td class="text-center"><b>' + dataCur[value][1] + '</b></td><td>' + col1 + '</td><td>' + col2 + '</td><td><b>' + col3 + '</b></td></tr>')
+        $('#' + id).append('<tr' + border + '><td class="text-center"><b>' + (~border.indexOf('top') ? dataCur[value][1] : '') + '</b></td><td>' + col1 + '</td><td>' + col2 + '</td><td><b>' + col3 + '</b></td></tr>')
     }
 }
 

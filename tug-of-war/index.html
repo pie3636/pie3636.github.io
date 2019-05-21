@@ -59,8 +59,8 @@
         <button type="button" class="close" id="updateAnnouncementClose">x</button>
         <b>Update</b> (<span id="updateAnnouncementVersion"></span>):<br />
         <!--<hr style="margin-top: 5px; margin-bottom: 5px"/>-->
-        - Charts are now dynamic! You can click and drag on them to zoom. A legend in the top right corner also gives you the exact values.<br />
-        - Statistics generation is now dynamic as well! This changes nothing for users, but it means I no longer have to copy paste every single statistic, as they are generated directly in the right format into <a href="js/data.js">this file</a>. This means that data updates are now about three times faster than earlier.<br /><br />
+        - Two new charts are available at the bottom of the "Charts" tab: The first one shows how many counts were posted above or below each number. The second one shows how much time the count spent above or below each number<br />
+        - Slight formatting and visual improvements<br /><br />
         You can also check the <a href="#" class="alert-link" onclick="changeTab('changelog')">changelog</a> for more information.
     </div>
 
@@ -106,6 +106,16 @@
         <div class="panel panel-info">
             <div class="panel-body">
                 <div id="chart-powerusers" class="chart"></div>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <div id="chart-underabove" class="chart"></div>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <div id="chart-underabovetime" class="chart"></div>
             </div>
         </div>
     </div>
@@ -539,7 +549,10 @@
 
 
     <div id="changelog" style="display:none; margin-left: 5px; margin-right: 5px">
-            <h5>5 May 2019:</h5>
+            <h5>21 May 2019:</h5>
+            - Two new charts are available at the bottom of the "Charts" tab: The first one shows how many counts were posted above or below each number. The second one shows how much time the count spent above or below each number<br />
+            - Slight formatting and visual improvements<br />
+            <hr/><h5>5 May 2019:</h5>
             - Charts are now dynamic! You can click and drag on them to zoom. A legend in the top right corner also gives you the exact values.<br />
             - Statistics generation is now dynamic as well! This changes nothing for users, but it means I no longer have to copy paste every single statistic, as they are generated directly in the right format into <a href="js/data.js">this file</a>. This means that data updates are now about three times faster than earlier.<br />
             <hr/><h5>29 Apr 2019:</h5>
