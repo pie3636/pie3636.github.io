@@ -59,8 +59,9 @@
         <button type="button" class="close" id="updateAnnouncementClose">x</button>
         <b>Update</b> (<span id="updateAnnouncementVersion"></span>):<br />
         <!--<hr style="margin-top: 5px; margin-bottom: 5px"/>-->
-        - Two new charts are available at the bottom of the "Charts" tab: The first one shows how many counts were posted above or below each number. The second one shows how much time the count spent above or below each number<br />
-        - Slight formatting and visual improvements<br /><br />
+        - Added statistic: current positive/negative count streak<br />
+        - Added statistic: current positive/negative get streak<br />
+        - Added statistics for "get counts", meaning counts that reached a get<br /><br />
         You can also check the <a href="#" class="alert-link" onclick="changeTab('changelog')">changelog</a> for more information.
     </div>
 
@@ -179,6 +180,12 @@
                     <br /><br />
                     The average reply time is <b><span id="avg-time"></span> <span id="avg-time-unit"></span><span id="avg-time-variation"></span></b>.
                     The median reply time is <b><span id="med-time"></span> <span id="med-time-unit"></span><span id="med-time-variation"></span></b>.
+                    <br /><br />
+                    For comparison, the reply time for counts reaching a get has ranged from <b><span id="fastest-count-get-reach"></span> <span id="fastest-count-get-reach-unit"></span><span id="fastest-count-get-reach-variation"></span></b>
+                    to <b><span id="slowest-count-get-reach"></span> <span id="slowest-count-get-reach-unit"></span><span id="slowest-count-get-reach-variation"></span></b>.
+                    <br /><br />
+                    The average reply time for counts reaching a get is <b><span id="avg-time-get-reach"></span> <span id="avg-time-get-reach-unit"></span><span id="avg-time-get-reach-variation"></span></b>.
+                    The median reply time for counts reaching a get is <b><span id="med-time-get-reach"></span> <span id="med-time-get-reach-unit"></span><span id="med-time-get-reach-variation"></span></b>.
                 </div>
                 <div class="panel panel-info panel-low panel-body">
                     <h2 class="text-center">Count direction</h2>
@@ -212,6 +219,8 @@
                     The longest positive streak lasted <b><span id="max-pos-streak"></span><span id="max-pos-streak-variation"></span></b> counts.
                     <br /><br />
                     The longest negative streak lasted <b><span id="max-neg-streak"></span><span id="max-neg-streak-variation"></span></b> counts.
+                    <br /><br />
+                    The current streak is <span id="cur-pos-neg-streak-sign"></span> and is <b><span id="cur-pos-neg-streak"></span></b> counts long.
                 </div>
                 <div class="panel panel-info panel-low panel-body">
                     <h2 class="text-center">Other</h2>
@@ -343,6 +352,8 @@
                     The longest positive get streak lasted <b><span id="max-pos-get-streak"></span><span id="max-pos-get-streak-variation"></span></b> gets.
                     <br /><br />
                     The longest negative get streak lasted <b><span id="max-neg-get-streak"></span><span id="max-neg-get-streak-variation"></span></b> gets.
+                    <br /><br />
+                    The current get streak is <span id="cur-pos-neg-get-streak-sign"></span> and is <b><span id="cur-pos-neg-get-streak"></span></b> counts long.
                 </div>
                 <div class="panel panel-info panel-low panel-body">
                     <h2 class="text-center">Get length</h2>
@@ -549,7 +560,11 @@
 
 
     <div id="changelog" style="display:none; margin-left: 5px; margin-right: 5px">
-            <h5>21 May 2019:</h5>
+            <h5>25 May 2019:</h5>
+            - Added statistic: current positive/negative count streak<br />
+            - Added statistic: current positive/negative get streak<br />
+            - Added statistics for "get counts", meaning counts that reached a get<br />
+            <hr/><h5>21 May 2019:</h5>
             - Two new charts are available at the bottom of the "Charts" tab: The first one shows how many counts were posted above or below each number. The second one shows how much time the count spent above or below each number<br />
             - Slight formatting and visual improvements<br />
             <hr/><h5>5 May 2019:</h5>

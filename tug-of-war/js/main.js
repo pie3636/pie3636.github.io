@@ -339,10 +339,14 @@ $(function () {
         updateTableNR(data.counts.leastCommon, 'least-common-counts', false, true);
 
         updateValue(data.replyTime.started, 'started', true, 2, true);
-        updateValue(data.replyTime.fastest, 'fastest-count', true, 2, true);
+        updateValue(data.replyTime.fastest, 'fastest-count', true, 0, true);
         updateValue(data.replyTime.slowest, 'slowest-count', true, 2, true);
         updateValue(data.replyTime.avg, 'avg-time', true, 2, true);
         updateValue(data.replyTime.med, 'med-time', true, 0, true);
+        updateValue(data.replyTime.fastestGetReach, 'fastest-count-get-reach', true, 0, true);
+        updateValue(data.replyTime.slowestGetReach, 'slowest-count-get-reach', true, 0, true);
+        updateValue(data.replyTime.avgGetReach, 'avg-time-get-reach', true, 2, true);
+        updateValue(data.replyTime.medGetReach, 'med-time-get-reach', true, 0, true);
         updateValue(data.countSign.pos, 'pos-counts', true);
         updateValue(data.countSign.neg, 'neg-counts', true);
         updateValue(data.countSign.posPercent, 'pos-counts-percent', true, 2);
@@ -351,6 +355,8 @@ $(function () {
         updateValue(data.countSign.ofZero, 'of-counts-zero', true, 2);
         updateValue(data.countSign.maxPosStreak, 'max-pos-streak', true);
         updateValue(data.countSign.maxNegStreak, 'max-neg-streak', true);
+        updateValue(data.countSign.curPosNegStreak, 'cur-pos-neg-streak');
+        $('#cur-pos-neg-streak-sign').html(data.countSign.curPosNegStreakSign < 0 ? 'negative' : 'positive');
         updateValue(data.countSign.maxUpStreak.length, 'max-up-streak', true);
         updateValue(data.countSign.maxUpStreak.percent, 'max-up-streak-percent', true, 2);
         updateValue(data.countSign.maxUpStreak.begin, 'max-up-streak-begin');
@@ -401,6 +407,9 @@ $(function () {
         updateValue(data.getSign.ofZero, 'of-gets-zero', true, 2);
         updateValue(data.getSign.maxPosStreak, 'max-pos-get-streak', true);
         updateValue(data.getSign.maxNegStreak, 'max-neg-get-streak', true);
+        updateValue(data.getSign.curPosNegStreak, 'cur-pos-neg-get-streak');
+        $('#cur-pos-neg-get-streak-sign').html(data.getSign.curPosNegStreakSign < 0 ? 'negative' : 'positive');
+        
 
         updateTableNR(data.oneStalemates, 'one-stalemates');
         updateTableNR(data.twoStalemates, 'two-stalemates', true);
