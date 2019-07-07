@@ -116,6 +116,7 @@ function readSingleFile(file, i) {
                                 }
                             },
                             y: {
+                                valueRange: [0, 1],
                                 axisLabelFormatter: function(n) {
                                     return Math.round(100*n) + '%';
                                 }
@@ -190,6 +191,7 @@ function readSingleFile(file, i) {
                                 logscale: true
                             },
                             y: {
+                                valueRange: [0, 1],
                                 axisLabelFormatter: function(n) {
                                     return Math.round(100*n) + '%';
                                 },
