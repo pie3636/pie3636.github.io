@@ -9,7 +9,7 @@ function Item(id, cap, droprank, droprank2, i1, i2, limitI1, limitLine) {
     this.limitLine = limitLine;
 }
 
-versionStr = "1.8.6";
+versionStr = "1.9.6";
 
 // TODO Alphab sort, +1/+10, presets, guide next to it
 
@@ -20,65 +20,66 @@ itemObjs = {
      * < limitLine: lv * i1
      * > limitLine: limitLine * i1 + (lv - limitLine) * limitI1
      */
-    //                               id       cap  rank rank2   i1   i2   lI1 lLine
-    "Lance":                new Item( 0,       20,    1,    9,    5,   0,    2,  10),
-    "Earth Armour":         new Item( 1, Infinity,    1,    2,   20,   5,    0,   0),
-    "Claymore":             new Item( 2, Infinity, 0.05,  1.5,   20,   5,    0,   0),
-    "Wing Boots":           new Item( 3,       30,    1,   11,    3,   0,    1,   5),
-    "Training Book":        new Item( 4,       20,    3,   10,    2,   0,    1,  10),
-    "Golden Gloves":        new Item( 5, Infinity,    2,  1.9,   15,   0,   10, 200),
-    "Rapier":               new Item( 6,       25,    1,   11,    5,   0,    1,  10),
-    "Halberd":              new Item( 7, Infinity,    3,    5,   10,   0,    5, 100),
-    "Red Elixir":           new Item( 8,      100,    2,    6,    2,   0,    1,  30),
-    "Gold Vessels":         new Item( 9, Infinity,    2,    9,   10,   0,    5, 100),
-    "Blue Elixir":          new Item(10,      300,    7,   17,    5,   0,    2, 100),
-    "Green Elixir":         new Item(11,       10,    7,   14,    5,   0,    0,   0),
-    "Coat of Gold":         new Item(12,      300,    5,   11,    5,   0,    2, 100),
-    "Golden Rod":           new Item(13,       10,    5,    9,    5,   0,    0,   0),
-    "Solomon's Staff":      new Item(14,      300,    3,    8,    5,   0,    2, 100),
-    "Solomon's Key":        new Item(15,       10,    4,    3,    5,   0,    0,   0),
-    "Excalibur":            new Item(16,      300,    4,    9,    5,   0,    2, 100),
-    "Aegis":                new Item(17,       10,    3,    2,    5,   0,    0,   0),
-    "Caduceus":             new Item(18,      600,    4, 11.5,   10,   0,    2, 200),
-    "Philosopher's Stone":  new Item(19, Infinity,    4,    3,   10,   0,    2, 500),
-    "Hydra's Poison Arrow": new Item(20,       10,    5,    3,    5,   0,    1,  10),
-    "Durandal":             new Item(21,      105,    5,   30,    2,   0,    1,  20),
-    "Mistilteinn":          new Item(22,      105,    6,   32,    2,   0,    1,  20),
-    "A King's Crown":       new Item(23,      100,   30,   90,    5,   0,    1,  40),
-    "Gungnir":              new Item(24, Infinity,    5,    6,   10,   0,    0,   0),
-    "Lævateinn":            new Item(25,       12,   10,   50,    1,   0,    0,   0),
-    "Gáe Bolg":             new Item(26,        3,   70,  700,    1,   0,    0,   0),
-    "Mithril Sword":        new Item(27,       45,    7,   42,    2,   0,    1,  20),
-    "Mithril Armour":       new Item(28,       45,    5,   28,    2,   0,    1,  20),
-    "Full Plate":           new Item(29, Infinity,  7.5,  5.5,  300,  10,    0,   0),
-    "Flamberge":            new Item(30, Infinity,  6.5,  5.5,  300,  10,    0,   0),
-    "Full Helmet":          new Item(31, Infinity,   11,   14, 1800,  11,    0,   0),
-    "Tomahawk":             new Item(32, Infinity,   10,   14, 1800,  11,    0,   0),
-    "Summoning letter":     new Item(33,       10,    7,   10,    1,   0,    0,   0),
-    "Awakening Armor":      new Item(34,       70,   10,   65,   10,   2,    0,   0),
-    "Awakening Sword":      new Item(35,       70,   10,   65,   10,   2,    0,   0),
-    "Gold Box":             new Item(36,    30000,  0.9,    2,    5,   2,    0,   0),
-    "Awakening Armor 2":    new Item(37,       30,   14,   70,   10,   2,    0,   0),
-    "Awakening Sword 2":    new Item(38,       30,   14,   70,   10,   2,    0,   0),
-    "Guild Hat":            new Item(39,       16,    6,   26,   25,   0,    1,   1),
-    "Mjolnir":              new Item(40,       31,   15,   12,  0.2,   0, 0.01,   1),
-    "Dark Knight Armor":    new Item(41,        5,   15,   24,    1,   0,    0,   0),
-    "Gate":                 new Item(42,      701,    9,    7,   22,   0, 0.02,   1),
-    "Dark Gate":            new Item(43,      401,   10,    8,    4,   0, 0.02,   1),
-    "Magic Lamp":           new Item(44,       76,    7,   12,  100,   0,    2,   1),
-    "Dark Boots":           new Item(45,      100,  8.7,    6,    1,   0,  0.5,  30),
-    "Fire Sword":           new Item(46,    30000, 9999, 9999,    5,   0,    0,   0),
-    "Freyr's Sword":        new Item(47,    50000, 14.5,   18,    1,   0,    0,   0),
-    "Flame Pot":            new Item(48,       16,    7,   22,    1,   0,  0.3,   1),
-    "Ice Pot":              new Item(49,       16,    7,   22,    1,   0,  0.3,   1),
-    "Golden Pot":           new Item(50,       11,    7,   22,    1,   0,  0.3,   1),
-    "Black Essence":        new Item(51,       30,    9,   18,    2,   0,  0.4,   5),
-    "Demon Eye":            new Item(52,      151,   12,   12,   10,   0,  0.1,   1),
-    "Red Hand":             new Item(53,      151,   26,   36,    5,   0,  0.1,   1),
-    "Veteran's Hat":        new Item(54,       10,   28,   72,    3,   0,    0,   0),
-    "Blue Crystal":         new Item(55,       11,    6,   32,  100,   0,   10,   1),
-    "Freyr's Sword 2":      new Item(56,       20,   19, 9999,  500,   0,    0,   0),
-    "Book of Prophesy":     new Item(57,       3,    18,  200,  100,   0,    0,   0)
+    //                               id       cap   rank  rank2   i1   i2   lI1 lLine
+    "Lance":                new Item( 0,       20,     1,     9,    5,   0,    2,  10),
+    "Earth Armour":         new Item( 1, Infinity,     1,     2,   20,   5,    0,   0),
+    "Claymore":             new Item( 2, Infinity,  0.05,   1.5,   20,   5,    0,   0),
+    "Wing Boots":           new Item( 3,       30,     1,    11,    3,   0,    1,   5),
+    "Training Book":        new Item( 4,       20,     3,    10,    2,   0,    1,  10),
+    "Golden Gloves":        new Item( 5, Infinity,     2,   1.9,   15,   0,   10, 200),
+    "Rapier":               new Item( 6,       25,     1,    21,    5,   0,    1,  10),
+    "Halberd":              new Item( 7, Infinity,     3,     5,   10,   0,    5, 100),
+    "Red Elixir":           new Item( 8,      100,     2,     6,    2,   0,    1,  30),
+    "Gold Vessels":         new Item( 9, Infinity,     2,     9,   10,   0,    5, 100),
+    "Blue Elixir":          new Item(10,      300,     7,    17,    5,   0,    2, 100),
+    "Green Elixir":         new Item(11,       10,     7,    14,    5,   0,    0,   0),
+    "Coat of Gold":         new Item(12,      300,     5,    11,    5,   0,    2, 100),
+    "Golden Rod":           new Item(13,       10,     5,     9,    5,   0,    0,   0),
+    "Solomon's Staff":      new Item(14,      300,     3,     8,    5,   0,    2, 100),
+    "Solomon's Key":        new Item(15,       10,     4,     3,    5,   0,    0,   0),
+    "Excalibur":            new Item(16,      300,     4,     9,    5,   0,    2, 100),
+    "Aegis":                new Item(17,       10,     3,     2,    5,   0,    0,   0),
+    "Caduceus":             new Item(18,      600,     4,  11.5,   10,   0,    2, 200),
+    "Philosopher's Stone":  new Item(19, Infinity,     4,     3,   10,   0,    2, 500),
+    "Hydra's Poison Arrow": new Item(20,       10,     5,     3,    5,   0,    1,  10),
+    "Durandal":             new Item(21,      105,     5,    30,    2,   0,    1,  20),
+    "Mistilteinn":          new Item(22,      105,     6,    32,    2,   0,    1,  20),
+    "A King's Crown":       new Item(23,      100,    50,    60,    5,   0,    1,  40),
+    "Gungnir":              new Item(24, Infinity,     5,     6,   10,   0,    0,   0),
+    "Lævateinn":            new Item(25,       12,    10,    50,    1,   0,    0,   0),
+    "Gáe Bolg":             new Item(26,        3,   400,   200,    1,   0,    0,   0),
+    "Mithril Sword":        new Item(27,       45,     7,    42,    2,   0,    1,  20),
+    "Mithril Armour":       new Item(28,       45,     5,    28,    2,   0,    1,  20),
+    "Full Plate":           new Item(29, Infinity,   7.5,   5.5,  300,  10,    0,   0),
+    "Flamberge":            new Item(30, Infinity,   6.5,   5.5,  300,  10,    0,   0),
+    "Full Helmet":          new Item(31, Infinity,    11,    14, 1800,  11,    0,   0),
+    "Tomahawk":             new Item(32, Infinity,    10,    14, 1800,  11,    0,   0),
+    "Summoning letter":     new Item(33,       10,     7,    10,    1,   0,    0,   0),
+    "Awakening Armor":      new Item(34,       70,    10,    65,   10,   2,    0,   0),
+    "Awakening Sword":      new Item(35,       70,    10,    65,   10,   2,    0,   0),
+    "Gold Box":             new Item(36,    30000,   0.9,     2,    5,   2,    0,   0),
+    "Awakening Armor 2":    new Item(37,       30,    16,    65,   10,   2,    0,   0),
+    "Awakening Sword 2":    new Item(38,       30,    16,    65,   10,   2,    0,   0),
+    "Guild Hat":            new Item(39,       16,     5,    40,   25,   0,    1,   1),
+    "Mjolnir":              new Item(40,       31,    12,    60,  0.2,   0, 0.01,   1),
+    "Dark Knight Armor":    new Item(41,        5,    15,   300,    1,   0,    0,   0),
+    "Gate":                 new Item(42,      701,   8.5,     8,   22,   0, 0.02,   1),
+    "Dark Gate":            new Item(43,      401,   9.5,     9,    4,   0, 0.02,   1),
+    "Magic Lamp":           new Item(44,       76,     7,    12,  100,   0,    2,   1),
+    "Dark Boots":           new Item(45,      100,     8,    40,    1,   0,  0.5,  30),
+    "Fire Sword":           new Item(46,    30000, 99999, 99999,    5,   0,    0,   0),
+    "Freyr's Sword":        new Item(47,    50000,    18,  13.5,    1,   0,    0,   0),
+    "Flame Pot":            new Item(48,       16,     7,    22,    1,   0,  0.3,   1),
+    "Ice Pot":              new Item(49,       16,     7,    22,    1,   0,  0.3,   1),
+    "Golden Pot":           new Item(50,       11,     7,    22,    1,   0,  0.3,   1),
+    "Black Essence":        new Item(51,       30,     9,    18,    2,   0,  0.4,   5),
+    "Demon Eye":            new Item(52,      151,    12,    11,   10,   0,  0.1,   1),
+    "Red Hand":             new Item(53,      151,    26,    36,    5,   0,  0.1,   1),
+    "Veteran's Hat":        new Item(54,       10,    33,    62,    3,   0,    0,   0),
+    "Blue Crystal":         new Item(55,       11,     6,    32,  100,   0,   10,   1),
+    "Freyr's Sword 2":      new Item(56,       20,   100,  1000,  500,   0,    0,   0),
+    "Book of Prophesy":     new Item(57,       3,     18,   200,  100,   0,    0,   0)
+    "Ancient Magic Stone":  new Item(58,       1,    450,   450,    1,   0,    0,   0)
 }
 
 names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon's Staff",
@@ -611,6 +612,10 @@ function simulateChest(curItems, floor, noBuy) {
             itemID1 = 2;
         if (lv6 >= 75 && random40Bool(engine))
             itemID1 = 2;
+    } else if (itemID1 == 58) {
+        if (flag2 || floor < 1601) {
+            itemID1 = 2;
+        }
     } else if (itemID1 == 54) {
         lv1 = curItems[itemID1];
         if (lv1 <= 14)
