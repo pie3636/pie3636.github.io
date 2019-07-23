@@ -27,8 +27,8 @@
 <div class="container-fluid" role="main" id="main">
     <div class="alert alert-danger">
         <span class="glyphicon glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
-        <b>Warning:</b> This website is in <b>alpha</b>. In particular, the gold chest simulation, as well as the quest ones, are almost certainly incorrect. The presets are also not yet implemented.<br/>
-        If you notice any discrepancy or wrong value, please message me (<a href="http://reddit.com/user/pie3636">/u/pie3636</a>) so I can fix it. I will keep working on the website in the near future, and particularly fix the broken parts.
+        <b>Warning:</b> This website is in <b>beta</b>. In particular, the gold chest simulation, as well as the quest ones, have yet to be fixed.<br/>
+        If you notice any discrepancy or wrong value, please message me (<a href="http://reddit.com/user/pie3636">/u/pie3636</a>) so I can fix it.
     </div>
     
     <div class="panel panel-info panel-body">
@@ -183,6 +183,7 @@ Always: Runs will be simulated as if they were all quest runs (adding quest ches
                 </div>
                 <div class="modal-body">
                     <span class="valign">
+                        Values are displayed using a <span style="color:#00A000">green</span> <span style="color:#A0A000">to</span> <span style="color:#A00000">red</span> gradient based on how close you are to capping each item.<br/>
                         Sort obtained items by
                         <span class="left-pad"></span>
                         <label>
@@ -246,6 +247,111 @@ Always: Runs will be simulated as if they were all quest runs (adding quest ches
                 <div class="modal-footer">
                     <div id="import-error" style="display: none" class="red bottom15"><b>Error:</b> invalid preset code. Please try again <span id="import-error-text"></span></div>
                     <button type="button" id="do-import" class="btn btn-default btn-center">Import</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="save-confirm" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>             
+                    <h4 class="modal-title">Confirmation</h5>
+                </div>
+                <div class="modal-body">
+                    <p>This preset already exists. Do you want to overwrite it?</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="do-save" type="button" class="btn btn-primary" data-dismiss="modal">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="save-success" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>             
+                    <h4 class="modal-title">Success</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Preset saved.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="load-success" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>             
+                    <h4 class="modal-title">Success</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Preset loaded.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="unselected" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>             
+                    <h4 class="modal-title">Error</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Please first select a valid preset.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="load-fail" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>             
+                    <h4 class="modal-title">Error</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Preset failed to load! Ask for pie3636's help or delete the preset.</p>
+                    <p>Error: <span id="load-err"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="remove-confirm" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>             
+                    <h4 class="modal-title">Confirmation</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to remove this preset?</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="do-remove" type="button" class="btn btn-primary" data-dismiss="modal">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                 </div>
             </div>
         </div>

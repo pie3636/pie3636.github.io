@@ -9,9 +9,11 @@ function Item(id, cap, droprank, droprank2, i1, i2, limitI1, limitLine) {
     this.limitLine = limitLine;
 }
 
-versionStr = "1.9.6";
+versionStr = "1.9.8";
+saveInterval = undefined;
 
-// TODO Alphab sort, +1/+10, presets, guide next to it
+// TODO Alphab sort, +1/+10, guide next to it, ordering items and saving that in the preset/localstorage
+
 
 itemObjs = {
     /*
@@ -1379,15 +1381,15 @@ function debugInit() {
     console.log("Ready to run");
 }
 
-function debugCur() {
-    items = [20, 10069, 12961, 30, 20, 10223, 25, 6360, 100, 5089, 300, 10, 300, 10, 300, 10, 300, 10, 600, 7452, 10, 56, 61, 65, 7869, 12, 3, 45, 45, 11128, 9899, 7862, 9464, 10, 70, 70, 9823, 30, 30, 16, 31, 5, 701, 401, 76, 85, 0, 326, 16, 16, 11, 30, 121, 17]
+function debugCur() { // /u/Vetokend 20190526
+    items = [20,11675,16519,30,10,13903,25,8962,100,7087,300,10,300,10,300,10,300,10,600,10489,10,105,105,69,5540,12,3,45,45,12853,13986,11077,15100,10,70,70,12271,30,30,16,31,5,701,401,76,100,355,460,16,16,11,30,151,86,10,11,1,3,0]
     j = 0;
     for (i in itemObjs) {
         $("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, ""))[0].value = items[j];
         j++;
     }
-    $("#resets")[0].value = 1828;
-    $("#floor-max")[0].value = 1560;
+    $("#resets")[0].value = 2227;
+    $("#floor-max")[0].value = 1547;
 }
 
 function displayResults() {
@@ -1413,7 +1415,11 @@ function displayResults() {
     }
     curItems = items.slice();
     for (var i = 0; i < itemCount; i++) {
-        var str = "<tr><td>" + tabs[1][i] + "</td><td>" + curItems[itemObjs[tabs[1][i]].id] + "</td><td>";
+        var x = 0;
+        if (caps[itemObjs[tabs[1][i]].id]) {
+            x = 160 * (curItems[itemObjs[tabs[1][i]].id]/caps[itemObjs[tabs[1][i]].id])
+        }
+        var str = "<tr>+<td>" + setColor(tabs[1][i], x) + "</td><td>" + setColor(curItems[itemObjs[tabs[1][i]].id], x) + "</td><td>";
         var hidden = hideCapped;
         if (!isntMaxed(curItems, itemObjs[tabs[1][i]].id)) {
             str += "<span class='red'>Capped</span></td><td>";
@@ -1421,13 +1427,17 @@ function displayResults() {
             str += "<span class='red'>Shop only</span></td><td>";
         } else {
             hidden = false;
-            str += tabs[j][i].toFixed(5) + "%</td><td>+" + tabs[2 - j][i].toFixed(2);
+            str += setColor(tabs[j][i].toFixed(5) + "%", x) + "</td><td>" + setColor("+" + tabs[2 - j][i].toFixed(2), x);
         }
-        str += "</td><td>" + String(itemObjs[tabs[1][i]].cap).replace("Infinity", "-") + "</td></tr>";
+        str += "</td><td>" + setColor(String(itemObjs[tabs[1][i]].cap).replace("Infinity", "-"), x) + "</td></tr>";
         if (!hidden) {
             $("#res-table").append(str);
         }
     }
+}
+
+function setColor(txt, capProgression) {
+    return "<span style='color:rgb(" + capProgression + ", " + (160 - capProgression) + ", 0)'>" + txt + "</span>";
 }
 
 function runSimulation() {
@@ -1457,30 +1467,9 @@ function openImport() {
 function importPreset() {
     try {
         presetLoading = true;
-        toImport = JSON.parse(RawDeflate.inflate(Base64.decode($("#import-code")[0].value)));
-        items = toImport[0];
-        var j = 0;
-        for (i in itemObjs) { // Update item levels in GUI
-            $("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, ""))[0].value = items[j];
-            j++;
-        }
-        $("#" + toImport[1]).prop("checked", true).trigger("click");
-        $("#resets")[0].value = toImport[2];
-        $("#" + toImport[3]).prop("checked", true).trigger("click");
-        $("#single-floor")[0].value = toImport[4];
-        $("#reset-chests").prop("checked", toImport[5]);
-        $("#floor-chests").prop("checked", toImport[6]);
-        $("#hide-capped").prop("checked", toImport[7]);
-        $("#floor-min")[0].value = toImport[8];
-        $("#floor-max")[0].value = toImport[9];
-        $("#" + toImport[10]).prop("checked", true).trigger("click");
-        for (var i = 9; i < 19; i++) {
-            $("#" + i).value = toImport[i + 2];
-        }
-        $("#" + toImport[19]).prop("checked", true).trigger("click");
-
-        $("#import").modal("hide");
+        doImportPreset(JSON.parse(RawDeflate.inflate(Base64.decode($("#import-code")[0].value))));
         presetLoading = false;
+        $("#import").modal("hide");
     } catch (e) {
         $("#import-error").show();
         $("#import-error-text").html("(" + e.message + ")");
@@ -1489,7 +1478,30 @@ function importPreset() {
     }
 }
 
-function exportPreset() {
+function doImportPreset(toImport) {
+    items = toImport[0];
+    var j = 0;
+    for (i in itemObjs) { // Update item levels in GUI
+        $("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, ""))[0].value = items[j];
+        j++;
+    }
+    $("#" + toImport[1]).prop("checked", true).trigger("click");
+    $("#resets")[0].value = toImport[2];
+    $("#" + toImport[3]).prop("checked", true).trigger("click");
+    $("#single-floor")[0].value = toImport[4];
+    $("#reset-chests").prop("checked", toImport[5]);
+    $("#floor-chests").prop("checked", toImport[6]);
+    $("#hide-capped").prop("checked", toImport[7]);
+    $("#floor-min")[0].value = toImport[8];
+    $("#floor-max")[0].value = toImport[9];
+    $("#" + toImport[10]).prop("checked", true).trigger("click");
+    for (var i = 9; i < 19; i++) {
+        $("#" + i).value = toImport[i + 2];
+    }
+    $("#" + toImport[19]).prop("checked", true).trigger("click");
+}
+
+function getExportData() {
     j = 0;
     for (var i in itemObjs) {
         items[j] = Number($("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, ""))[0].value);
@@ -1517,23 +1529,71 @@ function exportPreset() {
         Number($("#15min")[0].value),
         $("input[name='res-sort']:checked")[0].id,
     ];
-    $("#export-code").html(Base64.encode(RawDeflate.deflate(JSON.stringify(toExport))));
+    return Base64.encode(RawDeflate.deflate(JSON.stringify(toExport)));
+}
+
+function exportPreset() {
+    $("#export-code").html(getExportData());
     $("#export").modal();
 }
 
 function savePreset() {
-    // TODO
+    if (localStorage.getItem("pset_" + $("#presetSave")[0].value)) {
+        $("#save-confirm").modal();
+    } else {
+        doSavePreset();
+        $("#save-success").modal();
+    }
+}
+
+function doSavePreset() {
+    localStorage.setItem("pset_" + $("#presetSave")[0].value, getExportData());
+    updatePresets();
+}
+
+function updatePresets() {
+    $("#presetEdit option:gt(0)").remove();
+    for (var i = 0; i < localStorage.length; i++) {
+        if (localStorage.key(i) != "_autosave") {
+            $("#presetEdit").append($("<option></option>").attr("value", localStorage[localStorage.key(i)]).text(localStorage.key(i).substr(5)));
+        }
+    }
 }
 
 function loadPreset() {
-    // TODO
+    var pset = "pset_" + $("#presetEdit option:selected").text();
+    if (!localStorage.getItem(pset)) {
+        $("#unselected").modal();
+        return;
+    }
+    try {
+        presetLoading = true;
+        doImportPreset(localStorage.getItem(pset));
+        presetLoading = false;
+        $("#load-success").modal();
+    } catch (e) {
+        presetLoading = false;
+        $("#load-err").html(e);
+        $("#load-fail").modal();
+    }
 }
 
 function removePreset() {
-    // TODO
+    var pset = "pset_" + $("#presetEdit option:selected").text();
+    if (!localStorage.getItem(pset)) {
+        $("#unselected").modal();
+        return;
+    }
+    $("#remove-confirm").modal();
+}
+
+function doRemovePreset() {
+    localStorage.removeItem("pset_" + $("#presetEdit option:selected").text());
+    updatePresets();
 }
 
 $(function () {
+    
     $('[data-toggle="tooltip"]').tooltip();
     $("#version").append(versionStr);
 
@@ -1559,9 +1619,7 @@ $(function () {
     for (var i in itemObjs) {
         itemCount++;
     }
-
-    presetLoading = false;
-
+    
     items = new Array(itemCount).fill(0); // TODO
 
     for (var i in itemObjs) {
@@ -1571,6 +1629,15 @@ $(function () {
     for (var i in itemObjs) {
         $("#itemLevels").append("<tr><td>" + i + "</td><td><input type='number' id='" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, "") + "' name='quantity' min='0' max='" + itemObjs[i].cap + "' value='" + itemObjs[i].value + "'></td><tr/>");
     }
+    
+    var autosave = localStorage.getItem("_autosave");
+    if (autosave) {
+        doImportPreset(JSON.parse(RawDeflate.inflate(Base64.decode(autosave))));
+    }
+
+    updatePresets();
+
+    presetLoading = false;
 
     $('.modal').on('show.bs.modal', centerModal);
     $("#export").on('shown.bs.modal', function(e) {
@@ -1613,8 +1680,14 @@ $(function () {
     $("#btn-import").click(openImport);
     $("#btn-export").click(exportPreset);
     $("#do-import").click(importPreset);
+    $("#do-save").click(doSavePreset);
+    $("#do-remove").click(doRemovePreset);
     $("#btn-load").click(loadPreset);
     $("#btn-remove").click(removePreset);
-
+    
+    saveInterval = setInterval(function() {
+        localStorage.setItem("_autosave", getExportData());
+    }, 1000);
+    
     //debugCur();
 });
