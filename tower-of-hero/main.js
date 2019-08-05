@@ -711,13 +711,13 @@ function simulateChest(curItems, floor, noBuy) {
             itemID1 = 30;
     }
     if (itemID1 == 31)
-        itemID1 = ATKHPItemHosei(curItems, itemID1, 29);
+        itemID1 = itemDowngrade(curItems, itemID1, 29);
     if (itemID1 == 29)
-        itemID1 = ATKHPItemHosei(curItems, itemID1, 1);
+        itemID1 = itemDowngrade(curItems, itemID1, 1);
     if (itemID1 == 32)
-        itemID1 = ATKHPItemHosei(curItems, itemID1, 30);
+        itemID1 = itemDowngrade(curItems, itemID1, 30);
     if (itemID1 == 30)
-        itemID1 = ATKHPItemHosei(curItems, itemID1, 2);
+        itemID1 = itemDowngrade(curItems, itemID1, 2);
     if (!isntMaxed(curItems, itemID1))
         itemID1 = random70Bool(engine) ? 2 : 1;
     acquireItem(curItems, itemID1, noBuy);
@@ -979,8 +979,7 @@ function Hosei1OR2(itemID) {
     return random75Bool(engine) ? 2 : 1;
 }
 
-// Also copied directly from the code
-function ATKHPItemHosei(curitems, itemID, t2) {
+function itemDowngrade(curitems, itemID, t2) {
     lv = curItems[itemID];
     if (lv >= 15000 && random85Bool(engine))
         itemID = t2;
