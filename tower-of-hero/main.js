@@ -12,6 +12,7 @@ function Item(id, cap, droprank, droprank2, i1, i2, limitI1, limitLine) {
 versionStr = "1.9.8";
 saveInterval = undefined;
 
+// TODO fix quest, gold chest, add item guide (stats), score (gold/atk etc) and top floor calculator
 // TODO Alphab sort, +1/+10, guide next to it, ordering items and saving that in the preset/localstorage
 
 
@@ -457,7 +458,7 @@ function simulateChest(curItems, floor, noBuy) {
                 itemID1 = 2;
                 break;
             }
-            if (lv5 >= 9 && Random.get_value() < 0.5) {
+            if (lv5 >= 9 && randomBool(engine) < 0.5) {
                 itemID1 = 2;
                 break;
             }
@@ -686,7 +687,7 @@ function simulateChest(curItems, floor, noBuy) {
             itemID1 = ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, num1 * 0.8))];
     }
     if (itemID1 == 46) {
-        max = floor * 0.0006 + randomRangeFloat(0, 0.05);
+        max = (floor - 1) * 0.0006 + randomRangeFloat(0, 0.05);
         if (max > 0.6)
             max = 0.6;
         do {
@@ -847,121 +848,209 @@ function simulateReset(curItems, endFloor) {
     }
 }
 
-function randm101(max) {
-    num1 = randomRangeInt(0, max + 1);
+function randm10(min, max) {
+    if (max === undefined) {
+        max = min;
+        min = 0;
+    }
+    num1 = randomRangeInt(Math.trunc(min), Math.trunc(max) + 1);
     num2 = num1 - num1 % 10;
     if (num2 < 0)
         return 0;
     return num2;
   }
 
-function randm10(min, max) {
-    num1 = randomRangeInt(Math.trunc(min), Math.trunc(max) + 1);
-    num2 = num1 - num1 % 10;
-    if (num2 < 0)
-        return 0;
-    return num2;
-}
-
-// Copied directly from the code, with few modifications. I didn't really understand that part
+// Copied directly from the code, with few modifications. Not too sure what's going there with the whole clearLine thing.
 function simulateQuest(curItems, beginFloor, endFloor) {
+    specialQuest = random01(engine) < curItems[54] * 0.03;
+    
     duration = randomRangeInt(8, 12);
     if (duration == 11) {
         duration += randomRangeInt(0, 2 + randomRangeInt(0, 2))
     }
-    length = 50;
-    kuriaLine = new Array(length).fill(0);
-    chestFloor = new Array(length).fill(0);
-    chestCount = new Array(length).fill(0);
-    num1 = 0;
-    if (duration >= 11)
-        num1 = 1;
-    num2 = Math.trunc((1 + endFloor * 1.2) / 30 + randomRangeFloat(-2, 2)); // .45 bestFloorSum + .75 questBestFloorSum
-    max1 = num2 - num2 % 10;
-    if (max1 > 20)
-        max1 = 20;
-    num3 = Math.trunc((1 + endFloor * 1.2) / 30 + randomRangeFloat(-2, 2)); // Idem
-    num4 = num3 - num3 % 10;
-    if (num4 > 10)
-        num4 = 10;
-    num5 = (1.0 + endFloor * 1.2) / 500 + randomRangeFloat(-0.25, 0.25); // Idem
-    num6 = Math.trunc(num5 * 10);
-    num7 = num6 - num6 % 10;
-    num8 = ((1 + endFloor) / 170) + randomRangeFloat(-0.25, 0.25);
-    num9 = Math.trunc(num5 * 10);
-    if (num9 < 0)
-        num9 = 1;
-    if (num1 == 0) {
-        kuriaLine[3] = 70 + num4 + randm101(max1) + randm101(max1 + 5)
-            + randm101(max1) + randm10(num9 * 0.25, num9 * 0.8) + randm10(num9 * 0.25, num9 * 0.8) + randm10(num9 * 0.45, num9 * 0.9 + 1) + randm10(num9 * 0.5, num9 * 0.9 + 1);
-        kuriaLine[4] = kuriaLine[3] + 30 + randm101(num7 + num4 + 6) + randm10(num9 * 0.55, num9 + 2);
-        kuriaLine[5] = kuriaLine[4] + 50 + num7 + randm101(num7 + num4 + 7) + randm10(num9 * 0.6, num9 + 6);
-        for (var index = 6; index < length; ++index) {
-            num11 = random01(engine);
-            num12 = 90 + randm101(num7 + num4) + randm10(num9 * 0.35, num9 * 0.7);
-            if (num11 < 0.2)
-                num12 = 80 + randm101(num7 + num4 + 4) + randm10(num9 * 0.35, num9 * 0.8);
-            else if (num11 < 0.5)
-                num12 = 60 + randm101(num7 + num4 + 6) + randm10(num9 * 0.35, num9 * 0.8);
-            else if (num11 < 0.65)
-                num12 = 50 + randm101(num7 + num4 + 8) + randm10(num9 * 0.35, num9 * 0.8);
-            kuriaLine[index] += kuriaLine[index - 1] + num12;
+    clearLine = new Array(50).fill(0);
+    chestFloor = new Array(50).fill(0);
+    chestCount = new Array(50).fill(0);
+    max1 = Math.min(Math.floor((1 + floorRecord * 0.45 + questRecord * 0.75) / 300 + randomRangeFloat(-0.2, 0.2)), 2) * 10;
+    max2 = Math.min(max1, 10);
+    max3 = Math.floor((1 + floorRecord * 0.45 + questRecord * 0.75) / 50 + randomRangeFloat(-2.5, 2.5));
+    max4 = max3 - max3 % 10;
+    num8 = ((1 + questRecord) / 170) + randomRangeFloat(-0.25, 0.25);
+    if (max3 < 0) {
+        max3 = 1;
+    }
+    if (specialQuest) {
+        clearLine[0] = 100 + randm10(max1) + randm10(max3 * 0.2, max3 * 0.8);
+        clearLine[1] = clearLine[0] + 20 + randm10(max3 * 0.25, max3 * 0.8);
+        clearLine[2] = clearLine[1] + 20 + max2 + randm10(max1) + randm10(max3 * 0.45, max3 * 0.9 + 1);
+        clearLine[3] = clearLine[2] + 30 + randm10(max1 + 5) + randm10(max3 * 0.5, max3 * 0.95 + 1);
+        clearLine[4] = clearLine[3] + 20 + max4 + randm10(max4 + max2 + 7) + randm10(max3 * 0.6, max3 + 6);
+        for (index = 5; index < 50; ++index) {
+            x = random01(engine);
+            num12 = 70 + randm10(max4 + max2) + randm10(max3 * 0.3, max3 * 0.6);
+            if (x < 0.2) {
+                num12 = 50 + randm10(max4 + max2 + 4) + randm10(max3 * 0.35, max3 * 0.75);
+            }
+            else if (x < 0.4) {
+                num12 = 50 + randm10(max4 + max2 + 6) + randm10(max3 * 0.35, max3 * 0.8);
+            }
+            else if (x < 0.5) {
+                num12 = 30 + randm10(max4 + max2 + 6) + randm10(max3 * 0.35, max3 * 0.8);
+            }
+            else if (x < 0.7) {
+                num12 = 20 + randm10(max4 + max2 + 7) + randm10(max3 * 0.35, max3 * 0.8);
+            }
+            clearLine[index] += clearLine[index - 1] + num12;
+        }
+        chestCount[2] = 2;
+        chestFloor[2] = 200 + randomRangeInt(clearLine[2], clearLine[2] * 2);
+        chestFloor[2] -= chestFloor[2] % 10;
+        num10 = 3;
+    } else if (duration < 11) {
+        clearLine[0] = 20 + randm10(max1) + randm10(max3 * 0.25, max3 * 0.8);
+        clearLine[1] = clearLine[0] + 20 + randm10(max3 * 0.25, max3 * 0.8);
+        clearLine[2] = clearLine[1] + 10 + max2 + randm10(max1) + randm10(max3 * 0.45, max3 * 0.9 + 1);
+        clearLine[3] = clearLine[2] + 20 + randm10(max1 + 5) + randm10(max3 * 0.5, max3 * 0.9 + 1);
+        clearLine[4] = clearLine[3] + 30 + randm10(max4 + max2 + 6) + randm10(max3 * 0.55, max3 + 2);
+        clearLine[5] = clearLine[4] + 40 + max4 + randm10(max4 + max2 + 7) + randm10(max3 * 0.6, max3 + 6);
+        for (index = 6; index < 50; ++index) {
+            x = random01(engine);
+            num12 = 80 + randm10(max4 + max2) + randm10(max3 * 0.35, max3 * 0.7);
+            if (x < 0.2) {
+                num12 = 70 + randm10(max4 + max2 + 4) + randm10(max3 * 0.35, max3 * 0.8);
+            }
+            else if (x < 0.5) {
+                num12 = 60 + randm10(max4 + max2 + 6) + randm10(max3 * 0.35, max3 * 0.8);
+            }
+            else if (x < 0.65) {
+                num12 = 50 + randm10(max4 + max2 + 8) + randm10(max3 * 0.35, max3 * 0.8);
+            }
+            clearLine[index] += clearLine[index - 1] + num12;
         }
         chestCount[3] = 1;
-        if (duration <= 9 && random60Bool(engine))
+        if (duration <= 9 && random60Bool(engine) || duration <= 8) {
             chestCount[3] = 2;
-        else if (duration <= 8)
-            chestCount[3] = 2;
-        chestFloor[3] = 120 + randomRangeFloat(kuriaLine[3] + 80, kuriaLine[3] * 2 + 80);
+        }
+        chestFloor[3] = 200 + randomRangeInt(clearLine[3], clearLine[3] * 2);
         chestFloor[3] -= chestFloor[3] % 10;
         num10 = 4;
     } else {
-        kuriaLine[2] = 60 + num4 + randm101(max1) + randm101(max1) + randm101(num9 * 0.2, num9 * 0.8) + randm101(num9 * 0.25, num9 * 0.8) + randm10(num9 * 0.45, num9 * 0.9 + 1);
-        kuriaLine[3] = kuriaLine[2] + 40 + randm101(max1 + 5) + randm10(num9 * 0.5, num9 * 0.95 + 1);
-        kuriaLine[4] = kuriaLine[3] + 40 + num7 + randm101(num7 + num4 + 7) + randm10(num9 * 0.6, num9 + 6);
-        for (var index = 5; index < length; ++index) {
-            num11 = random01(engine);
-            num12 = 100 + randm101(num7 + num4) + randm10(num9 * 0.3, num9 * 0.6);
-            if (num11 < 0.2)
-                num12 = 80 + randm101(num7 + num4 + 4) + randm10(num9 * 0.35, num9 * 0.75);
-            else if (num11 < 0.5)
-                num12 = 70 + randm101(num7 + num4 + 6) + randm10(num9 * 0.35, num9 * 0.8);
-            else if (num11 < 0.65)
-                num12 = 60 + randm101(num7 + num4 + 7) + randm10(num9 * 0.35, num9 * 0.8);
-            kuriaLine[index] += kuriaLine[index - 1] + num12;
+        clearLine[0] = 30 + randm10(max1) + randm10(max3 * 0.2, max3 * 0.8);
+        clearLine[1] = clearLine[0] + 20 + randm10(max3 * 0.25, max3 * 0.8);
+        clearLine[2] = clearLine[1] + 10 + max2 + randm10(max1) + randm10(max3 * 0.45, max3 * 0.9 + 1);
+        clearLine[3] = clearLine[2] + 40 + randm10(max1 + 5) + randm10(max3 * 0.5, max3 * 0.95 + 1);
+        clearLine[4] = clearLine[3] + 40 + max4 + randm10(max4 + max2 + 7) + randm10(max3 * 0.6, max3 + 6);
+        for (index = 5; index < 50; ++index) {
+            x = random01(engine);
+            num12 = 90 + randm10(max4 + max2) + randm10(max3 * 0.3, max3 * 0.6);
+            if (x < 0.2) {
+                num12 = 80 + randm10(max4 + max2 + 4) + randm10(max3 * 0.35, max3 * 0.75);
+            }
+            else if (x < 0.5) {
+                num12 = 70 + randm10(max4 + max2 + 6) + randm10(max3 * 0.35, max3 * 0.8);
+            }
+            else if (x < 0.65) {
+                num12 = 60 + randm10(max4 + max2 + 7) + randm10(max3 * 0.35, max3 * 0.8);
+            }
+            clearLine[index] += clearLine[index - 1] + num12;
         }
         chestCount[2] = 1;
-        chestFloor[2] = 120 + randomRangeFloat(kuriaLine[2] + 80, kuriaLine[2] * 2 + 80);
+        chestFloor[2] = 200 + randomRangeInt(clearLine[2], clearLine[2] * 2);
         chestFloor[2] -= chestFloor[2] % 10;
         num10 = 3;
     }
-    for (var index = num10; index < length; ++index) {
-        max2 = (0.7 + index * 0.05);
-        if (max2 > 1)
-            max2 = 1;
-        num11 = randomRangeFloat(0, max2);
-        if (num11 > 0.52) {
-            chestCount[index] = 1 + Math.trunc(randomRangeFloat(0, kuriaLine[index] * (num11 < 0.82 ? 0.0065 : 0.005)));
+    for (index = num10; index < 50; ++index) {
+        min = clearLine[index];
+        max2 = Math.min(0.7 + index * 0.05, 1);
+        floorFactor = randomRangeFloat(0, max2);
+        if (specialQuest) {
+            floorFactor += 0.05;
+        }
+        if (floorFactor < 0.34) {
+            chestCount[index] = 1 + Math.floor(randomRangeFloat(0, min * 0.0065));
+        } else if (floorFactor < 0.52) {
+            chestCount[index] = 1 + Math.floor(randomRangeFloat(0, min * 0.005));
         }
         if (chestCount[index] != 0) {
-            chestFloor[index] = 150 + randomRangeFloat(kuriaLine[index] + 60, Math.trunc(kuriaLine[index] * 1.4 + 170));
-            if (chestFloor[index] > endFloor) {
-                break;
+            num12 = 150 + randomRangeInt(min, Math.floor(min * 1.35 + 150));
+            if (num12 >= 800) {
+                num12 = Math.floor(num12 * 0.75 + 200);
             }
-            chestFloor[index] -= chestFloor[index] % (randomRangeFloat(0, max2) < 0.75 || chestFloor[index] < 200 ? 10 : 50);
+            if (num12 >= 1200) {
+                num12 = Math.floor(num12 * 0.75 + 300);
+            }
+            if (num12 >= 1600) {
+                num12 = Math.floor(num12 * 0.75 + 400);
+            }
+            if (num12 >= 2000) {
+                num12 = 2000 + randomRangeInt(0, 70);
+            }
+            num13 = randomRangeFloat(0, max2) < 0.75 || num12 < 200 ? num12 - num12 % 10 : num12 - num12 % 50;
+            if (num13 % 50 == 0 && random30Bool(engine)) {
+                num13 += 10;
+            }
+            chestFloor[index] = num13;
         }
-        var m = index < 2 ? 1 : 2;
-        if (chestCount[index] > m)
-            chestCount[index] = m;
+        chestCount[index] = Math.max(chestCount[index], index) < 2 ? 1 : 2;
     }
-    for (var i = 0; i < length; i++) {
-        if (chestFloor[i] > beginFloor) {
-            if (chestFloor[i] <= endFloor) {
-                for (var j = 0; j < chestCount[i]; j++) {
-                    simulateChest(curItems, i);
+    if (specialQuest) {
+        for (index = 0; index < 50; ++index) {
+            if (chestCount[index] != 0) {
+                ++chestCount[index];
+                if (random01(engine) < 0.35) {
+                    ++chestCount[index];
                 }
-            } else {
-                break;
+                if (random15Bool(engine)) {
+                    ++chestCount[index];
+                }
+            }
+        }
+        if (random25Bool(engine)) {
+            for (index = 0; index < 50; ++index) {
+                if (chestCount[index] == 0 && (index < 5 || random01(engine) >= 0.225) && (index < 12 || random01(engine) >= 0.225)) {
+                    ++chestCount[index];
+                    if (random40Bool(engine)) {
+                        ++chestCount[index];
+                    }
+                    num4 = clearLine[index] + randomRangeInt(0, 100);
+                    if (num4 >= 2000) {
+                        num4 = 2000 + randomRangeInt(0, 70);
+                    }
+                    num12 = num4 - num4 % 10;
+                    if (num12 % 50 == 0 && random30Bool(engine)) {
+                        num12 += 10;
+                    }
+                    chestFloor[index] = num12;
+                }
+            }
+        }
+        flag = false;
+        num13 = 0;
+        for (index = 0; index < 50; ++index) {
+            if (chestCount[index] >= 4) {
+                if (flag) {
+                    chestCount[index] = 3;
+                }
+                flag = true;
+            }
+            if (chestCount[index] >= 3) {
+                if (num13 >= 1 && random01(engine) < 0.26) {
+                    chestCount[index] = 2;
+                }
+                if (num13 >= 2 && random01(engine) < 0.22) {
+                    chestCount[index] = 2;
+                }
+                if (num13 >= 3 && random30Bool(engine)) {
+                    chestCount[index] = 2;
+                }
+                ++num13;
+            }
+        }
+    }
+    for (var i = 0; i < 50 && endFloor >= clearLine[i]; i++) {
+        if (clearLine[i] > beginFloor) {
+            for (j = 0; j < chestCount[i]; ++j) {
+                simulateChest(curItems, chestFloor[i] - 1);
             }
         }
     }
@@ -1128,16 +1217,13 @@ function sim_sq_re_fl() {
     timeLimit = Number($("input[name='run-time']:checked")[0].id.replace("s", '')) * 1000;
     timeStart = performance.now();
     do {
-        for (var i = 0; i < guildHatStat; i++) {
+        for (var i = 0; i < 100; i++) {
             curItems = items.slice();
             simulateRun(curItems, beginFloor, endFloor);
             simulateReset(curItems, endFloor);
-            simulateQuest(curItems, beginFloor, endFloor);
-        };
-        for (var i = guildHatStat; i < 100; i++) {
-            curItems = items.slice();
-            simulateRun(curItems, beginFloor, endFloor);
-            simulateReset(curItems, endFloor);
+            if (randomRangeFloat(0, 1.1) < guildHatStat * 0.0085 + 0.075) {
+                simulateQuest(curItems, beginFloor, endFloor);
+            }
         };
         steps += 100;
     } while (performance.now() - timeStart < timeLimit);
@@ -1148,14 +1234,12 @@ function sim_sq_re_nf() {
     timeLimit = Number($("input[name='run-time']:checked")[0].id.replace("s", '')) * 1000;
     timeStart = performance.now();
     do {
-        for (var i = 0; i < guildHatStat; i++) {
+        for (var i = 0; i < 100; i++) {
             curItems = items.slice();
             simulateReset(curItems, endFloor);
-            simulateQuest(curItems, beginFloor, endFloor);
-        };
-        for (var i = guildHatStat; i < 100; i++) {
-            curItems = items.slice();
-            simulateReset(curItems, endFloor);
+            if (randomRangeFloat(0, 1.1) < guildHatStat * 0.0085 + 0.075) {
+                simulateQuest(curItems, beginFloor, endFloor);
+            }
         };
         steps += 100;
     } while (performance.now() - timeStart < timeLimit);
@@ -1166,14 +1250,12 @@ function sim_sq_nr_fl() {
     timeLimit = Number($("input[name='run-time']:checked")[0].id.replace("s", '')) * 1000;
     timeStart = performance.now();
     do {
-        for (var i = 0; i < guildHatStat; i++) {
+        for (var i = 0; i < 100; i++) {
             curItems = items.slice();
             simulateRun(curItems, beginFloor, endFloor);
-            simulateQuest(curItems, beginFloor, endFloor);
-        };
-        for (var i = guildHatStat; i < 100; i++) {
-            curItems = items.slice();
-            simulateRun(curItems, beginFloor, endFloor);
+            if (randomRangeFloat(0, 1.1) < guildHatStat * 0.0085 + 0.075) {
+                simulateQuest(curItems, beginFloor, endFloor);
+            }
         };
         steps += 100;
     } while (performance.now() - timeStart < timeLimit);
@@ -1184,9 +1266,11 @@ function sim_sq_nr_nf() {
     timeLimit = Number($("input[name='run-time']:checked")[0].id.replace("s", '')) * 1000;
     timeStart = performance.now();
     do {
-        for (var i = 0; i < guildHatStat; i++) {
-            curItems = items.slice();
-            simulateQuest(curItems, beginFloor, endFloor);
+        for (var i = 0; i < 100; i++) {
+            if (randomRangeFloat(0, 1.1) < guildHatStat * 0.0085 + 0.075) {
+                curItems = items.slice();
+                simulateQuest(curItems, beginFloor, endFloor);
+            }
         };
         steps += 100;
     } while (performance.now() - timeStart < timeLimit);
@@ -1290,6 +1374,8 @@ function mainLoop() {
         beginFloor = Number($("#floor-min")[0].value) + 1;
         endFloor = $("#floor-max")[0].value;
         questValues = [Number($("#8min")[0].value), Number($("#9min")[0].value), Number($("#10min")[0].value), Number($("#11min")[0].value), Number($("#12min")[0].value), Number($("#13min")[0].value), Number($("#14min")[0].value), Number($("#15min")[0].value)];
+        floorRecord = Number($("#floor-record")[0].value);
+        questRecord = Number($("#quest-record")[0].value);
         if (questType === "no-quest") {
             if ($("#reset-chests")[0].checked) {
                 if ($("#floor-chests")[0].checked) {
@@ -1376,6 +1462,8 @@ function debugInit() {
     endFloor = $("#floor-max")[0].value;
     questValues = [Number($("#8min")[0].value), Number($("#9min")[0].value), Number($("#10min")[0].value), Number($("#11min")[0].value), Number($("#12min")[0].value), Number($("#13min")[0].value), Number($("#14min")[0].value), Number($("#15min")[0].value)];
     guildHatStat = items[39] == 0 ? 0 : items[39] + 24;
+    floorRecord = Number($("#floor-record")[0].value);
+    questRecord = Number($("#quest-record")[0].value);
     curItems = items.slice();
     console.log("Ready to run");
 }
@@ -1498,6 +1586,8 @@ function doImportPreset(toImport) {
         $("#" + i).value = toImport[i + 2];
     }
     $("#" + toImport[19]).prop("checked", true).trigger("click");
+    $("#floor-record")[0].value = toImport[20] || 750;
+    $("#quest-record")[0].value = toImport[21] || 700;
 }
 
 function getExportData() {
@@ -1527,6 +1617,8 @@ function getExportData() {
         Number($("#14min")[0].value),
         Number($("#15min")[0].value),
         $("input[name='res-sort']:checked")[0].id,
+        Number($("#floor-record")[0].value),
+        Number($("#quest-record")[0].value)
     ];
     return Base64.encode(RawDeflate.deflate(JSON.stringify(toExport)));
 }
@@ -1629,6 +1721,25 @@ $(function () {
         $("#itemLevels").append("<tr><td>" + i + "</td><td><input type='number' id='" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, "") + "' name='quantity' min='0' max='" + itemObjs[i].cap + "' value='" + itemObjs[i].value + "'></td><tr/>");
     }
     
+    // Event listeners (must be done before loading autosave)
+    $("#full-run").click(function() {
+        $("#run-form").show();
+        $("#one-floor").hide();
+    });
+
+    $("#gold-chest, #normal-chest").click(function() {
+        $("#run-form").hide();
+        $("#one-floor").show();
+    });
+
+    $("#no-quest").click(function() {
+        $("#quest-form").hide();
+    });
+
+    $("#normal-quest, #always-quest").click(function() {
+        $("#quest-form").show();
+    });
+    
     var autosave = localStorage.getItem("_autosave");
     if (autosave) {
         doImportPreset(JSON.parse(RawDeflate.inflate(Base64.decode(autosave))));
@@ -1654,25 +1765,6 @@ $(function () {
     });
 
     // Event listeners
-
-    $("#full-run").click(function() {
-        $("#run-form").show();
-        $("#one-floor").hide();
-    });
-
-    $("#gold-chest, #normal-chest").click(function() {
-        $("#run-form").hide();
-        $("#one-floor").show();
-    });
-
-    $("#no-quest").click(function() {
-        $("#quest-form").hide();
-    });
-
-    $("#normal-quest, #always-quest").click(function() {
-        $("#quest-form").show();
-    });
-
     $("#simulate").click(runSimulation);
     $("#prob, #avg").click(displayResults);
     $("#btn-save").click(savePreset);
