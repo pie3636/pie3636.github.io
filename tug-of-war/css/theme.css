@@ -1,5 +1,6 @@
 body {
     padding-top: 60px; /* Navbar */
+    overflow-y: scroll; /* Prevents horizontal jump when changing between tabs with vs. without scrollbar */
 }
 
 /* FAQ vertical spacing */
