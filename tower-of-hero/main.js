@@ -70,18 +70,18 @@ $(function () {
         "Demon Eye":            new Item(52,      151,    12,    13,   10,   0,  0.1,   1),
         "Red Hand":             new Item(53,      151,    26,    36,    5,   0,  0.1,   1),
         "Veteran's Hat":        new Item(54,       10,    33,    62,    3,   0,    0,   0),
-        "Blue Crystal":         new Item(55,       11,     6,    32,  100,   0,   10,   1),
+        "Blue Crystal":         new Item(55,       13,     6,    32,  100,   0,   10,   1),
         "Freyr's Sword 2":      new Item(56,       20,   100,  1000,  500,   0,    0,   0),
         "Book of Prophesy":     new Item(57,       3,     18,   200,  100,   0,    0,   0),
         "Ancient Magic Stone":  new Item(58,       2,    450,   450,    1,   0,    0,   0),
-        "Mass prrod. Gáe Bolg": new Item(59,       6,    400,   200,  0.5,   0,  0.1,   1);
+        "Mass prod Gáe Bolg":   new Item(59,       6,    400,   200,  0.5,   0,  0.1,   1)
     };
 
     names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon's Staff",
              "Solomon's Key", "Excalibur", "Aegis", "Caduceus", "Philosopher's Stone", "Hydra's Poison Arrow", "Durandal", "Mistilteinn", "A King's Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour",
              "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor 2", "Awakening Sword 2", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate",
              "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand", "Veteran's Hat", "Blue Crystal", "Freyr's Sword 2",
-             "Book of Prophesy", "Ancient Magic Stone", "Mass Prod. Gáe Bolg"];
+             "Book of Prophesy", "Ancient Magic Stone", "Mass prod Gáe Bolg"];
 
     caps = names.map(function(index) {
         return itemObjs[index].cap;
@@ -1616,8 +1616,12 @@ function doImportPreset(toImport) {
     items = toImport[0];
     var j = 0;
     for (i in itemObjs) { // Update item levels in GUI
-        $("#" + nameCleanup(i))[0].value = items[j];
-        $("#" + nameCleanup(i) + "_i")[0].value = items[j];
+        val = items[j];
+        if (val === undefined) {
+            val = 0;
+        }
+        $("#" + nameCleanup(i))[0].value = val;
+        $("#" + nameCleanup(i) + "_i")[0].value = val;
         j++;
     }
     $("#" + toImport[1]).prop("checked", true).trigger("click");
