@@ -84,13 +84,13 @@ itemObjs = {
     "Book of Prophesy":     new Item(57,       3,     18,   200,  100,   0,    0,   0),
     "Ancient Magic Stone":  new Item(58,       2,    450,   450,    1,   0,    0,   0),
     "Mass prod. Gáe Bolg":  new Item(59,       6,    400,   200,  0.5,   0,  0.1,   1)
-}
+};
 
 names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon's Staff",
          "Solomon's Key", "Excalibur", "Aegis", "Caduceus", "Philosopher's Stone", "Hydra's Poison Arrow", "Durandal", "Mistilteinn", "A King's Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour",
          "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor 2", "Awakening Sword 2", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate",
          "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand", "Veteran's Hat", "Blue Crystal", "Freyr's Sword 2",
-         "Book of Prophesy", "Ancient Magic Stone", "Mass Prod. Gáe Bolg"];
+         "Book of Prophesy", "Ancient Magic Stone", "Mass prod. Gáe Bolg"];
 
 caps = names.map(function(index) {
     return itemObjs[index].cap;
