@@ -1574,7 +1574,11 @@ function doImportPreset(toImport) {
     items = toImport[0];
     var j = 0;
     for (i in itemObjs) { // Update item levels in GUI
-        $("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, ""))[0].value = items[j];
+        val = items[j];
+        if (val === undefined) {
+            val = 0;
+        }
+        $("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, ""))[0].value = val;
         j++;
     }
     $("#" + toImport[1]).prop("checked", true).trigger("click");
