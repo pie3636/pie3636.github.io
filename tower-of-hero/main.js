@@ -79,7 +79,7 @@ itemObjs = {
     "Demon Eye":            new Item(52,      151,    12,    11,   10,   0,  0.1,   1),
     "Red Hand":             new Item(53,      151,    26,    36,    5,   0,  0.1,   1),
     "Veteran's Hat":        new Item(54,       10,    33,    62,    3,   0,    0,   0),
-    "Blue Crystal":         new Item(55,       11,     6,    32,  100,   0,   10,   1),
+    "Blue Crystal":         new Item(55,       13,     6,    32,  100,   0,   10,   1),
     "Freyr's Sword 2":      new Item(56,       20,   100,  1000,  500,   0,    0,   0),
     "Book of Prophesy":     new Item(57,       3,     18,   200,  100,   0,    0,   0),
     "Ancient Magic Stone":  new Item(58,       2,    450,   450,    1,   0,    0,   0),
