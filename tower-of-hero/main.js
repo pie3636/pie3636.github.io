@@ -9,7 +9,7 @@ function Item(id, cap, droprank, droprank2, i1, i2, limitI1, limitLine) {
     this.limitLine = limitLine;
 }
 
-versionStr = "1.9.8";
+versionStr = "2.0.2";
 saveInterval = undefined;
 
 // TODO fix quest, gold chest, add item guide (stats), score (gold/atk etc) and top floor calculator
@@ -82,14 +82,15 @@ itemObjs = {
     "Blue Crystal":         new Item(55,       11,     6,    32,  100,   0,   10,   1),
     "Freyr's Sword 2":      new Item(56,       20,   100,  1000,  500,   0,    0,   0),
     "Book of Prophesy":     new Item(57,       3,     18,   200,  100,   0,    0,   0),
-    "Ancient Magic Stone":  new Item(58,       2,    450,   450,    1,   0,    0,   0)
+    "Ancient Magic Stone":  new Item(58,       2,    450,   450,    1,   0,    0,   0),
+    "Mass prod. Gáe Bolg":  new Item(59,       6,    400,   200,  0.5,   0,  0.1,   1);
 }
 
 names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon's Staff",
          "Solomon's Key", "Excalibur", "Aegis", "Caduceus", "Philosopher's Stone", "Hydra's Poison Arrow", "Durandal", "Mistilteinn", "A King's Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour",
          "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor 2", "Awakening Sword 2", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate",
          "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand", "Veteran's Hat", "Blue Crystal", "Freyr's Sword 2",
-         "Book of Prophesy", "Ancient Magic Stone"];
+         "Book of Prophesy", "Ancient Magic Stone", "Mass Prod. Gáe Bolg"];
 
 caps = names.map(function(index) {
     return itemObjs[index].cap;
@@ -616,7 +617,11 @@ function simulateChest(curItems, floor, noBuy) {
         if (lv6 >= 75 && random40Bool(engine))
             itemID1 = 2;
     } else if (itemID1 == 58) {
-        if (flag2 || floor < 1601) {
+        if (flag2 || floor < 1651 + 200 * curItems[58]) {
+            itemID1 = 2;
+        }
+    } else if (itemID1 == 59) {
+        if (flag2 || floor < 1151 + 150 * curItems[58]) {
             itemID1 = 2;
         }
     } else if (itemID1 == 54) {
