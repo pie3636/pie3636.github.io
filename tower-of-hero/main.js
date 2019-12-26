@@ -559,7 +559,7 @@ function simulateChest(curItems, floor, noBuy) {
         if (lv2 != 0) {
             num2 = 0;
             if (lv2 >= 10)
-                num2 = 150 + lv2 * 8;
+                num2 = 201 + lv2 * 44;
             if (lv2 >= 5)
                 num2 = 20 + lv2 * 8;
             if (floor < 181 + lv2 * 36 + num2)
