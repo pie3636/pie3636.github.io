@@ -67,20 +67,21 @@ $(function () {
         "Ice Pot":              new Item(49,       16,     7,    22,    1,   0,  0.3,   1),
         "Golden Pot":           new Item(50,       11,     7,    22,    1,   0,  0.3,   1),
         "Black Essence":        new Item(51,       30,     9,    18,    2,   0,  0.4,   5),
-        "Demon Eye":            new Item(52,      151,    12,    11,   10,   0,  0.1,   1),
+        "Demon Eye":            new Item(52,      151,    12,    13,   10,   0,  0.1,   1),
         "Red Hand":             new Item(53,      151,    26,    36,    5,   0,  0.1,   1),
         "Veteran's Hat":        new Item(54,       10,    33,    62,    3,   0,    0,   0),
         "Blue Crystal":         new Item(55,       11,     6,    32,  100,   0,   10,   1),
         "Freyr's Sword 2":      new Item(56,       20,   100,  1000,  500,   0,    0,   0),
         "Book of Prophesy":     new Item(57,       3,     18,   200,  100,   0,    0,   0),
-        "Ancient Magic Stone":  new Item(58,       2,    450,   450,    1,   0,    0,   0)
+        "Ancient Magic Stone":  new Item(58,       2,    450,   450,    1,   0,    0,   0),
+        "Mass prrod. Gáe Bolg": new Item(59,       6,    400,   200,  0.5,   0,  0.1,   1);
     };
 
     names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon's Staff",
              "Solomon's Key", "Excalibur", "Aegis", "Caduceus", "Philosopher's Stone", "Hydra's Poison Arrow", "Durandal", "Mistilteinn", "A King's Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour",
              "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor 2", "Awakening Sword 2", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate",
              "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand", "Veteran's Hat", "Blue Crystal", "Freyr's Sword 2",
-             "Book of Prophesy", "Ancient Magic Stone"];
+             "Book of Prophesy", "Ancient Magic Stone", "Mass Prod. Gáe Bolg"];
 
     caps = names.map(function(index) {
         return itemObjs[index].cap;
@@ -557,7 +558,7 @@ function simulateChest(curItems, floor, noBuy) {
             if (lv != 0) {
                 num2 = 0;
                 if (lv >= 10) {
-                    num2 = 150 + lv * 8;
+                    num2 = 201 + lv * 44;
                 }
                 if (lv >= 5) {
                     num2 = 20 + lv * 8;
@@ -704,7 +705,12 @@ function simulateChest(curItems, floor, noBuy) {
             }
             break;
         case 58:
-            if (flag2 || floor < 1601) {
+            if (flag2 || floor < 1651 + lv * 200) {
+                itemID1 = 2;
+            }
+            break;
+        case 59:
+            if (flag2 || floor < 1151 + lv * 150) {
                 itemID1 = 2;
             }
             break;
@@ -1516,6 +1522,10 @@ function debugCur() { // /u/Vetokend 20190526
     $("#floor-max")[0].value = 1547;
 }
 
+function debugItem() {
+    lv = 1, claymoreLv = 929, resets = 171;
+}
+
 function displayResults() {
     if (presetLoading) { // Loading a preset will trigger radio button clicks and call this function
         return;
@@ -1856,14 +1866,14 @@ function getEffect(id, lv = 0) {
 Object.defineProperties(Array.prototype, {
     'collapseSimple': {
         value: function() {
-            return this.reduce((a, b) => a * b);
+            return this.reduce((a, b) => a * b, 1);
         }
     },
     'probInsert': {
         value: function(newProb) {
             for (var i = 0; i < this.length; i++) {
-                if (this[i] == newProb[0]) {
-                    this[i][2] += newProb[1];
+                if (this[i][0] == newProb[0]) {
+                    this[i][1] += newProb[1];
                     return;
                 }
             }
@@ -1872,12 +1882,16 @@ Object.defineProperties(Array.prototype, {
     },
     'probSet': {
         value: function(newProbMArray) {
-            replProba = this.reduce((a, b) => a[1] + b[1]);
-            for (var i = 0; i < this.length; i++) {
-                this[i][1] *= 1 - replProba;
+            replProba = this.reduce((a, b) => a + b[1], 0);
+            if (replProba == 1) {
+                this.length = 0;
+            } else {
+                for (var i = 0; i < this.length; i++) {
+                    this[i][1] *= 1 - replProba;
+                }
             }
-            for (var j in newProbMArray) {
-                this.probInsert([j[0], j[1] * replProba]);
+            for (var j = 0; j < newProbMArray.length; j++) {
+                this.probInsert([newProbMArray[j][0], newProbMArray[j][1] * replProba]);
             }
         }
     },
@@ -1895,19 +1909,20 @@ Object.defineProperties(Array.prototype, {
 
 function simulateChestProba(lv, claymoreLv, resets, endFloor) {
     var num1 = 1 + (lv >= 40 ? 160 + lv : 5 * lv) * 0.01; // Based on item 23 parameters
-    chests = Array(300).fill([0, 1]);
-        currentProb = [1];
+    chests = Array(300);
+    for (var i = 0; i < 300; i++) {
+        chests[i] = [[0, 1]];
+    }
+    currentProb = [1];
     if (resets == 0) {
-        chests[5].probSet([1, currentProb.collapseSimple()]);
-        chests[7].probSet([1, currentProb.collapseSimple()]);
+        chests[5].probSet([[1, currentProb.collapseSimple()]]);
+        chests[7].probSet([[1, currentProb.collapseSimple()]]);
     } else if (resets == 1) {
-        chests[2].probSet([1, currentProb.collapseSimple()]);
-        chests[4].probSet([1, currentProb.collapseSimple()]);
-        chests[7].probSet([1, currentProb.collapseSimple()]);
+        chests[2].probSet([[1, currentProb.collapseSimple()]]);
+        chests[4].probSet([[1, currentProb.collapseSimple()]]);
+        chests[7].probSet([[1, currentProb.collapseSimple()]]);
     } else {
         currentProb.push((claymoreLv >= 100 ? 0.72 : 1) * (claymoreLv >= 150 ? 0.66 : 1) * (claymoreLv >= 200 ? 0.62 : 1) * (claymoreLv >= 250 ? 0.5 : 1));
-        var num2 = random01(engine);
-        var num3 = random01(engine);
         currentProb.push(0.5 + resets * 0.035);
         if (resets >= 10) {
             currentProb.push(0.2);
@@ -1915,11 +1930,9 @@ function simulateChestProba(lv, claymoreLv, resets, endFloor) {
             currentProb.invertLastProb();
             chests[7].probSet([[1, currentProb.collapseSimple()]]);
             currentProb.pop();
-        }
-        if (resets < 10) {
-            currentProb.replaceLastProb(1);
+            currentProb.invertLastProb();
         } else {
-            currentProb.invertLastProb();;
+            currentProb.replaceLastProb(1);
         }
         currentProb.push(0.045);
         chests[4].probSet([[1, currentProb.collapseSimple()]]);
@@ -1936,6 +1949,7 @@ function simulateChestProba(lv, claymoreLv, resets, endFloor) {
         chests[8].probSet([[1, currentProb.collapseSimple()]]);
         currentProb.replaceLastProb(1 - 0.7);
         chests[7].probSet([[1, currentProb.collapseSimple()]]);
+        currentProb.pop();
         currentProb.pop();
         currentProb.pop();
     }
