@@ -1512,14 +1512,14 @@ function debugInit() {
 }
 
 function debugCur() { // /u/Vetokend 20190526
-    items = [20,11675,16519,30,10,13903,25,8962,100,7087,300,10,300,10,300,10,300,10,600,10489,10,105,105,69,5540,12,3,45,45,12853,13986,11077,15100,10,70,70,12271,30,30,16,31,5,701,401,76,100,355,460,16,16,11,30,151,86,10,11,1,3,0]
+    items = [20,12273,19516,30,20,15123,25,9643,100,7729,300,10,300,10,300,10,300,10,600,11257,10,105,105,71,6004,12,3,45,45,13377,15323,12111,15335,10,70,70,13014,30,30,16,31,5,701,401,76,100,355,512,16,16,11,30,151,118,10,13,3,3,2,3]
     j = 0;
     for (i in itemObjs) {
         $("#" + nameCleanup(i))[0].value = items[j];
         j++;
     }
-    $("#resets")[0].value = 2227;
-    $("#floor-max")[0].value = 1547;
+    $("#resets")[0].value = 2348;
+    $("#floor-max")[0].value = 1550;
 }
 
 function debugItem() {
@@ -1886,7 +1886,7 @@ Object.defineProperties(Array.prototype, {
     },
     'probSet': {
         value: function(newProbMArray) {
-            replProba = this.reduce((a, b) => a + b[1], 0);
+            replProba = newProbMArray.reduce((a, b) => a + b[1], 0);
             if (replProba == 1) {
                 this.length = 0;
             } else {
@@ -1895,7 +1895,7 @@ Object.defineProperties(Array.prototype, {
                 }
             }
             for (var j = 0; j < newProbMArray.length; j++) {
-                this.probInsert([newProbMArray[j][0], newProbMArray[j][1] * replProba]);
+                this.probInsert([newProbMArray[j][0], newProbMArray[j][1]]);
             }
         }
     },
@@ -1927,7 +1927,7 @@ function simulateChestProba(lv, claymoreLv, resets, endFloor) {
         chests[7].probSet([[1, currentProb.collapseSimple()]]);
     } else {
         currentProb.push((claymoreLv >= 100 ? 0.72 : 1) * (claymoreLv >= 150 ? 0.66 : 1) * (claymoreLv >= 200 ? 0.62 : 1) * (claymoreLv >= 250 ? 0.5 : 1));
-        currentProb.push(0.5 + resets * 0.035);
+        currentProb.push(Math.min(0.5 + resets * 0.035, 1));
         if (resets >= 10) {
             currentProb.push(0.2);
             chests[8].probSet([[1, currentProb.collapseSimple()]]);
