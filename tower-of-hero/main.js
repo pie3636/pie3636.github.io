@@ -248,6 +248,32 @@ function randomRangeFloat(min, max) {
     return Math.random() * (max - min) + min;
 }
 
+// A function which sorts the targetData array based on the second parameter
+function advancedSort(targetData, sortType = "A-Z") {
+	switch (sortType) {
+		case "A-Z":
+			targetData.sort((a, b) => (names[a.key] > names[b.key]) ? 1 : -1)
+			break;
+		case "Z-A":
+			targetData.sort((a, b) => (names[a.key] < names[b.key]) ? 1 : -1)
+			break;
+		case "Amount_least-highest":
+			targetData.sort((a, b) => (gainedTimes[a.key] > gainedTimes[b.key]) ? 1 : -1)
+			break;
+		case "Amount_highest-least":
+			targetData.sort((a, b) => (gainedTimes[a.key] < gainedTimes[b.key]) ? 1 : -1)
+			break;
+
+		default:
+			//error, is not given right sortType, so cannot sort
+			break;
+	}
+
+
+	//finally returns the array
+	return targetData;
+}
+
 function refSort(targetData, refData) {
     var indices = Object.keys(refData);
     indices.sort(function(indexA, indexB) {
