@@ -1381,6 +1381,7 @@ function mainLoop() {
         questValues = [Number($("#8min")[0].value), Number($("#9min")[0].value), Number($("#10min")[0].value), Number($("#11min")[0].value), Number($("#12min")[0].value), Number($("#13min")[0].value), Number($("#14min")[0].value), Number($("#15min")[0].value)];
         floorRecord = Number($("#floor-record")[0].value);
         questRecord = Number($("#quest-record")[0].value);
+        curItems = items.slice()
         if (questType === "no-quest") {
             if ($("#reset-chests")[0].checked) {
                 if ($("#floor-chests")[0].checked) {
