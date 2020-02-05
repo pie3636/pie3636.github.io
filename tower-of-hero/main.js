@@ -621,7 +621,7 @@ function simulateChest(curItems, floor, noBuy) {
             itemID1 = 2;
         }
     } else if (itemID1 == 59) {
-        if (flag2 || floor < 1151 + 150 * curItems[58]) {
+        if (flag2 || floor < 1151 + 150 * curItems[59]) {
             itemID1 = 2;
         }
     } else if (itemID1 == 54) {
