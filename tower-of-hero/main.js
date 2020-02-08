@@ -64,7 +64,7 @@ itemObjs = {
     "Awakening Armor 2":    new Item(37,       30,    16,    65,   10,   2,    0,   0),
     "Awakening Sword 2":    new Item(38,       30,    16,    65,   10,   2,    0,   0),
     "Guild Hat":            new Item(39,       16,     5,    40,   25,   0,    1,   1),
-    "Mjolnir":              new Item(40,       31,    12,    60,  0.2,   0, 0.01,   1),
+    "Mjolnir":              new Item(40,       31,    12,    90,  0.2,   0, 0.01,   1),
     "Dark Knight Armor":    new Item(41,        5,    15,   300,    1,   0,    0,   0),
     "Gate":                 new Item(42,      701,   8.5,     8,   22,   0, 0.02,   1),
     "Dark Gate":            new Item(43,      401,   9.5,     9,    4,   0, 0.02,   1),
@@ -83,7 +83,7 @@ itemObjs = {
     "Freyr's Sword 2":      new Item(56,       20,   100,  1000,  500,   0,    0,   0),
     "Book of Prophesy":     new Item(57,       3,     18,   200,  100,   0,    0,   0),
     "Ancient Magic Stone":  new Item(58,       2,    450,   450,    1,   0,    0,   0),
-    "Mass prod Gáe Bolg":   new Item(59,       6,    400,   200,  0.5,   0,  0.1,   1),
+    "Mass prod Gáe Bolg":   new Item(59,      16,    400,   200,  0.5,   0,  0.1,   1),
     "Demon's Mask":         new Item(60,      11,    300,   250,   25,   0,    1,   1),
     "Power of Demons":      new Item(61,      26,    500,   200,   10,   0,    1,   1)
 };
