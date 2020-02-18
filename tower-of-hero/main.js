@@ -1679,7 +1679,7 @@ function loadPreset() {
     }
     try {
         presetLoading = true;
-        doImportPreset(doImportPreset(JSON.parse(RawDeflate.inflate(Base64.decode(localStorage.getItem(pset))))));
+        doImportPreset(JSON.parse(RawDeflate.inflate(Base64.decode(localStorage.getItem(pset)))));
         presetLoading = false;
         $("#load-success").modal();
     } catch (e) {
