@@ -1,5 +1,5 @@
 $(function () {
-    versionStr = "1.9.8";
+    versionStr = "2.0.4";
     saveInterval = undefined;
 
     // TODO top bar with quick links to items
@@ -27,7 +27,7 @@ $(function () {
         "Gold Vessels":         new Item( 9, Infinity,     2,     9,   10,   0,    5, 100),
         "Blue Elixir":          new Item(10,      300,     7,    17,    5,   0,    2, 100),
         "Green Elixir":         new Item(11,       10,     7,    14,    5,   0,    0,   0),
-        "Coat of Gold":         new Item(12,      300,     5,    11,    5,   0,    2, 100),
+        "Golden Coat":          new Item(12,      300,     5,    11,    5,   0,    2, 100),
         "Golden Rod":           new Item(13,       10,     5,     9,    5,   0,    0,   0),
         "Solomon's Staff":      new Item(14,      300,     3,     8,    5,   0,    2, 100),
         "Solomon's Key":        new Item(15,       10,     4,     3,    5,   0,    0,   0),
@@ -38,7 +38,7 @@ $(function () {
         "Hydra's Poison Arrow": new Item(20,       10,     5,     3,    5,   0,    1,  10),
         "Durandal":             new Item(21,      105,     5,    30,    2,   0,    1,  20),
         "Mistilteinn":          new Item(22,      105,     6,    32,    2,   0,    1,  20),
-        "A King's Crown":       new Item(23,      100,    50,    60,    5,   0,    1,  40),
+        "Royal Crown":          new Item(23,      100,    50,    60,    5,   0,    1,  40),
         "Gungnir":              new Item(24, Infinity,     5,     6,   10,   0,    0,   0),
         "Lævateinn":            new Item(25,       12,    10,    50,    1,   0,    0,   0),
         "Gáe Bolg":             new Item(26,        3,   400,   200,    1,   0,    0,   0),
@@ -55,7 +55,7 @@ $(function () {
         "Awakening Armor 2":    new Item(37,       30,    16,    65,   10,   2,    0,   0),
         "Awakening Sword 2":    new Item(38,       30,    16,    65,   10,   2,    0,   0),
         "Guild Hat":            new Item(39,       16,     5,    40,   25,   0,    1,   1),
-        "Mjolnir":              new Item(40,       31,    12,    60,  0.2,   0, 0.01,   1),
+        "Mjolnir":              new Item(40,       31,    12,    90,  0.2,   0, 0.01,   1),
         "Dark Knight Armor":    new Item(41,        5,    15,   300,    1,   0,    0,   0),
         "Gate":                 new Item(42,      701,   8.5,     8,   22,   0, 0.02,   1),
         "Dark Gate":            new Item(43,      401,   9.5,     9,    4,   0, 0.02,   1),
@@ -67,35 +67,38 @@ $(function () {
         "Ice Pot":              new Item(49,       16,     7,    22,    1,   0,  0.3,   1),
         "Golden Pot":           new Item(50,       11,     7,    22,    1,   0,  0.3,   1),
         "Black Essence":        new Item(51,       30,     9,    18,    2,   0,  0.4,   5),
-        "Demon Eye":            new Item(52,      151,    12,    13,   10,   0,  0.1,   1),
+        "Demon Eye":            new Item(52,      151,    12,    11,   10,   0,  0.1,   1),
         "Red Hand":             new Item(53,      151,    26,    36,    5,   0,  0.1,   1),
         "Veteran's Hat":        new Item(54,       10,    33,    62,    3,   0,    0,   0),
         "Blue Crystal":         new Item(55,       13,     6,    32,  100,   0,   10,   1),
         "Freyr's Sword 2":      new Item(56,       20,   100,  1000,  500,   0,    0,   0),
         "Book of Prophesy":     new Item(57,       3,     18,   200,  100,   0,    0,   0),
         "Ancient Magic Stone":  new Item(58,       2,    450,   450,    1,   0,    0,   0),
-        "Mass prod Gáe Bolg":   new Item(59,       6,    400,   200,  0.5,   0,  0.1,   1)
+        "Mass prod Gáe Bolg":   new Item(59,      16,    400,   200,  0.5,   0,  0.1,   1),
+        "Demon's Mask":         new Item(60,      11,    300,   250,   25,   0,    1,   1),
+        "Power of Demons":      new Item(61,      26,    500,   200,   10,   0,    1,   1)
     };
-
-    names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon's Staff",
-             "Solomon's Key", "Excalibur", "Aegis", "Caduceus", "Philosopher's Stone", "Hydra's Poison Arrow", "Durandal", "Mistilteinn", "A King's Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour",
-             "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor 2", "Awakening Sword 2", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate",
-             "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand", "Veteran's Hat", "Blue Crystal", "Freyr's Sword 2",
-             "Book of Prophesy", "Ancient Magic Stone", "Mass prod Gáe Bolg"];
-
+    
+    
+    names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Golden Coat", "Golden Rod", "Solomon's Staff",
+        "Solomon's Key", "Excalibur", "Aegis", "Caduceus", "Philosopher's Stone", "Hydra's Poison Arrow", "Durandal", "Mistilteinn", "Royal Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour",
+        "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor 2", "Awakening Sword 2", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate",
+        "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand", "Veteran's Hat", "Blue Crystal", "Freyr's Sword 2",
+        "Book of Prophesy", "Ancient Magic Stone", "Mass prod Gáe Bolg", "Demon's Mask", "Power of Demons"
+    ];
+    
     caps = names.map(function(index) {
         return itemObjs[index].cap;
     });
-
+    
     droprank = names.map(function(index) {
         return itemObjs[index].droprank;
     });
-
+    
     droprank2 = names.map(function(index) {
         return itemObjs[index].droprank2;
     });
-
-    
+        
     $('[data-toggle="tooltip"]').tooltip();
     $("#version").append(versionStr);
 
@@ -434,6 +437,7 @@ function simulateChest(curItems, floor, noBuy) {
             }
         }
     }
+<<<<<<< HEAD
     lv = curItems[itemID1];
     switch (itemID1) {
         case 3:
@@ -499,16 +503,76 @@ function simulateChest(curItems, floor, noBuy) {
                     || lv >= 60 && random30Bool(engine)
                     || lv >= 80 && random30Bool(engine))
             ) {
+=======
+    lv2 = curItems[itemID1];
+    switch (itemID1) {
+        case 3:
+            if (lv2 >= 15 && randomBool(engine))
+                itemID1 = 1;
+            if (lv2 >= 21 && random40Bool(engine))
+                itemID1 = 1;
+            if (lv2 >= 24 && random30Bool(engine))
+                itemID1 = 1;
+            if (lv2 >= 27 && random30Bool(engine))
+                itemID1 = 1;
+            break;
+        case 4:
+            if (lv2 > 9 && (flag1 || flag3 || floor < 151 + 40 * lv2))
+                itemID1 = 2;
+            break;
+        case 6:
+            if (lv2 > 20 && (flag1 || flag3 || floor < 301))
+            itemID1 = 1;
+            if (lv2 >= 15 && randomBool(engine))
+                itemID1 = 1;
+            if (lv2 >= 18 && randomBool(engine))
+                itemID1 = 1;
+            if (lv2 >= 22 && randomBool(engine))
+                itemID1 = 1;
+            break;
+        case 10:
+        case 12:
+        case 14:
+        case 16:
+            if (lv2 >= 210 && random70Bool(engine))
+                itemID1 = 2;
+            break;
+        case 21:
+        case 22:
+            num3 = 100 + 36 * lv2 + (lv2 < 3 ? 0 : 100) + (lv2 < 5 ? 0 : 70) + (lv2 < 10 ? 0 : 90) + (lv2 < 25 ? 0 : 80) + (lv2 < 35 ? 0 : 80);
+            if (num3 > 1199)
+                num3 = num3 * 0.5 + 599.5;
+            if (num3 > 1499)
+                num3 = num3 * 0.5 + 749.5;
+            if (num3 > 1899)
+                num3 = num3 * 0.5 + 949.5;
+            if (flag1 || flag2 || floor < num3 + 1) {
+                itemID1 = 2;
+                break;
+            }
+            if (lv2 >= 25 && random30Bool(engine)) {
+                itemID1 = 2;
+                break;
+            }
+            break;
+        case 23:
+            if (flag1 || flag3 || lv2 <= 0 && floor < 251 || lv2 == 1 && floor < 301 || lv2 >= 2 && floor < 351 + lv2 * 35 + (lv2 < 6 ? 0 : 100)) {
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
                 itemID1 = 2;
             }
+<<<<<<< HEAD
             break;
         case 25:
             if (flag1
                 || flag3
                 || floor < (111 + 90 * lv + lv * lv * 6 + (lv < 7 ? 0 : 150)) + (lv < 9 ? 0 : 90 + (lv * lv) * 0.5)
                 || lv >= 9 && randomBool(engine)) {
+=======
+            if (lv2 >= 91 && random80Bool(engine)) {
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
                 itemID1 = 2;
             }
+<<<<<<< HEAD
             break;
         case 27:
         case 28:
@@ -516,8 +580,12 @@ function simulateChest(curItems, floor, noBuy) {
                 || flag2
                 || floor < 133 + 33 * lv + (lv < 3 ? 0 : 100) + (lv < 5 ? 0 : 80) + (lv < 10 ? 0 : 90) + (lv < 25 ? 0 : 90) + (lv < 35 ? 0 : 80)
                 || lv >= 25 && random30Bool(engine)) {
+=======
+            if (lv2 >= 20 && random01(engine) > 0.09994 + floor * 0.00006) {
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
                 itemID1 = 2;
             }
+<<<<<<< HEAD
             break;
         case 31:
         case 32:
@@ -526,8 +594,16 @@ function simulateChest(curItems, floor, noBuy) {
             }
         case 33:
             if (floor < 20 * lv * (lv - 1) - 99) {
+=======
+            if (lv2 >= 16 && random01(engine) > 0.19992 + floor * 0.00008) {
+                itemID1 = 2;
+                break;
+            }
+            if (lv2 >= 12 && random01(engine) > 0.2999 + floor * 0.0001) {
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
                 itemID1 = 2;
             }
+<<<<<<< HEAD
             break;
         case 34:
         case 35:
@@ -549,8 +625,12 @@ function simulateChest(curItems, floor, noBuy) {
                     (lv >= 48 && random30Bool(engine)
                     || lv >= 58 && random30Bool(engine)
                     || lv >= 68 && random30Bool(engine))) {
+=======
+            if (lv2 >= 8 && random01(engine) > 0.4999 + floor * 0.0001) {
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
                 itemID1 = 2;
             }
+<<<<<<< HEAD
             break;
         case 37:
         case 38:
@@ -593,10 +673,31 @@ function simulateChest(curItems, floor, noBuy) {
                     || lv >= 10 && random45Bool(engine)
                     || lv >= 12 && random45Bool(engine)
                     || lv >= 14 && random45Bool(engine)) {
+=======
+            if (lv2 >= 5 && random01(engine) > 0.7999 + floor * 0.0001) {
+                itemID1 = 2;
+                break;
+            }
+            if (floor < 1000) {
+                if (lv2 >= 20 && random30Bool(engine)) {
+                    itemID1 = 2;
+                    break;
+                }
+                if (lv2 >= 40 && random30Bool(engine)) {
+                    itemID1 = 2;
+                    break;
+                }
+                if (lv2 >= 60 && random30Bool(engine)) {
+                    itemID1 = 2;
+                    break;
+                }
+                if (lv2 >= 80 && random30Bool(engine)) {
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
                     itemID1 = 2;
                 }
             }
             break;
+<<<<<<< HEAD
         case 40:
             if (floor < 251 + 39 * lv) {
                 itemID1 = 1;
@@ -616,17 +717,26 @@ function simulateChest(curItems, floor, noBuy) {
             if (lv >= 350 && random30Bool(engine)
                 || lv >= 500 && random40Bool(engine)
                 || lv >= 600 && randomBool(engine)) {
+=======
+        case 25:
+            if (flag1 || flag3 || floor < (111 + 90 * lv2 + lv2 * lv2 * 6 + (lv2 < 7 ? 0 : 150)) + (lv2 < 9 ? 0 : 90 + (lv2 * lv2) * 0.5)) {
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
                 itemID1 = 2;
             }
+<<<<<<< HEAD
             break;
         case 43:
             if (curItems[40] == 0 || curItems[42] == 0 || floor < 321 + 4.6 * lv) {
                 itemID1 = 1;
             }
             if (lv >= 200 && random40Bool(engine) || lv >= 300 && randomBool(engine)) {
+=======
+            if (lv2 >= 9 && randomBool(engine) < 0.5) {
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
                 itemID1 = 2;
             }
             break;
+<<<<<<< HEAD
         case 44:
             if (lv >= 1 && floor < 101 + 4 * lv + (lv < 5 ? 0 : 50) + (lv < 10 ? 0 : 70) + (lv < 40 ? 0 : 70) + (lv < 60 ? 0 : 70) + (lv < 70 ? 0 : 70)) {
                 itemID1 = 2;
@@ -739,6 +849,294 @@ function simulateChest(curItems, floor, noBuy) {
             if (flag2 || floor < 1151 + lv * 150) {
                 itemID1 = 2;
             }
+=======
+        case 27:
+        case 28:
+            num3 = 132 + 33 * lv2 + (lv2 < 3 ? 0 : 100) + (lv2 < 5 ? 0 : 80) + (lv2 < 10 ? 0 : 90) + (lv2 < 25 ? 0 : 90) + (lv2 < 35 ? 0 : 80);
+            if (flag1 || flag2 || floor < num3 + 1) {
+                itemID1 = 2;
+                break;
+            }
+            if (lv2 >= 25 && random30Bool(engine)) {
+                itemID1 = 2;
+                break;
+            }
+            break;
+        case 33:
+            if (floor < 20 * lv2 * (lv2 - 1) - 99)
+                itemID1 = 2;
+            break;
+        case 34:
+        case 35:
+            if (flag1 || flag3 || lv2 <= 0 && floor < 351 || lv2 >= 1 && floor < 461 + lv2 * 40)
+                itemID1 = 2;
+            else if (lv2 >= 2 && random01(engine) < 0.30005 - floor * 0.00005)
+                itemID1 = 2;
+            else if (lv2 >= 3 && random01(engine) < 0.40005 - floor * 0.00005)
+                itemID1 = 2;
+            else if (lv2 >= 5 && random01(engine) < 0.50005 - floor * 0.00005)
+                itemID1 = 2;
+            else if (lv2 >= 10 && random01(engine) < 0.50005 - floor * 0.00005)
+                itemID1 = 2;
+            else if (lv2 >= 20 && random01(engine) < 0.50005 - floor * 0.00005)
+                itemID1 = 2;
+            else if (lv2 >= 45 && random01(engine) < 0.50005 - floor * 0.00005)
+                itemID1 = 2;
+            else if (floor < 901) {
+                if (lv2 >= 48 && random40Bool(engine))
+                    itemID1 = 2;
+                else if (lv2 >= 58 && random40Bool(engine))
+                    itemID1 = 2;
+                else if (lv2 >= 68 && random40Bool(engine))
+                    itemID1 = 2;
+            } else if (floor < 1101) {
+                if (lv2 >= 48 && random30Bool(engine))
+                    itemID1 = 2;
+                else if (lv2 >= 58 && random30Bool(engine))
+                    itemID1 = 2;
+                else if (lv2 >= 68 && random30Bool(engine))
+                    itemID1 = 2;
+            }
+            break;
+        case 37:
+        case 38:
+            if (curItems[itemID1 - 3] == 0 || flag1 || flag3 || (lv2 <= 0 && floor < 501 || lv2 >= 1 && floor < 621 + lv2 * 46))
+                itemID1 = 2;
+            else if (lv2 >= 2 && random01(engine) < 0.40005 - floor * 0.00005)
+                itemID1 = 2;
+            else if (lv2 >= 3 && random01(engine) < 0.50005 - floor * 0.00005)
+                itemID1 = 2;
+            else if (lv2 >= 5 && random01(engine) < 0.70005 - floor * 0.00005)
+                itemID1 = 2;
+            else if (lv2 >= 10 && random01(engine) < 0.50005 - floor * 0.00005)
+                itemID1 = 2;
+            else if (lv2 >= 20 && random01(engine) < 0.50005 - floor * 0.00005)
+                itemID1 = 2;
+            else if (lv2 >= 20 && randomBool(engine))
+                itemID1 = 1;
+            else if (lv2 >= 25 && random25Bool(engine))
+                itemID1 = 1;
+            else if (lv2 >= 28 && random25Bool(engine))
+                itemID1 = 1;
+            else if (floor < 1401) {
+                if (lv2 >= 22 && random40Bool(engine))
+                    itemID1 = 2;
+                else if (lv2 >= 24 && random40Bool(engine))
+                    itemID1 = 2;
+                else if (lv2 >= 26 && random40Bool(engine))
+                    itemID1 = 2;
+            } else if (floor < 1601) {
+                if (lv2 >= 22 && random30Bool(engine))
+                    itemID1 = 2;
+                else if (lv2 >= 24 && random30Bool(engine))
+                    itemID1 = 2;
+                else if (lv2 >= 26 && random30Bool(engine))
+                    itemID1 = 2;
+            }
+            break;
+        case 39:
+            if (lv2 != 0) {
+                num2 = 0;
+                if (lv2 >= 10)
+                    num2 = 201 + lv2 * 44;
+                if (lv2 >= 5)
+                    num2 = 20 + lv2 * 8;
+                if (floor < 181 + lv2 * 36 + num2)
+                    itemID1 = 2;
+                if (lv2 >= 10 && random45Bool(engine))
+                    itemID1 = 2;
+                if (lv2 >= 12 && random45Bool(engine))
+                    itemID1 = 2;
+                if (lv2 >= 14 && random45Bool(engine))
+                    itemID1 = 2;
+            }
+            break;
+        case 40:
+            if (floor < 251 + 39 * lv2)
+                itemID1 = 1;
+            break;
+        case 41:
+            lv3 = curItems[40];
+            if (lv3 == 0 || floor < 291 + 190 * lv2)
+                itemID1 = 1;
+            if (lv2 >= 3 && randomBool(engine)) {
+                itemID1 = 1;
+            }
+            break;
+        case 42:
+            lv3 = curItems[40];
+            if (lv3 == 0 || floor < 221 + 2.4 * lv2)
+                itemID1 = 1;
+            if (lv2 >= 350 && random30Bool(engine))
+                itemID1 = 2;
+            if (lv2 >= 500 && random40Bool(engine))
+                itemID1 = 2;
+            if (lv2 >= 600 && randomBool(engine))
+                itemID1 = 2;
+            break;
+        case 43:
+            lv6 = curItems[40];
+            lv3 = curItems[42];
+            if (lv6 == 0 || lv3 == 0 || floor < 321 + 4.6 * lv2)
+                itemID1 = 1;
+            if (lv2 >= 200 && random40Bool(engine))
+                itemID1 = 2;
+            if (lv2 >= 300 && randomBool(engine))
+                itemID1 = 2;
+            break;
+        case 44:
+            if (lv2 >= 1 && floor < 101 + 4 * lv2 + (lv2 < 5 ? 0 : 50) + (lv2 < 10 ? 0 : 70) + (lv2 < 40 ? 0 : 70) + (lv2 < 60 ? 0 : 70) + (lv2 < 70 ? 0 : 70))
+                itemID1 = 2;
+            break;
+        case 45:
+            num3 = 451 + 6 * lv2;
+            if (lv2 >= 70)
+                num3 += 100;
+            if (lv2 >= 80)
+                num3 += 200;
+            if (lv2 >= 90)
+                num3 += 200;
+            if (floor < num3)
+                itemID1 = 1;
+            break;
+        case 48:
+            if (lv2 >= 1) {
+                if (flag3 || floor < 241 + 41 * lv2)
+                    itemID1 = 2;
+            } else if (floor < 141)
+                itemID1 = 2;
+            break;
+        case 49:
+            if (flag3 || floor < 231 + 45 * lv2)
+                itemID1 = 2;
+            break;
+        case 50:
+            if (flag3 || floor < 211 + 49 * lv2)
+                itemID1 = 2;
+            break;
+        case 51:
+            if (lv2 >= 1) {
+                if (floor < 201 + 35 * lv2)
+                    itemID1 = 2;
+            } else if (floor < 161)
+                itemID1 = 2;
+            if (lv2 >= 24 && random30Bool(engine))
+                itemID1 = 2;
+            if (lv2 >= 26 && random30Bool(engine))
+                itemID1 = 2;
+            break;
+        case 52:
+            lv6 = curItems[40];
+            lv3 = curItems[43];
+            if (lv6 == 0 || lv3 <= 10 || floor < 501 + 12 * lv2)
+                itemID1 = 1;
+            if (lv2 >= 25 && random40Bool(engine))
+                itemID1 = 2;
+            if (lv2 >= 50 && random30Bool(engine))
+                itemID1 = 2;
+            if (lv2 >= 75 && random40Bool(engine))
+                itemID1 = 2;
+            break;
+        case 53:
+            if (flag1 || flag3 || floor < 761 + 5 * lv2)
+                itemID1 = 2;
+            else if (lv2 >= 2 && random10Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 3 && random30Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 10 && random15Bool(engine))
+                itemID1 = 1;
+            else if (lv2 >= 50 && random25Bool(engine))
+                itemID1 = 1;
+            else if (lv2 >= 80 && random25Bool(engine))
+                itemID1 = 2;
+            break;
+        case 54:
+            if (lv2 <= 14)
+                itemID1 = 2;
+            if (lv2 <= 15 && random70Bool(engine))
+                itemID1 = 1;
+            lv2 = curItems[itemID1]; // Keep this line
+            if (floor < 851 + lv2 * 80)
+                itemID1 = 1;
+            else if (flag2)
+                itemID1 = 2;
+            else if (lv2 >= 1 && random40Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 3 && random60Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 5 && random40Bool(engine))
+                itemID1 = 1;
+            else if (lv2 >= 6 && random90Bool(engine))
+                itemID1 = 1;
+            else if (lv2 >= 7 && random40Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 9 && random90Bool(engine))
+                itemID1 = 2;
+            itemID1 = Hosei1OR2(itemID1);
+            break;
+        case 55:
+            if (lv2 >= 2 && random30Bool(engine))
+                itemID1 = 1;
+            if (lv2 >= 4 && random70Bool(engine))
+                itemID1 = 1;
+            if (lv2 >= 5 && random90Bool(engine))
+                itemID1 = 1;
+            if (lv2 >= 7 && random90Bool(engine))
+                itemID1 = 1;
+            if (flag3)
+                itemID1 = 1;
+            itemID1 = Hosei1OR2(itemID1);
+            break;
+        case 56:
+            lv3 = curItems[47];
+            if (lv3 < 500)
+                itemID1 = 2;
+            if (lv3 < lv2 * 500)
+                itemID1 = 2;
+            if (flag3 && random30Bool(engine) || floor < 201)
+                itemID1 = 2;
+            break;
+        case 57:
+            if (random90Bool(engine) && (flag3 || floor < 150))
+                itemID1 = 2;
+            else if (lv2 >= 1 && floor < 226)
+                itemID1 = 2;
+            else if (flag2 || floor < 801 + lv2 * 200)
+                itemID1 = 2;
+            break;
+        case 58:
+            if (flag2 || floor < 1651 + 200 * lv2)
+                itemID1 = 2;
+            else if (lv2 >= 1 && random01(engine) < 0.334)
+                itemID1 = 2;
+            break;
+        case 59:
+            if (flag2 || floor < 1151 + 150 * lv2)
+                itemID1 = 2;
+            else if (lv2 >= 1 && randomBool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 5 && random40Bool(engine))
+                itemID1 = 2;
+            break;
+        case 60:
+            if (flag2 || floor < 1001 + 250 * lv2)
+                itemID1 = 2;
+            else if (lv2 >= 5 && randomBool(engine))
+                itemID1 = 2;
+            break;
+        case 61:
+            if (flag2 || floor < 1401 + 150 * lv2)
+                itemID1 = 2;
+            else if (lv2 >= 5 && randomBool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 10 && random30Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 15 && random25Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 20 && random25Bool(engine))
+                itemID1 = 2;
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
             break;
     }
     
@@ -843,7 +1241,7 @@ function simulateRun(curItems, beginFloor, endFloor) {
     }
     var num4 = 0;
     var cur = 20;
-    while (cur*10 <= Math.min(endFloor, 2405)) {
+    while (cur * 10 <= Math.min(endFloor, 2405)) {
         chests[cur] = 0;
         num2 = 0.12 + cur / 380;
         if (num2 > 0.2) {
@@ -866,7 +1264,13 @@ function simulateRun(curItems, beginFloor, endFloor) {
         if (cur % 5 == 0) {
             chests[cur] = 1;
             if (cur % 10 == 0) {
+<<<<<<< HEAD
                 if (random25Bool(engine)) {
+=======
+                if (endFloor < cur / 10) // TODO record floor instead
+                    chests[cur] = cur != 20 ? (cur % 50 != 0 ? 3 : 4) : 2;
+                else if (random25Bool(engine))
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
                     chests[cur] = 2;
                 }
                 else if (random01(engine) < 0.22 && cur % 50 == 0) {
@@ -894,9 +1298,9 @@ function simulateRun(curItems, beginFloor, endFloor) {
         cur++;
     }
     for (var i in chests) {
-        if (i*10 > beginFloor && i*10 <= endFloor) {
+        if (i * 10 > beginFloor && i * 10 <= endFloor) {
             for (var j = 0; j < chests[i]; j++) {
-                simulateChest(curItems, i*10);
+                simulateChest(curItems, i * 10);
             }
         }
     }
@@ -932,12 +1336,12 @@ function randm10(min, max) {
         return 0;
     }
     return num2;
-  }
+}
 
 // Copied directly from the code, with few modifications. Not too sure what's going there with the whole clearLine thing.
 function simulateQuest(curItems, beginFloor, endFloor) {
     specialQuest = random01(engine) < curItems[54] * 0.03;
-    
+
     duration = randomRangeInt(8, 12);
     if (duration == 11) {
         duration += randomRangeInt(0, 2 + randomRangeInt(0, 2))
@@ -964,14 +1368,11 @@ function simulateQuest(curItems, beginFloor, endFloor) {
             num12 = 70 + randm10(max4 + max2) + randm10(max3 * 0.3, max3 * 0.6);
             if (x < 0.2) {
                 num12 = 50 + randm10(max4 + max2 + 4) + randm10(max3 * 0.35, max3 * 0.75);
-            }
-            else if (x < 0.4) {
+            } else if (x < 0.4) {
                 num12 = 50 + randm10(max4 + max2 + 6) + randm10(max3 * 0.35, max3 * 0.8);
-            }
-            else if (x < 0.5) {
+            } else if (x < 0.5) {
                 num12 = 30 + randm10(max4 + max2 + 6) + randm10(max3 * 0.35, max3 * 0.8);
-            }
-            else if (x < 0.7) {
+            } else if (x < 0.7) {
                 num12 = 20 + randm10(max4 + max2 + 7) + randm10(max3 * 0.35, max3 * 0.8);
             }
             clearLine[index] += clearLine[index - 1] + num12;
@@ -992,11 +1393,9 @@ function simulateQuest(curItems, beginFloor, endFloor) {
             num12 = 80 + randm10(max4 + max2) + randm10(max3 * 0.35, max3 * 0.7);
             if (x < 0.2) {
                 num12 = 70 + randm10(max4 + max2 + 4) + randm10(max3 * 0.35, max3 * 0.8);
-            }
-            else if (x < 0.5) {
+            } else if (x < 0.5) {
                 num12 = 60 + randm10(max4 + max2 + 6) + randm10(max3 * 0.35, max3 * 0.8);
-            }
-            else if (x < 0.65) {
+            } else if (x < 0.65) {
                 num12 = 50 + randm10(max4 + max2 + 8) + randm10(max3 * 0.35, max3 * 0.8);
             }
             clearLine[index] += clearLine[index - 1] + num12;
@@ -1019,11 +1418,9 @@ function simulateQuest(curItems, beginFloor, endFloor) {
             num12 = 90 + randm10(max4 + max2) + randm10(max3 * 0.3, max3 * 0.6);
             if (x < 0.2) {
                 num12 = 80 + randm10(max4 + max2 + 4) + randm10(max3 * 0.35, max3 * 0.75);
-            }
-            else if (x < 0.5) {
+            } else if (x < 0.5) {
                 num12 = 70 + randm10(max4 + max2 + 6) + randm10(max3 * 0.35, max3 * 0.8);
-            }
-            else if (x < 0.65) {
+            } else if (x < 0.65) {
                 num12 = 60 + randm10(max4 + max2 + 7) + randm10(max3 * 0.35, max3 * 0.8);
             }
             clearLine[index] += clearLine[index - 1] + num12;
@@ -1404,7 +1801,7 @@ function sim_aq_nr_nf() {
 function sim_gc() {
     steps = 0;
     timeLimit = Number($("input[name='run-time']:checked")[0].id.replace("s", '')) * 1000,
-    timeStart = performance.now();
+        timeStart = performance.now();
     do {
         for (var i = 0; i < 100; i++) {
             curItems = items.slice();
@@ -1417,7 +1814,7 @@ function sim_gc() {
 function sim_nc() {
     steps = 0;
     timeLimit = Number($("input[name='run-time']:checked")[0].id.replace("s", '')) * 1000,
-    timeStart = performance.now();
+        timeStart = performance.now();
     do {
         for (var i = 0; i < 100; i++) {
             curItems = items.slice();
@@ -1445,6 +1842,7 @@ function mainLoop() {
         questValues = [Number($("#8min")[0].value), Number($("#9min")[0].value), Number($("#10min")[0].value), Number($("#11min")[0].value), Number($("#12min")[0].value), Number($("#13min")[0].value), Number($("#14min")[0].value), Number($("#15min")[0].value)];
         floorRecord = Number($("#floor-record")[0].value);
         questRecord = Number($("#quest-record")[0].value);
+        curItems = items.slice()
         if (questType === "no-quest") {
             if ($("#reset-chests")[0].checked) {
                 if ($("#floor-chests")[0].checked) {
@@ -1508,7 +1906,7 @@ function mainLoop() {
     }
     for (var i = 0; i < items.length; i++) {
         gainedLevels[i] /= steps;
-        gainedTimes[i] = gainedTimes[i]/steps * 100;
+        gainedTimes[i] = gainedTimes[i] / steps * 100;
     }
     restoreGUI();
     displayResults();
@@ -1538,7 +1936,11 @@ function debugInit() {
 }
 
 function debugCur() { // /u/Vetokend 20190526
+<<<<<<< HEAD
     items = [20,12273,19516,30,20,15123,25,9643,100,7729,300,10,300,10,300,10,300,10,600,11257,10,105,105,71,6004,12,3,45,45,13377,15323,12111,15335,10,70,70,13014,30,30,16,31,5,701,401,76,100,355,512,16,16,11,30,151,118,10,13,3,3,2,3]
+=======
+    items = [20, 11675, 16519, 30, 10, 13903, 25, 8962, 100, 7087, 300, 10, 300, 10, 300, 10, 300, 10, 600, 10489, 10, 105, 105, 69, 5540, 12, 3, 45, 45, 12853, 13986, 11077, 15100, 10, 70, 70, 12271, 30, 30, 16, 31, 5, 701, 401, 76, 100, 355, 460, 16, 16, 11, 30, 151, 86, 10, 11, 1, 3, 0]
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
     j = 0;
     for (i in itemObjs) {
         $("#" + nameCleanup(i))[0].value = items[j];
@@ -1577,7 +1979,7 @@ function displayResults() {
     for (var i = 0; i < itemCount; i++) {
         var x = 0;
         if (caps[itemObjs[tabs[1][i]].id]) {
-            x = 160 * (curItems[itemObjs[tabs[1][i]].id]/caps[itemObjs[tabs[1][i]].id])
+            x = 160 * (curItems[itemObjs[tabs[1][i]].id] / caps[itemObjs[tabs[1][i]].id])
         }
         var str = "<tr>+<td>" + setColor(tabs[1][i], x) + "</td><td>" + setColor(curItems[itemObjs[tabs[1][i]].id], x) + "</td><td>";
         var hidden = hideCapped;
@@ -1642,12 +2044,21 @@ function doImportPreset(toImport) {
     items = toImport[0];
     var j = 0;
     for (i in itemObjs) { // Update item levels in GUI
+<<<<<<< HEAD
+=======
+        if (i == "Coat of Gold") i = "Golden Coat"; // Pre-2.0.0 compatibility
+        if (i == "A King's Crown") i = "Royal Crown";
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
         val = items[j];
         if (val === undefined) {
             val = 0;
         }
+<<<<<<< HEAD
         $("#" + nameCleanup(i))[0].value = val;
         $("#" + nameCleanup(i) + "_i")[0].value = val;
+=======
+        $("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, ""))[0].value = val;
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
         j++;
     }
     $("#" + toImport[1]).prop("checked", true).trigger("click");
@@ -1737,7 +2148,7 @@ function loadPreset() {
     }
     try {
         presetLoading = true;
-        doImportPreset(localStorage.getItem(pset));
+        doImportPreset(JSON.parse(RawDeflate.inflate(Base64.decode(localStorage.getItem(pset)))));
         presetLoading = false;
         $("#load-success").modal();
     } catch (e) {
@@ -1761,6 +2172,7 @@ function doRemovePreset() {
     updatePresets();
 }
 
+<<<<<<< HEAD
 function changeTab(newTab) {
         $('#nav_' + currentTab).parent().removeClass('active');
         $('#nav_' + newTab).parent().addClass('active');
@@ -1769,12 +2181,42 @@ function changeTab(newTab) {
         currentTab = newTab;
         scroll();
 }
+=======
+$(function() {
+
+    $('[data-toggle="tooltip"]').tooltip();
+    $("#version").append(versionStr);
+
+    engine = Random.engines.mt19937().autoSeed();
+    random01 = Random.real(0, 1, false);
+    randomBool = Random.bool();
+    random10Bool = Random.bool(.1);
+    random15Bool = Random.bool(.15);
+    random20Bool = Random.bool(.2);
+    random25Bool = Random.bool(.25);
+    random30Bool = Random.bool(.3);
+    random40Bool = Random.bool(.4);
+    random45Bool = Random.bool(.45);
+    random60Bool = Random.bool(.6);
+    random70Bool = Random.bool(.7);
+    random75Bool = Random.bool(.75);
+    random80Bool = Random.bool(.8);
+    random85Bool = Random.bool(.85);
+    random90Bool = Random.bool(.9);
+
+    itemCount = 0;
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
 
 function copyItemsLoot() {
     for (var i in itemObjs) {
         $("#" + nameCleanup(i))[0].value = $("#" + nameCleanup(i) + "_i")[0].value;
     }
+<<<<<<< HEAD
 }
+=======
+
+    items = new Array(itemCount).fill(0); // TODO
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
 
 function copyLootItems() {
     for (var i in itemObjs) {
@@ -1783,7 +2225,16 @@ function copyLootItems() {
     for (var i in itemObjs) {
         updateItemEffect(i);
     }
+<<<<<<< HEAD
 }
+=======
+
+    // Event listeners (must be done before loading autosave)
+    $("#full-run").click(function() {
+        $("#run-form").show();
+        $("#one-floor").hide();
+    });
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
 
 function getTable(strCaption, strData, start, end, fCaption, fData, cl="") {
     str = "<table class='table table-hover table-data'><thead><tr><th>" + strCaption + "</th>";
@@ -1805,9 +2256,20 @@ function rnd(x, n) {
     return +x.toFixed(n)
 }
 
+<<<<<<< HEAD
 function getAnchor(id) {
     return "<a class='alink' href='#" + nameCleanup(id) + "_l'><samp>" + id + "</samp></a>";
 }
+=======
+    $("#normal-quest, #always-quest").click(function() {
+        $("#quest-form").show();
+    });
+
+    var autosave = localStorage.getItem("_autosave");
+    if (autosave) {
+        doImportPreset(JSON.parse(RawDeflate.inflate(Base64.decode(autosave))));
+    }
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
 
 function getTime(x) {
     x = rnd(x, 2);
@@ -1893,6 +2355,7 @@ function getEffect(id, lv = 0) {
     }
 }
 
+<<<<<<< HEAD
 Object.defineProperties(Array.prototype, {
     'collapseSimple': {
         value: function() {
@@ -1935,6 +2398,25 @@ Object.defineProperties(Array.prototype, {
             this[this.length - 1] = newProb;
         }
     }
+=======
+    // Event listeners
+    $("#simulate").click(runSimulation);
+    $("#prob, #avg").click(displayResults);
+    $("#btn-save").click(savePreset);
+    $("#btn-import").click(openImport);
+    $("#btn-export").click(exportPreset);
+    $("#do-import").click(importPreset);
+    $("#do-save").click(doSavePreset);
+    $("#do-remove").click(doRemovePreset);
+    $("#btn-load").click(loadPreset);
+    $("#btn-remove").click(removePreset);
+
+    saveInterval = setInterval(function() {
+        localStorage.setItem("_autosave", getExportData());
+    }, 1000);
+
+    //debugCur();
+>>>>>>> e6c97c722b9436704dd876dbda8a74103e35b42d
 });
 
 function simulateChestProba(lv, claymoreLv, resets, endFloor) {
