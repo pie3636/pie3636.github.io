@@ -36,7 +36,7 @@ itemObjs = {
     "Gold Vessels":         new Item( 9, Infinity,     2,     9,   10,   0,    5, 100),
     "Blue Elixir":          new Item(10,      300,     7,    17,    5,   0,    2, 100),
     "Green Elixir":         new Item(11,       10,     7,    14,    5,   0,    0,   0),
-    "Coat of Gold":         new Item(12,      300,     5,    11,    5,   0,    2, 100),
+    "Golden Coat":          new Item(12,      300,     5,    11,    5,   0,    2, 100),
     "Golden Rod":           new Item(13,       10,     5,     9,    5,   0,    0,   0),
     "Solomon's Staff":      new Item(14,      300,     3,     8,    5,   0,    2, 100),
     "Solomon's Key":        new Item(15,       10,     4,     3,    5,   0,    0,   0),
@@ -47,7 +47,7 @@ itemObjs = {
     "Hydra's Poison Arrow": new Item(20,       10,     5,     3,    5,   0,    1,  10),
     "Durandal":             new Item(21,      105,     5,    30,    2,   0,    1,  20),
     "Mistilteinn":          new Item(22,      105,     6,    32,    2,   0,    1,  20),
-    "A King's Crown":       new Item(23,      100,    50,    60,    5,   0,    1,  40),
+    "Royal Crown":          new Item(23,      100,    50,    60,    5,   0,    1,  40),
     "Gungnir":              new Item(24, Infinity,     5,     6,   10,   0,    0,   0),
     "Lævateinn":            new Item(25,       12,    10,    50,    1,   0,    0,   0),
     "Gáe Bolg":             new Item(26,        3,   400,   200,    1,   0,    0,   0),
@@ -89,8 +89,8 @@ itemObjs = {
 };
 
 
-names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon's Staff",
-    "Solomon's Key", "Excalibur", "Aegis", "Caduceus", "Philosopher's Stone", "Hydra's Poison Arrow", "Durandal", "Mistilteinn", "A King's Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour",
+names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Golden Coat", "Golden Rod", "Solomon's Staff",
+    "Solomon's Key", "Excalibur", "Aegis", "Caduceus", "Philosopher's Stone", "Hydra's Poison Arrow", "Durandal", "Mistilteinn", "Royal Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour",
     "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor 2", "Awakening Sword 2", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate",
     "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand", "Veteran's Hat", "Blue Crystal", "Freyr's Sword 2",
     "Book of Prophesy", "Ancient Magic Stone", "Mass prod Gáe Bolg", "Demon's Mask", "Power of Demons"
@@ -1585,6 +1585,8 @@ function doImportPreset(toImport) {
     items = toImport[0];
     var j = 0;
     for (i in itemObjs) { // Update item levels in GUI
+        if (i == "Coat of Gold") i = "Golden Coat"; // Pre-2.0.0 compatibility
+        if (i == "A King's Crown") i = "Royal Crown";
         val = items[j];
         if (val === undefined) {
             val = 0;
