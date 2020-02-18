@@ -951,12 +951,11 @@ function simulateRun(curItems, beginFloor, endFloor) {
         if (cur % 5 == 0) {
             chests[cur] = 1;
             if (cur % 10 == 0) {
-                if (endFloor < cur / 10) // TODO record floor instead
+                if (endFloor < cur / 10) { // TODO record floor instead
                     chests[cur] = cur != 20 ? (cur % 50 != 0 ? 3 : 4) : 2;
-                else if (random25Bool(engine))
+                } else if (random25Bool(engine)) {
                     chests[cur] = 2;
-                }
-                else if (random01(engine) < 0.22 && cur % 50 == 0) {
+                } else if (random01(engine) < 0.22 && cur % 50 == 0) {
                     chests[cur] = 3;
                 }
             }
