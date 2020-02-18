@@ -9,7 +9,7 @@ function Item(id, cap, droprank, droprank2, i1, i2, limitI1, limitLine) {
     this.limitLine = limitLine;
 }
 
-versionStr = "2.0.2";
+versionStr = "2.0.4";
 saveInterval = undefined;
 
 // TODO fix quest, gold chest, add item guide (stats), score (gold/atk etc) and top floor calculator
