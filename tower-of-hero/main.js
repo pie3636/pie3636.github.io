@@ -2015,6 +2015,11 @@ Object.defineProperties(Array.prototype, {
         value: function(newProb) {
             this[this.length - 1] = newProb;
         }
+    },
+    'getProb': {
+        value: function(potentialValue) {
+            // TODO: Find [potentialValue, x] in this, else return 0
+        }
     }
 });
 
@@ -2065,18 +2070,28 @@ function simulateChestProba(lv, claymoreLv, resets, endFloor) {
         currentProb.pop();
     }
     
-    // TODO
-    chests[10] = 1;
-    chests[12 + randomRangeInt(0, 2)] = 1;
-    chests[15] = 1;
-    chests[16 + randomRangeInt(0, 3)] = 1;
+    chests[10] = [[1, 1]];
+    currentProb.push(1/3);
+    chests[12].probSet(([1, currentProb.collapseSimple()]]);
+    chests[13].probSet(([1, currentProb.collapseSimple()]]);
+    chests[14].probSet(([1, currentProb.collapseSimple()]]);
+    currentProb.pop();
+    chests[15] = [[1, 1]];
+    currentProb.push(1/3);
+    chests[16].probSet(([1, currentProb.collapseSimple()]]);
+    chests[17].probSet(([1, currentProb.collapseSimple()]]);
+    chests[18].probSet(([1, currentProb.collapseSimple()]]);
+    chests[19].probSet(([1, currentProb.collapseSimple()]]);
+    currentProb.pop();
+    
     if (curItems[39] == 0) {
-        chests[17] = 1;
+        chests[17] = [[1, 1]];
     }
-    var num4 = 0;
+    
+    var num4 = [[0, 1]];
     var cur = 20;
     while (cur*10 <= Math.min(endFloor, 2405)) {
-        chests[cur] = 0;
+        chests[cur] = [[0, 1]];
         num2 = 0.12 + cur / 380;
         if (num2 > 0.2) {
             num2 = num2 * 0.8 + 0.04;
@@ -2091,46 +2106,41 @@ function simulateChestProba(lv, claymoreLv, resets, endFloor) {
         if (num3 >= 0.42) {
             num3 = 0.42;
         }
-        if (random01(engine) < num3) {
-            chests[cur] = 1;
-            ++num4;
-        }
+        currentProb.push(num3);
+        chests[cur].probSet(([1, currentProb.collapseSimple()]]);
+        num4.probSet(([num4 + 1, currentProb.collapseSimple()]]);
+        currentProb.pop();
         if (cur % 5 == 0) {
-            chests[cur] = 1;
+            chests[cur] = [[1, 1]];
             if (cur % 10 == 0) {
-                if (random25Bool(engine)) {
-                    chests[cur] = 2;
+                currentProb.push(0.25);
+                chests[cur].probSet(([2, currentProb.collapseSimple]));
+                currentProb.invertLastProb();
+                    if (cur % 50 == 0) {
+                    currentProb.push(0.22);
+                    chests[cur].probSet(([3, currentProb.collapseSimple]));
+                    currentProb.pop();
                 }
-                else if (random01(engine) < 0.22 && cur % 50 == 0) {
-                    chests[cur] = 3;
-                }
-            }
+                currentProb.pop();
         }
         if (cur % 10 == 0 && cur >= 30) {
-            if (num4 == 0) {
-                chests[cur - 5 + randomRangeInt(1, 3)] = 1;
-                chests[cur - 5 - randomRangeInt(1, 3)] = 1;
-            } else if (num4 == 1) {
-                chests[cur - 5] = 1;
-            } else if (num4 > 5) {
+            if (num4 == 0) { // TODO
+                chests[cur - 5 + randomRangeInt(1, 3)] = 1; // TODO
+                chests[cur - 5 - randomRangeInt(1, 3)] = 1; // TODO
+            } else if (num4 == 1) { // TODO
+                chests[cur - 5] = [[1, 1]];
+            } else if (num4 > 5) { // TODO
                 for (var j = 9; j > 0; j--) {
-                    chests[cur - j] = 0;
+                    chests[cur - j] = [[0, 1]];
                 }
                 for (var j = 0; j < 3; j++) {
-                    chests[cur - 5 + randomRangeInt(1, 5)] = 1;
-                    chests[cur - 5 - randomRangeInt(1, 5)] = 1;
+                    chests[cur - 5 + randomRangeInt(1, 5)] = 1; // TODO
+                    chests[cur - 5 - randomRangeInt(1, 5)] = 1; // TODO
                 }
             }
-            num4 = 0;
+            num4 = [[0, 1]];
         }
         cur++;
-    }
-    for (var i in chests) {
-        if (i*10 > beginFloor && i*10 <= endFloor) {
-            for (var j = 0; j < chests[i]; j++) {
-                simulateChest(curItems, i*10);
-            }
-        }
     }
 }
 
