@@ -13,7 +13,7 @@ versionStr = "2.0.4";
 saveInterval = undefined;
 
 // TODO fix quest, gold chest, add item guide (stats), score (gold/atk etc) and top floor calculator
-// TODO Alphab sort, +1/+10, guide next to it, ordering items and saving that in the preset/localstorage
+// TODO Alphab sort, +1/+10, guide next to it
 
 
 itemObjs = {
@@ -1465,7 +1465,7 @@ function mainLoop() {
 function debugInit() {
     j = 0;
     for (var i in itemObjs) {
-        items[j] = Number($("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, ""))[0].value);
+        items[j] = Number(getByCleanName(i)[0].value);
         j++;
     }
     gainedLevels = new Array(itemCount).fill(0);
@@ -1488,7 +1488,7 @@ function debugCur() { // /u/Vetokend 20190526
     items = [20, 11675, 16519, 30, 10, 13903, 25, 8962, 100, 7087, 300, 10, 300, 10, 300, 10, 300, 10, 600, 10489, 10, 105, 105, 69, 5540, 12, 3, 45, 45, 12853, 13986, 11077, 15100, 10, 70, 70, 12271, 30, 30, 16, 31, 5, 701, 401, 76, 100, 355, 460, 16, 16, 11, 30, 151, 86, 10, 11, 1, 3, 0]
     j = 0;
     for (i in itemObjs) {
-        $("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, ""))[0].value = items[j];
+        getByCleanName(i)[0].value = items[j];
         j++;
     }
     $("#resets")[0].value = 2227;
@@ -1553,7 +1553,7 @@ function runSimulation() {
     items = new Array(itemCount).fill(0);
     j = 0;
     for (var i in itemObjs) {
-        items[j] = Number($("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, ""))[0].value);
+        items[j] = Number(getByCleanName(i)[0].value);
         j++;
     }
     gainedLevels = new Array(itemCount).fill(0);
@@ -1570,7 +1570,7 @@ function openImport() {
 function importPreset() {
     try {
         presetLoading = true;
-        doImportPreset(JSON.parse(RawDeflate.inflate(Base64.decode($("#import-code")[0].value))));
+        doImportPreset(decodePreset($("#import-code")[0].value));
         presetLoading = false;
         $("#import").modal("hide");
     } catch (e) {
@@ -1591,7 +1591,7 @@ function doImportPreset(toImport) {
         if (val === undefined) {
             val = 0;
         }
-        $("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, ""))[0].value = val;
+        getByCleanName(i)[0].value = val;
         j++;
     }
     $("#" + toImport[1]).prop("checked", true).trigger("click");
@@ -1610,12 +1610,27 @@ function doImportPreset(toImport) {
     $("#" + toImport[19]).prop("checked", true).trigger("click");
     $("#floor-record")[0].value = toImport[20] || 750;
     $("#quest-record")[0].value = toImport[21] || 700;
+    for (i in toImport[22]) {
+        if (i == 0) {
+            $("#itemLevels").prepend($("#" + toImport[22][i]));
+        } else {
+            $("#" + toImport[22][i]).insertAfter($("#" + toImport[22][i-1]));
+        }
+    }
+}
+
+function cleanName(i) {
+    return i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, "");
+}
+
+function getByCleanName(i) {
+    return $("#" + cleanName(i));
 }
 
 function getExportData() {
     j = 0;
     for (var i in itemObjs) {
-        items[j] = Number($("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, ""))[0].value);
+        items[j] = Number(getByCleanName(i)[0].value);
         j++;
     }
     toExport = [
@@ -1640,9 +1655,18 @@ function getExportData() {
         Number($("#15min")[0].value),
         $("input[name='res-sort']:checked")[0].id,
         Number($("#floor-record")[0].value),
-        Number($("#quest-record")[0].value)
+        Number($("#quest-record")[0].value),
+        $.map($(".item_tr"), x => x.id)
     ];
-    return Base64.encode(RawDeflate.deflate(JSON.stringify(toExport)));
+    return encodePreset(toExport);
+}
+
+function decodePreset(preset) {
+    return JSON.parse(RawDeflate.inflate(atob(preset)));
+}
+
+function encodePreset(data) {
+    return btoa(RawDeflate.deflate(JSON.stringify(data)));
 }
 
 function exportPreset() {
@@ -1681,7 +1705,7 @@ function loadPreset() {
     }
     try {
         presetLoading = true;
-        doImportPreset(JSON.parse(RawDeflate.inflate(Base64.decode(localStorage.getItem(pset)))));
+        doImportPreset(decodePreset(localStorage.getItem(pset)));
         presetLoading = false;
         $("#load-success").modal();
     } catch (e) {
@@ -1740,8 +1764,18 @@ $(function() {
     }
 
     for (var i in itemObjs) {
-        $("#itemLevels").append("<tr><td>" + i + "</td><td><input type='number' id='" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, "") + "' name='quantity' min='0' max='" + itemObjs[i].cap + "' value='" + itemObjs[i].value + "'></td><tr/>");
+        $("#itemLevels").append(
+            "<tr id=tr_" + cleanName(i) + " class='item_tr'>"
+            + "<td class='handle'><span class='glyphicon glyphicon-option-vertical' aria-hidden='true'></span></td>"
+            + "<td>" + i + "</td>"
+            + "<td><input type='number' id='" + cleanName(i) + "' name='quantity' min='0' max='" + itemObjs[i].cap + "' value='" + itemObjs[i].value + "'></td>"
+            + "<tr/>");
     }
+    $("#itemLevels").sortable({
+        item: "> tr",
+        cursor: "move",
+        revert: true
+    });
 
     // Event listeners (must be done before loading autosave)
     $("#full-run").click(function() {
@@ -1764,7 +1798,7 @@ $(function() {
 
     var autosave = localStorage.getItem("_autosave");
     if (autosave) {
-        doImportPreset(JSON.parse(RawDeflate.inflate(Base64.decode(autosave))));
+        doImportPreset(decodePreset(autosave));
     }
 
     updatePresets();

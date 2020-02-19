@@ -16,6 +16,16 @@ input[type="number"] {
     width: 100px;
 }
 
+/* Improve display of dragged table rows */
+.ui-sortable-helper {
+  display: table;
+}
+
+.handle {
+    width: 20px;
+    color: #ccc;
+}
+
 /* Override default setting (bold) */
 label {
     font-weight: normal;
