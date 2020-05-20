@@ -2077,7 +2077,7 @@ function simulateChestProba(lv, claymoreLv, resets, endFloor) {
     chests[14].probSet(([1, currentProb.collapseSimple()]]);
     currentProb.pop();
     chests[15] = [[1, 1]];
-    currentProb.push(1/3);
+    currentProb.push(1/4);
     chests[16].probSet(([1, currentProb.collapseSimple()]]);
     chests[17].probSet(([1, currentProb.collapseSimple()]]);
     chests[18].probSet(([1, currentProb.collapseSimple()]]);
