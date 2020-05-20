@@ -51,7 +51,6 @@
 </nav>
 
 <div class="container-fluid" role="main" id="main">
-
     <div id="loot" style="display:none">
         <div class="alert alert-warning">
             If you notice any discrepancy, bug or wrong value, please message me (<a href="http://reddit.com/user/pie3636">/u/pie3636</a>, Discord: Anfasa#6822) so I can fix it.<br/><span class="glyphicon glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
@@ -209,45 +208,46 @@
                 </div>
             </div>
         </div>
-        
-        
-        
-        <div id="results" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Simulation results - <span id="simulated-count"></span> simulations, <span id="simulated-item"></span> items/simulation</h4>
-                    </div>
-                    <div class="modal-body">
-                        <span class="valign">
-                            Values are displayed using a <span style="color:#00A000">green</span> <span style="color:#A0A000">to</span> <span style="color:#A00000">red</span> gradient based on how close you are to capping each item.<br/>
-                            Sort obtained items by
-                            <span class="left-pad"></span>
-                            <label>
-                                <input type="radio" name="res-sort" id="avg"/> Average count
-                            </label>
-                            <span class="left-pad"></span>
-                            <label>
-                                <input type="radio" name="res-sort" id="prob" checked/> Probability
-                            </label>
-                        </span>
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Current level</th>
-                                    <th>Probability of getting</th>
-                                    <th>Times gotten</th>
-                                    <th>Cap</th>
-                                </tr>
-                            </thead>
-                            <tbody id="res-table"></tbody>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
+    </div>
+    
+    
+    
+    <div id="results" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Simulation results - <span id="simulated-count"></span> simulations, <span id="simulated-item"></span> items/simulation</h4>
+                </div>
+                <div class="modal-body">
+                    <span class="valign">
+                        Values are displayed using a <span style="color:#00A000">green</span> <span style="color:#A0A000">to</span> <span style="color:#A00000">red</span> gradient based on how close you are to capping each item.<br/>
+                        Sort obtained items by
+                        <span class="left-pad"></span>
+                        <label>
+                            <input type="radio" name="res-sort" id="avg"/> Average count
+                        </label>
+                        <span class="left-pad"></span>
+                        <label>
+                            <input type="radio" name="res-sort" id="prob" checked/> Probability
+                        </label>
+                    </span>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Current level</th>
+                                <th>Chance to get</th>
+                                <th>Times gotten</th>
+                                <th>Cap</th>
+                                <th>Loot value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="res-table"></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -425,7 +425,8 @@
 </div>
 
 
-<script src="../jquery.min.js"></script>
+<script src="../lib/js/jquery.min.js"></script>
+<script src="../lib/js/jquery-ui.min.js"></script>
 <script src="js/random.min.js"></script>
 <script src="js/base64.min.js"></script>
 <script src="js/inflate.js"></script>

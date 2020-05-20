@@ -19,6 +19,16 @@ input[type="number"] {
     width: 100px;
 }
 
+/* Improve display of dragged table rows */
+.ui-sortable-helper {
+  display: table;
+}
+
+.handle {
+    width: 20px;
+    color: #ccc;
+}
+
 /* Override default setting (bold) */
 label {
     font-weight: normal;
@@ -42,6 +52,10 @@ textarea[readonly] {
     border: 1px solid #ccc;
     background-color: #F0F0F0;
     padding: 2px;
+}
+
+.modal-dialog {
+    width: 700px;
 }
 
 .modal-footer {

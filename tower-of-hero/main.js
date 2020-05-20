@@ -1598,7 +1598,7 @@ function mainLoop() {
 function debugInit() {
     j = 0;
     for (var i in itemObjs) {
-        items[j] = Number($("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, ""))[0].value);
+        items[j] = Number(getByCleanName(i)[0].value);
         j++;
     }
     gainedLevels = new Array(itemCount).fill(0);
@@ -1621,7 +1621,7 @@ function debugCur() { // /u/Vetokend 20190526
     items = [20,12273,19516,30,20,15123,25,9643,100,7729,300,10,300,10,300,10,300,10,600,11257,10,105,105,71,6004,12,3,45,45,13377,15323,12111,15335,10,70,70,13014,30,30,16,31,5,701,401,76,100,355,512,16,16,11,30,151,118,10,13,3,3,2,3]
     j = 0;
     for (i in itemObjs) {
-        $("#" + nameCleanup(i))[0].value = items[j];
+        getByCleanName(i)[0].value = items[j];
         j++;
     }
     $("#resets")[0].value = 2348;
@@ -1656,12 +1656,13 @@ function displayResults() {
     curItems = items.slice();
     for (var i = 0; i < itemCount; i++) {
         var x = 0;
-        if (caps[itemObjs[tabs[1][i]].id]) {
-            x = 160 * (curItems[itemObjs[tabs[1][i]].id] / caps[itemObjs[tabs[1][i]].id])
+        itemID = itemObjs[tabs[1][i]].id;
+        if (caps[itemID]) {
+            x = 160 * (curItems[itemID] / caps[itemID]);
         }
-        var str = "<tr>+<td>" + setColor(tabs[1][i], x) + "</td><td>" + setColor(curItems[itemObjs[tabs[1][i]].id], x) + "</td><td>";
+        var str = "<tr>+<td>" + setColor(tabs[1][i], x) + "</td><td>" + setColor(curItems[itemID], x) + "</td><td>";
         var hidden = hideCapped;
-        if (!isntMaxed(curItems, itemObjs[tabs[1][i]].id)) {
+        if (!isntMaxed(curItems, itemID)) {
             str += "<span class='red'>Capped</span></td><td>";
         } else if (tabs[1][i] === "Fire Sword") {
             str += "<span class='red'>Shop only</span></td><td>";
@@ -1669,7 +1670,8 @@ function displayResults() {
             hidden = false;
             str += setColor(tabs[j][i].toFixed(5) + "%", x) + "</td><td>" + setColor("+" + tabs[2 - j][i].toFixed(2), x);
         }
-        str += "</td><td>" + setColor(String(itemObjs[tabs[1][i]].cap).replace("Infinity", "-"), x) + "</td></tr>";
+        rank = Math.round(droprank[itemID] + (1 + droprank[itemID]) * (1 + droprank2[itemID] * curItems[itemID] / 2) / 2 * 10) / 10;
+        str += "</td><td>" + setColor(String(itemObjs[tabs[1][i]].cap).replace("Infinity", "-"), x) + "</td><td>" + rank + "</td></tr>";
         if (!hidden) {
             $("#res-table").append(str);
         }
@@ -1690,7 +1692,7 @@ function runSimulation() {
     items = new Array(itemCount).fill(0);
     j = 0;
     for (var i in itemObjs) {
-        items[j] = Number($("#" + nameCleanup(i))[0].value);
+        items[j] = Number(getByCleanName(i)[0].value);
         j++;
     }
     gainedLevels = new Array(itemCount).fill(0);
@@ -1707,7 +1709,7 @@ function openImport() {
 function importPreset() {
     try {
         presetLoading = true;
-        doImportPreset(JSON.parse(RawDeflate.inflate(Base64.decode($("#import-code")[0].value))));
+        doImportPreset(decodePreset($("#import-code")[0].value));
         presetLoading = false;
         $("#import").modal("hide");
     } catch (e) {
@@ -1728,7 +1730,7 @@ function doImportPreset(toImport) {
         if (val === undefined) {
             val = 0;
         }
-        $("#" + i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, ""))[0].value = val;
+        getByCleanName(i)[0].value = val;
         j++;
     }
     $("#" + toImport[1]).prop("checked", true).trigger("click");
@@ -1747,12 +1749,27 @@ function doImportPreset(toImport) {
     $("#" + toImport[19]).prop("checked", true).trigger("click");
     $("#floor-record")[0].value = toImport[20] || 750;
     $("#quest-record")[0].value = toImport[21] || 700;
+    for (i in toImport[22]) {
+        if (i == 0) {
+            $("#itemLevels").prepend($("#" + toImport[22][i]));
+        } else {
+            $("#" + toImport[22][i]).insertAfter($("#" + toImport[22][i-1]));
+        }
+    }
+}
+
+function cleanName(i) {
+    return i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, "");
+}
+
+function getByCleanName(i) {
+    return $("#" + cleanName(i));
 }
 
 function getExportData() {
     j = 0;
     for (var i in itemObjs) {
-        items[j] = Number($("#" + nameCleanup(i))[0].value);
+        items[j] = Number(getByCleanName(i)[0].value);
         j++;
     }
     toExport = [
@@ -1777,9 +1794,18 @@ function getExportData() {
         Number($("#15min")[0].value),
         $("input[name='res-sort']:checked")[0].id,
         Number($("#floor-record")[0].value),
-        Number($("#quest-record")[0].value)
+        Number($("#quest-record")[0].value),
+        $.map($(".item_tr"), x => x.id)
     ];
-    return Base64.encode(RawDeflate.deflate(JSON.stringify(toExport)));
+    return encodePreset(toExport);
+}
+
+function decodePreset(preset) {
+    return JSON.parse(RawDeflate.inflate(atob(preset)));
+}
+
+function encodePreset(data) {
+    return btoa(RawDeflate.deflate(JSON.stringify(data)));
 }
 
 function exportPreset() {
@@ -1818,7 +1844,7 @@ function loadPreset() {
     }
     try {
         presetLoading = true;
-        doImportPreset(JSON.parse(RawDeflate.inflate(Base64.decode(localStorage.getItem(pset)))));
+        doImportPreset(decodePreset(localStorage.getItem(pset)));
         presetLoading = false;
         $("#load-success").modal();
     } catch (e) {
