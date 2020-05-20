@@ -42,6 +42,10 @@ textarea[readonly] {
     padding: 2px;
 }
 
+.modal-dialog {
+    width: 700px;
+}
+
 .modal-footer {
     text-align: center;
 }

@@ -1519,12 +1519,13 @@ function displayResults() {
     curItems = items.slice();
     for (var i = 0; i < itemCount; i++) {
         var x = 0;
-        if (caps[itemObjs[tabs[1][i]].id]) {
-            x = 160 * (curItems[itemObjs[tabs[1][i]].id] / caps[itemObjs[tabs[1][i]].id])
+        itemID = itemObjs[tabs[1][i]].id;
+        if (caps[itemID]) {
+            x = 160 * (curItems[itemID] / caps[itemID]);
         }
-        var str = "<tr>+<td>" + setColor(tabs[1][i], x) + "</td><td>" + setColor(curItems[itemObjs[tabs[1][i]].id], x) + "</td><td>";
+        var str = "<tr>+<td>" + setColor(tabs[1][i], x) + "</td><td>" + setColor(curItems[itemID], x) + "</td><td>";
         var hidden = hideCapped;
-        if (!isntMaxed(curItems, itemObjs[tabs[1][i]].id)) {
+        if (!isntMaxed(curItems, itemID)) {
             str += "<span class='red'>Capped</span></td><td>";
         } else if (tabs[1][i] === "Fire Sword") {
             str += "<span class='red'>Shop only</span></td><td>";
@@ -1532,7 +1533,8 @@ function displayResults() {
             hidden = false;
             str += setColor(tabs[j][i].toFixed(5) + "%", x) + "</td><td>" + setColor("+" + tabs[2 - j][i].toFixed(2), x);
         }
-        str += "</td><td>" + setColor(String(itemObjs[tabs[1][i]].cap).replace("Infinity", "-"), x) + "</td></tr>";
+        rank = Math.round(droprank[itemID] + (1 + droprank[itemID]) * (1 + droprank2[itemID] * curItems[itemID] / 2) / 2 * 10) / 10;
+        str += "</td><td>" + setColor(String(itemObjs[tabs[1][i]].cap).replace("Infinity", "-"), x) + "</td><td>" + rank + "</td></tr>";
         if (!hidden) {
             $("#res-table").append(str);
         }
