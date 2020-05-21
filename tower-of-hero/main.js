@@ -2060,7 +2060,7 @@ function getEffect(id, lv = 0) {
             return getSkillDuration("Doping", x, lv);
         case "Green Elixir":
             return getSkillCooldown("Doping", id, lv, 600);
-        case "Coat of Gold":
+        case "Golden Coat":
             return getSkillDuration("Rain of Gold", x, lv);
         case "Golden Rod":
             return getSkillCooldown("Rain of Gold", id, lv, 900);
@@ -2096,10 +2096,10 @@ function getEffect(id, lv = 0) {
             return "Tapping the screen will summon <b>" + (lv + 1) + "</b> heroes at once.";
         case "Mithril Sword":
             x = getPara(id, lv);
-            return "Decrease enemy attack by <b>" + x + "%</b>.";
+            return "Decrease enemy HP by <b>" + x + "%</b>.";
         case "Mithril Armour":
             x = getPara(id, lv);
-            return "Decrease enemy HP by <b>" + x + "%</b>.";
+            return "Decrease enemy attack by <b>" + x + "%</b>.";
         case "Full Plate":
             return "Heroes' and soldiers' HP are multiplied by <b>" + x.toLocaleString() + "</b>. This factor stacks <b>additively</b> with " + getAnchor("Earth Armour") + " and " + getAnchor("Full Helmet") + ", and <b>multiplicatively</b> with <samp>Power Up</samp> and other HP bonuses.";
         case "Flamberge":
