@@ -203,9 +203,19 @@ $(function () {
     items = new Array(itemCount).fill(0);
 
     for (var i in itemObjs) {
-        $("#itemLevels").append("<tr><td>" + i + "</td><td><input type='number' id='" + nameCleanup(i) + "' name='quantity' min='0'" + (itemObjs[i].cap != Infinity ? " max='" + itemObjs[i].cap + "'" : "") + "value='0'></td></tr>");
+        $("#itemLevels").append(
+            "<tr id=tr_" + cleanName(i) + " class='item_tr'>"
+            + "<td class='handle'><span class='glyphicon glyphicon-option-vertical' aria-hidden='true'></span></td>"
+            + "<td>" + i + "</td>"
+            + "<td><input type='number' id='" + cleanName(i) + "' name='quantity' min='0' max='" + itemObjs[i].cap + "' value='" + itemObjs[i].value + "'></td>"
+            + "<tr/>");
         $("#itemLevels2").append("<tr><td class='left-pad5'>" + i + "</td><td><a class='anchor' id='" + nameCleanup(i) + "_l'></a><input type='number' id='" + nameCleanup(i) + "_i' name='quantity' min='0'" + (itemObjs[i].cap != Infinity ? " max='" + itemObjs[i].cap + "'" : "") + "value='0'></td><td>" + getEffect() + "</td></tr>");
     }
+    $("#itemLevels").sortable({
+        item: "> tr",
+        cursor: "move",
+        revert: true
+    });
     
     // Event listeners (must be done before loading autosave)
     $("#full-run").click(function() {
