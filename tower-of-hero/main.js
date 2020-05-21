@@ -2,10 +2,11 @@ $(function () {
     versionStr = "2.0.4";
     saveInterval = undefined;
 
-    // TODO top bar with quick links to items
-    // TODO add total stats on top, for [v] unit at level ___ and [x] skill 1 (level ___) -> HP, Atk, Spd, ClimbSpd, nextCost, [spawn time] + gold find, skill effects etc
-    // TODO fix quest, gold chest, add item guide (stats), score (gold/atk etc) and top floor calculator
-    // TODO Alphab sort, +1/+10, guide next to it, ordering items and saving that in the preset/localstorage
+    // TODO add total stats on top, for [v] unit at level ___ and [x] skill 1 (level ___) -> HP, Atk, Spd, ClimbSpd, nextCost, [spawn time] + gold find, skill effects etc, top floor calculator
+    // TODO add a king's crown ("quantum" distribution), demon's mask, power of demons, item icons
+    // TODO Alphab sort, +1/+10, guide next to it
+    // TODO MERGE: ordering items and saving that in the preset/localstorage
+    // MAX: Summon (5+2x) 100   Seal 5   Growth Speed 52   Power Up 200   Warp 16   Ultimate Summon 80   Fame 150   New Dungeon   Auto-Seal 8
 
     itemObjs = {
         /*
@@ -87,6 +88,80 @@ $(function () {
         "Book of Prophesy", "Ancient Magic Stone", "Mass prod Gáe Bolg", "Demon's Mask", "Power of Demons"
     ];
     
+    bc_items = [[0.89, 0.10, 0.01, "-"],
+                [0.86, 0.12, 0.02, "-"],
+                [0.82, 0.15, 0.03, "-"],
+                [0.78, 0.18, 0.04, "-"],
+                [0.74, 0.21, 0.05, "-"],
+                [0.70, 0.24, 0.06, "-"],
+                [0.65, 0.28, 0.07, "-"],
+                [0.60, 0.32, 0.08, "-"],
+                [0.55, 0.36, 0.09, "-"],
+                [0.50, 0.40, 0.10, "-"],
+                [0.45, 0.44, 0.11, "-"],
+                [0.40, 0.48, 0.12, "-"],
+                [0.35, 0.52, 0.13, "-"]];
+
+    bc_crystals = [["-", 0.70, 0.28, 0.02],
+                   ["-", 0.65, 0.33, 0.02],
+                   ["-", 0.60, 0.38, 0.02],
+                   ["-", 0.55, 0.42, 0.03],
+                   ["-", 0.50, 0.47, 0.03],
+                   ["-", 0.47, 0.49, 0.04],
+                   ["-", 0.44, 0.50, 0.06],
+                   ["-", 0.42, 0.50, 0.08],
+                   ["-", 0.40, 0.52, 0.08],
+                   ["-", 0.35, 0.55, 0.10],
+                   ["-", 0.25, 0.60, 0.15],
+                   ["-", 0.20, 0.60, 0.20],
+                   ["-", 0.10, 0.65, 0.25]];
+   
+    bop_rewards = [[["8",   "-",  "-"],
+                    ["8",   "-",  "-"],
+                    ["8",   "-",  "-"],
+                    ["12",  "-",  "-"],
+                    ["12",  "1",  "-"],
+                    ["8",   "-",  "-"],
+                    ["8",   "-",  "-"],
+                    ["8",   "-",  "-"],
+                    ["12",  "-",  "-"],
+                    ["12¹", "2³", "-"],
+                    ["8",   "-",  "-"],
+                    ["8",   "-",  "-"],
+                    ["15",  "-",  "-"],
+                    ["20",  "-",  "-"],
+                    ["20²", "-",  "1"]],
+                   [["9",   "-",  "-"],
+                    ["9",   "-",  "-"],
+                    ["9",   "-",  "-"],
+                    ["14",  "-",  "-"],
+                    ["14",  "3",  "-"],
+                    ["9",   "-",  "-"],
+                    ["9",   "-",  "-"],
+                    ["9",   "-",  "-"],
+                    ["14",  "-",  "-"],
+                    ["14¹", "3³", "-"],
+                    ["9",   "-",  "-"],
+                    ["9",   "-",  "-"],
+                    ["15",  "-",  "-"],
+                    ["20",  "-",  "-"],
+                    ["20²", "-",  "2"]],
+                   [["10",  "-",  "-"],
+                    ["10",  "-",  "-"],
+                    ["10",  "-",  "-"],
+                    ["15",  "-",  "-"],
+                    ["15",  "5",  "-"],
+                    ["10",  "-",  "-"],
+                    ["10",  "-",  "-"],
+                    ["10",  "-",  "-"],
+                    ["15",  "-",  "-"],
+                    ["15¹", "5³", "-"],
+                    ["10",  "-",  "-"],
+                    ["10",  "-",  "-"],
+                    ["15",  "-",  "-"],
+                    ["20",  "-",  "-"],
+                    ["20²", "-",  "3"]]]
+    
     caps = names.map(function(index) {
         return itemObjs[index].cap;
     });
@@ -153,19 +228,19 @@ $(function () {
     
     var autosave = localStorage.getItem("_autosave");
     if (autosave) {
-        doImportPreset(JSON.parse(RawDeflate.inflate(Base64.decode(autosave))));
+        doImportPreset(decodePreset(autosave));
     }
     
     for (var i in itemObjs) {
-        updateItemEffect(i);
+        updateItemEffect(i, false);
     }
 
     updatePresets();
 
     presetLoading = false;
     
-    currentTab = 'items'; // TODO CHANGE
-    changeTab('items');
+    currentTab = 'loot';
+    changeTab('loot');
 
     $('.modal').on('show.bs.modal', centerModal);
     $("#export").on('shown.bs.modal', function(e) {
@@ -198,7 +273,7 @@ $(function () {
     for (var i in itemObjs) {
         $("#" + nameCleanup(i) + "_i").change(function(i) {
             return function(e) {
-                updateItemEffect(i);
+                updateItemEffect(i, true);
             };
         }(i));
     }
@@ -1670,7 +1745,7 @@ function displayResults() {
             hidden = false;
             str += setColor(tabs[j][i].toFixed(5) + "%", x) + "</td><td>" + setColor("+" + tabs[2 - j][i].toFixed(2), x);
         }
-        rank = Math.round(droprank[itemID] + (1 + droprank[itemID]) * (1 + droprank2[itemID] * curItems[itemID] / 2) / 2 * 10) / 10;
+        rank = rnd(droprank[itemID] + (1 + droprank[itemID]) * (1 + droprank2[itemID] * curItems[itemID] / 2) / 2, 1);
         str += "</td><td>" + setColor(String(itemObjs[tabs[1][i]].cap).replace("Infinity", "-"), x) + "</td><td>" + rank + "</td></tr>";
         if (!hidden) {
             $("#res-table").append(str);
@@ -1888,7 +1963,7 @@ function copyLootItems() {
         $("#" + nameCleanup(i) + "_i")[0].value = $("#" + nameCleanup(i))[0].value;
     }
     for (var i in itemObjs) {
-        updateItemEffect(i);
+        updateItemEffect(i, false);
     }
 }
 
@@ -1933,14 +2008,16 @@ function getSkillCooldown(skill, id, lv, baseDuration) {
 function getEffect(id, lv = 0) {
     if (lv < 0 || !itemObjs.hasOwnProperty(id) || Math.floor(lv) != lv || lv > itemObjs[id].cap) {
         return "Invalid level";
-    } else if (lv == 0 && !["Lance", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon's Staff", "Solomon's Key", "Excalibur", "Aegis", "Caduceus"].includes(id)) {
+    } else if (lv == 0 && !["Lance", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Coat of Gold", "Golden Rod", "Solomon's Staff", "Solomon's Key", "Excalibur", "Aegis", "Caduceus", "Philosopher's Stone", "Summoning letter", "Book of Prophesy"].includes(id)) {
         return "No effect.";
     }
     x = 1 + getPara(id, lv)/100;
     switch (id) {
         case "Lance":
             x = rnd(x, 2);
-            return (lv == 0 ? "No effect." : "Berserker spawn chance from <samp>Heroic Berserker</samp> is multiplied by <b>" + x + "</b>.") + "<br/>" + getTable("Heroic Berserker's level", ["Berserker chance (%)"], 1, 15, i => i, [i => i <= 5 ? rnd((1.5 + i / 2) * x, 2) : rnd((3 + i/ 5) * x, 2)], "w50") + getTable("Heroic Berserker's level", ["Berserker chance (%)"], 16, 30, i => i, [i => rnd((4.5 + i/10) * x, 2)], "w50") + "<div class='bottom10'/>";
+            return (lv == 0 ? "No effect." : "Berserker spawn chance from <samp>Heroic Berserker</samp> is multiplied by <b>" + x + "</b>.") + "<br/>"
+            + getTable("Heroic Berserker's level", ["Berserker chance (%)"], 1, 15, i => i, [i => i <= 5 ? rnd((1.5 + i / 2) * x, 2) : rnd((3 + i/ 5) * x, 2)], "w50")
+            + getTable("Heroic Berserker's level", ["Berserker chance (%)"], 16, 30, i => i, [i => rnd((4.5 + i/10) * x, 2)], "w50") + "<div class='bottom10'/>";
         case "Earth Armour":
             return "Heroes' and soldiers' HP are multiplied by <b>" + x.toLocaleString() + "</b>. This factor stacks <b>additively</b> with " + getAnchor("Full Plate") + " and " + getAnchor("Full Helmet") + ", and <b>multiplicatively</b> with <samp>Power Up</samp> and other HP bonuses.";
         case "Claymore":
@@ -1959,9 +2036,16 @@ function getEffect(id, lv = 0) {
             z = 15 + 0.1 * getPara(id, lv);
             return "Berserkers from <samp>Heroic Berserker</samp> have <b>" + (3*x).toLocaleString() + " times</b> as much HP and <b>" + (5*x).toLocaleString() + " times</b> as much attack as normal heroes." + (Number($("#mjolnir_i")[0].value) ? "<br/>Demons from " + getAnchor("Mjolnir") + " have <b>" + y.toLocaleString() + " times</b> as much HP and <b>" + z.toLocaleString() + " times</b> as much attack as normal heroes." : "");
         case "Red Elixir":
-            return (lv == 0 ? "No effect." : "Increases the moving speed and spawning speed of units affected by <samp>Doping</samp>.") + "<br/>" + getTable("Doping's level", ["Moving speed multiplier", "Spawn speed multiplier"], 1, 20, i => i, [i => rnd(1 + Math.min((27 + i * 3) * x, 60) * 0.01, 2), i => rnd(1 + (40 + i * 10) * x * 0.01, 2)], "w50") + "<div class='bottom10'/>";
+            return (lv == 0 ? "No effect." : "Increases the moving speed and spawning speed of units affected by <samp>Doping</samp>.") + "<br/>"
+            + getTable("Doping's level", ["Moving speed multiplier", "Spawn speed multiplier"], 1, 20, i => i, [i => rnd(1 + Math.min((27 + i * 3) * x, 60) * 0.01, 2), i => rnd(1 + (40 + i * 10) * x * 0.01, 2)], "w50") + "<div class='bottom10'/>";
         case "Gold Vessels":
-            return (lv == 0 ? "No effect." : "Increases the gold from enemies when using <samp>Rain of Gold</samp>.") + "<br/>" + getTable("Rain of Gold's level", ["Gold multiplier"], 1, 20, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50") + getTable("Rain of Gold's level", ["Gold multiplier"], 21, 40, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50") + getTable("Rain of Gold's level", ["Gold multiplier"], 41, 60, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50") + getTable("Rain of Gold's level", ["Gold multiplier"], 61, 80, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50") + getTable("Rain of Gold's level", ["Gold multiplier"], 81, 100, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50") + getTable("Rain of Gold's level", ["Gold multiplier"], 101, 120, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50") + "<div class='bottom10'/>";
+            return (lv == 0 ? "No effect." : "Increases the gold from enemies when using <samp>Rain of Gold</samp>.") + "<br/>"
+            + getTable("Rain of Gold's level", ["Gold multiplier"], 1, 20, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50")
+            + getTable("Rain of Gold's level", ["Gold multiplier"], 21, 40, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50")
+            + getTable("Rain of Gold's level", ["Gold multiplier"], 41, 60, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50")
+            + getTable("Rain of Gold's level", ["Gold multiplier"], 61, 80, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50")
+            + getTable("Rain of Gold's level", ["Gold multiplier"], 81, 100, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50")
+            + getTable("Rain of Gold's level", ["Gold multiplier"], 101, 120, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50") + "<div class='bottom10'/>";
         case "Blue Elixir":
             return getSkillDuration("Doping", x, lv);
         case "Green Elixir":
@@ -1987,17 +2071,254 @@ function getEffect(id, lv = 0) {
             return "Enemies' HP regeneration is decreased by <b>" + x + "%</b>.";
         case "Durandal":
             x = getPara(id, lv);
-            return "Heroes' are <b>" + x + "%<b> cheaper.";
+            return "Heroes' are <b>" + x + "%</b> cheaper.";
         case "Mistilteinn":
             x = getPara(id, lv);
-            return "Soldiers are <b>" + x + "%<b> cheaper.";
-        case "A King's Crown":
-            return "Note: This assumes you have reset the tower at least 15 times. Floors above floor 200";
-        // MAX: Summon (5+2x) 100   Seal 5   Growth Speed 52   Power Up 200   Warp 16   Ultimate Summon 80   Fame 150   New Dungeon   Auto-Seal 8
-        // PARA2 returns 5*lv for id 46
+            return "Soldiers are <b>" + x + "%</b> cheaper.";
+        case "Royal Crown":
+            return "Increases the probability and number of chests gotten on floors ending with 10, 20, 30 or 40. This is a complex effect; exact values will come in a future update.";
+            // TODO
+        case "Gungnir":
+            return "Offline gold is multiplied by <b>" + x.toLocaleString() + "</b>. Offline time past 10 hours counts for half as much, with a hard cap at 22 hours (16 hours worth of gold). Offline gold follows a formula based on the current highest floor and the number of levels of your soldiers. Soldiers that are far in the soldier list count more.";
+        case "Lævateinn":
+            return "The first <b>" + lv + "</b> soldier" + (lv > 1 ? "s" : "") + " will be automatically bought when resetting the Tower.";
+        case "Gáe Bolg":
+            return "Tapping the screen will summon <b>" + (lv + 1) + "</b> heroes at once.";
+        case "Mithril Sword":
+            x = getPara(id, lv);
+            return "Decrease enemy attack by <b>" + x + "%</b>.";
+        case "Mithril Armour":
+            x = getPara(id, lv);
+            return "Decrease enemy HP by <b>" + x + "%</b>.";
+        case "Full Plate":
+            return "Heroes' and soldiers' HP are multiplied by <b>" + x.toLocaleString() + "</b>. This factor stacks <b>additively</b> with " + getAnchor("Earth Armour") + " and " + getAnchor("Full Helmet") + ", and <b>multiplicatively</b> with <samp>Power Up</samp> and other HP bonuses.";
+        case "Flamberge":
+            return "Heroes' and soldiers' attack is multiplied by <b>" + x.toLocaleString() + "</b>. This factor stacks <b>additively</b> with " + getAnchor("Claymore") + " and " + getAnchor("Tomahawk") + ", and <b>multiplicatively</b> with <samp>Power Up</samp>, <samp>Fame</samp> and other attack bonuses.";
+        case "Full Helmet":
+            return "Heroes' and soldiers' HP are multiplied by <b>" + x.toLocaleString() + "</b>. This factor stacks <b>additively</b> with " + getAnchor("Earth Armour") + " and " + getAnchor("Full Plate") + ", and <b>multiplicatively</b> with <samp>Power Up</samp> and other HP bonuses.";
+        case "Tomahawk":
+            return "Heroes' and soldiers' attack is multiplied by <b>" + x.toLocaleString() + "</b>. This factor stacks <b>additively</b> with " + getAnchor("Claymore") + " and " + getAnchor("Flamberge") + ", and <b>multiplicatively</b> with <samp>Power Up</samp>, <samp>Fame</samp> and other attack bonuses.";
+        case "Summoning letter":
+            return (lv == 0 ? "No effect." : "Increases the number of heroes that can be summoned at once. Stacks up with <samp>Summon</samp>.") + "<br/>"
+            + getTable("Summon's level", ["Max. heroes"], 0, 19, i => i, [i => 5 + 2*i + lv], "w50")
+            + getTable("Summon's level", ["Max. heroes"], 20, 39, i => i, [i => 5 + 2*i + lv], "w50")
+            + getTable("Summon's level", ["Max. heroes"], 40, 59, i => i, [i => 5 + 2*i + lv], "w50")
+            + getTable("Summon's level", ["Max. heroes"], 60, 79, i => i, [i => 5 + 2*i + lv], "w50") + getTable("Summon's level", ["Max. heroes"], 80, 100, i => i, [i => 5 + 2*i + lv], "w50");
+        case "Awakening Armor":
+            x = rnd(x, 2);
+            return "Multiplies the HP of soldiers above level 1000 by <b>" + x.toLocaleString() + "</b>. This stacks <b> multiplicatively</b> with other HP bonuses.";
+        case "Awakening Sword":
+            x = rnd(x, 2);
+            return "Multiplies the attack of soldiers above level 1000 by <b>" + x.toLocaleString() + "</b>. This stacks <b> multiplicatively</b> with other attack bonuses.";
+        case "Gold Box":
+            x = getPara(id, lv);
+            return "Automatically grants <b>" + x.toLocaleString() + "</b> starting gold when resetting the Tower.";
+        case "Awakening Armor 2":
+            x = rnd(x, 2);
+            return "Multiplies the HP of soldiers above level 10000 by <b>" + x.toLocaleString() + "</b>. This stacks <b> multiplicatively</b> with other HP bonuses.";
+        case "Awakening Sword 2":
+            x = rnd(x, 2);
+            return "Multiplies the attack of soldiers above level 10000 by <b>" + x.toLocaleString() + "</b>. This stacks <b> multiplicatively</b> with other attack bonuses.";
+        case "Guild Hat":
+            x = getPara(id, lv);
+            return "Upon resetting the Tower, there is a <b>" + rnd(x * 0.85 + 7.5, 2) + "%</b> chance of starting a quest.";
+        case "Mjolnir":
+            x = rnd(getPara(id, lv), 2);
+            return "Tapping the screen has a <b>" + x + "%</b> chance of summoning a demon.";
+        case "Dark Knight Armor":
+            return "Demons will nullify all damage for the first <b>" + lv + "</b> times they are hit.";
+        case "Gate":
+            x = rnd(getPara(id, lv), 2);
+            x2 = getPara("Dark Gate", Number($("#dark_gate_i")[0].value));
+            return "Units have a <b>" + x + "%</b> chance of teleporting to the next enemy after killing one.<br/>For Demons, this chance compounds with " + getAnchor("Dark Gate") + " for a total chance of <b>" + rnd(x + x2, 2) + "%</b>.";
+        case "Dark Gate":
+            x = rnd(getPara(id, lv), 2);
+            x2 = getPara("Gate", Number($("#gate_i")[0].value));
+            return "Demons have an additional <b>" + x + "%</b> chance of teleporting to the next enemy after killing one.<br/>This chance compounds with " + getAnchor("Gate") + " for a total chance of <b>" + rnd(x + x2, 2) + "</b>%.";
+        case "Magic Lamp":
+            x = getPara(id, lv);
+            return "Resetting the Tower grants additional item chests.<br/>"
+            + getTable("Reset at floor", ["Chests gotten (min ~ avg ~ max)"], 9, 19, i => i == 9 ? "<100": 10*i, [i => (magicLampCalc(10*i, x)).join(" ~ ")], "w90")
+            + getTable("Reset at floor", ["Chests gotten (min ~ avg ~ max)"], 20, 29, i => 10*i, [i => (magicLampCalc(10*i, x)).join(" ~ ")], "w90")
+            + getTable("Reset at floor", ["Chests gotten (min ~ avg ~ max)"], 30, 39, i => 10*i, [i => (magicLampCalc(10*i, x)).join(" ~ ")], "w90")
+            + getTable("Reset at floor", ["Chests gotten (min ~ avg ~ max)"], 40, 49, i => 10*i, [i => (magicLampCalc(10*i, x)).join(" ~ ")], "w90")
+            + getTable("Reset at floor", ["Chests gotten (min ~ avg ~ max)"], 50, 59, i => 10*i, [i => (magicLampCalc(10*i, x)).join(" ~ ")], "w90")
+            + getTable("Reset at floor", ["Chests gotten (min ~ avg ~ max)"], 60, 69, i => 10*i, [i => (magicLampCalc(10*i, x)).join(" ~ ")], "w90")
+            + getTable("Reset at floor", ["Chests gotten (min ~ avg ~ max)"], 70, 79, i => 10*i, [i => (magicLampCalc(10*i, x)).join(" ~ ")], "w90")
+            + getTable("Reset at floor", ["Chests gotten (min ~ avg ~ max)"], 80, 89, i => 10*i, [i => (magicLampCalc(10*i, x)).join(" ~ ")], "w90")
+            + getTable("Reset at floor", ["Chests gotten (min ~ avg ~ max)"], 90, 99, i => 10*i, [i => (magicLampCalc(10*i, x)).join(" ~ ")], "w90")
+            + getTable("Reset at floor", ["Chests gotten (min ~ avg ~ max)"], 100, 109, i => 10*i, [i => (magicLampCalc(10*i, x)).join(" ~ ")], "w90")
+            + getTable("Reset at floor", ["Chests gotten (min ~ avg ~ max)"], 110, 119, i => 10*i, [i => (magicLampCalc(10*i, x)).join(" ~ ")], "w90")
+            + getTable("Reset at floor", ["Chests gotten (min ~ avg ~ max)"], 120, 129, i => 10*i, [i => (magicLampCalc(10*i, x)).join(" ~ ")], "w90")
+            + getTable("Reset at floor", ["Chests gotten (min ~ avg ~ max)"], 130, 139, i => 10*i, [i => (magicLampCalc(10*i, x)).join(" ~ ")], "w90")
+            + getTable("Reset at floor", ["Chests gotten (min ~ avg ~ max)"], 140, 149, i => 10*i, [i => (magicLampCalc(10*i, x)).join(" ~ ")], "w90")
+            + getTable("Reset at floor", ["Chests gotten (min ~ avg ~ max)"], 150, 159, i => 10*i, [i => (magicLampCalc(10*i, x)).join(" ~ ")], "w90")
+            + getTable("Reset at floor", ["Chests gotten (min ~ avg ~ max)"], 160, 169, i => 10*i, [i => (magicLampCalc(10*i, x)).join(" ~ ")], "w90")
+            + getTable("Reset at floor", ["Chests gotten (min ~ avg ~ max)"], 170, 179, i => 10*i, [i => (magicLampCalc(10*i, x)).join(" ~ ")], "w90")
+        case "Dark Boots":
+            x -= 1;
+            return "Demons' moving speed is increased by <b>" + x.toLocaleString() + "</b>. This stacks <b>multiplicatively</b> with <samp>Doping</samp>.";
+        case "Fire Sword":
+            return "Multiplies heroes and soldier's attack by <b>" + (1+lv/20).toLocaleString() + "</b>. This stacks <b>multiplicatively</b> with " + getAnchor("Flame Pot") + ", " + getAnchor("Awakening Sword") + ", " + getAnchor("Awakening Sword 2") + " and <samp>Power Up</samp> and <b>additively</b> with other attack bonuses.<br/>Also increases heroes and soldier's base attack (at their current level) by <b>" + (lv*(lv+41)).toLocaleString() + "</b>. This stacks <b>multiplicatively</b> with all other attack bonuses.";
+        case "Freyr's Sword":
+            x = getPara(id, lv);
+            x2 = getPara("Freyr's Sword 2", Number($("#freyrs_sword_2_i")[0].value));
+            lvs = x + x2;
+            save = lvs;
+            lv200 = lvs >= 3000 ? Math.floor((lvs - 1001) / 200) + 1 : 0;
+            lvs -= 200 * lv200;
+            lv50 = lvs >= 800 ? Math.floor((lvs - 401) / 50) + 1 : 0;
+            lvs -= 50 * lv50;
+            lv20 = lvs >= 300 ? Math.floor((lvs - 101) / 20) + 1 : 0;
+            lvs -= 20 * lv20;
+            return "When resetting the Tower, soldiers affected by " + getAnchor("Lævateinn") + " will receive additional levels as follow:<br/>"
+            + (lv200 ? "- <b>200</b> levels will be added to a random soldier, repeated <b>" + lv200 + "</b> time" + (lv200 > 1 ? "s": "") + ".<br/>" : "")
+            + (lv50 ? "- <b>50</b> levels will be added to a random soldier, repeated <b>" + lv50 + "</b> time" + (lv50 > 1 ? "s": "") + ".<br/>" : "")
+            + (lv20 ? "- <b>20</b> levels will be added to a random soldier, repeated <b>" + lv20 + "</b> time" + (lv20 > 1 ? "s": "") + ".<br/>" : "")
+            + (lvs ? "- <b>1</b> level will be added to a random soldier, repeated <b>" + lvs + "</b> time" + (lvs > 1 ? "s": "") + ".<br/>" : "")
+            + "In total, <b>" + save.toLocaleString() + "</b> additional soldiers levels will be purchased for free (includes the effect of " + getAnchor("Freyr's Sword 2") + ").";
+        case "Flame Pot":
+            x = rnd(getPara(id, lv), 2);
+            return "Increases heroes and soldiers' attack by your amount of crystals divided by 10 (in percent), up to a maximum of <b>" + x + "%</b> at <b>" + (x*10) + "</b> crystals. This stacks <b>multiplicatively</b> with all other attack bonuses.";
+        case "Ice Pot":
+            x = rnd(getPara(id, lv), 2);
+            return "Increases heroes and soldiers' HP by your amount of crystals divided by 10 (in percent), up to a maximum of <b>" + x + "%</b> at <b>" + (x*10) + "</b> crystals. This stacks <b>multiplicatively</b> with all other HP bonuses.";
+        case "Golden Pot":
+            x = rnd(getPara(id, lv), 2);
+            return "Increases all gold found by your amount of crystals divided by 10 (in percent), up to a maximum of <b>" + x + "%</b> at <b>" + (x*10) + "</b> crystals. This stacks <b>multiplicatively</b> with all other gold bonuses.";
+        case "Black Essence":
+            x = getPara(id, lv);
+            return "Whenever a soldier is summoned, there is a <b>" + x + "%</b> chance that the next same unit will be summoned <b>30%</b> earlier. On average, increases soldier spawning speed by <b>" + rnd(x*0.3, 2) + "%</b>.";
+        case "Demon Eye":
+            x = rnd(getPara(id, lv), 2);
+            return "Demons have a <b>" + x + "%</b> chance of attacking all enemies on the floor at once.";
+        case "Red Hand":
+            x = rnd(getPara(id, lv), 2);
+            return "When a unit is summoned, it has a <b>" + x + "%</b> chance of appearing directly next to the first living enemy of the floor.";
+        case "Veteran's Hat":
+            x = getPara(id, lv);
+            return "When a quest is starting through " + getAnchor("Guild Hat") + ", there is a <b>" + x + "%</b> chance it will be a special quest, which will yield additional rewards." + (x != 30 ? " If you have never encountered a special quest so far, this chance is set to <b>30%</b> instead." : "");
+        case "Blue Crystal":
+            return "Watching an ad will reward crystals and chests with the following probabilities:</br>" + getTable("Number received", ["Chests", "Crystals"], 0, 3, i => i + 1, [i => bc_items[lv - 1][i], i => bc_crystals[lv - 1][i]], "w50");
+        case "Freyr's Sword 2":
+            x = getPara(id, lv);
+            x2 = getPara("Freyr's Sword", Number($("#freyrs_sword_i")[0].value));
+            lvs = x + x2;
+            save = lvs;
+            lv200 = lvs >= 3000 ? Math.floor((lvs - 1001) / 200) + 1 : 0;
+            lvs -= 200 * lv200;
+            lv50 = lvs >= 800 ? Math.floor((lvs - 401) / 50) + 1 : 0;
+            lvs -= 50 * lv50;
+            lv20 = lvs >= 300 ? Math.floor((lvs - 101) / 20) + 1 : 0;
+            lvs -= 20 * lv20;
+            return "When resetting the Tower, soldiers affected by " + getAnchor("Lævateinn") + " will receive additional levels as follow:<br/>"
+            + (lv200 ? "- <b>200</b> levels will be added to a random soldier, repeated <b>" + lv200 + "</b> time" + (lv200 > 1 ? "s": "") + ".<br/>" : "")
+            + (lv50 ? "- <b>50</b> levels will be added to a random soldier, repeated <b>" + lv50 + "</b> time" + (lv50 > 1 ? "s": "") + ".<br/>" : "")
+            + (lv20 ? "- <b>20</b> levels will be added to a random soldier, repeated <b>" + lv20 + "</b> time" + (lv20 > 1 ? "s": "") + ".<br/>" : "")
+            + (lvs ? "- <b>1</b> level will be added to a random soldier, repeated <b>" + lvs + "</b> time" + (lvs > 1 ? "s": "") + ".<br/>" : "")
+            + "In total, <b>" + save.toLocaleString() + "</b> additional soldiers levels will be purchased for free (includes the effect of " + getAnchor("Freyr's Sword") + ").";
+        case "Book of Prophesy":
+            str = "The daily reward depends on the number of consecutive logins.<br/>";
+            if (lv == 0) {
+                return str + getTable("Day", ["Crystals"], 1, 15, i => i, [i => (i == 2 ? 10 : 8) + (i % 5 == 0 ? 2 : 0) + (i % 10 == 0 ? 7 : 0) + (i % 15 == 0 ? 12 : 0)], "w50") + getTable("Day", ["Crystals"], 16, 30, i => i, [i => (i == 2 ? 10 : 8) + (i % 5 == 0 ? 2 : 0) + (i % 10 == 0 ? 7 : 0) + (i % 15 == 0 ? 12 : 0)], "w50")
+                + "<br/>This table loops after 30 days, except that Day 2 will reward <b>8</b> crystals instead of <b>10</b> after the first 30 days.";
+            }
+            return str + getTable("Day", ["Crystals", "Chests", "Gold chests"], 0, 14, i => i + 1, [i => bop_rewards[lv - 1][i][0], i => bop_rewards[lv - 1][i][1], i => bop_rewards[lv - 1][i][2]], "w50")
+            + "<br/>¹ +1 for every 5 completed 15-day cycle, up to +5"
+            + "<br/>² +1 for every completed 15-day cycle, up to +5"
+            + "<br/>³ +1 for every 10 completed 15-day cycle, up to +5"
+            + "<br/>This table loops after 15 days.";
+        case "Ancient Magic Stone":
+            return "Picks <b>" + (lv == 2 ? "two</b> random items" : "one</b> random item") + " after resetting the Tower. The selected item" + (lv == 2 ? "s are" : " is") + " upgraded with bonus levels for the next reset.</b>The list of items that can be upgraded, their possible bonus levels and their weight (chance of being picked) are available <a href='https://i.imgur.com/YtXJc7m.png'><b>here</b></a>.";
+        case "Mass prod Gáe Bolg":
+            x = rnd(getPara(id, lv), 2);
+            return "Soldiers have a <b>" + x + "%</b> chance of being summoned in groups of two at a time instead of one.";
+        case "Demon's Mask":
+            return "Upon killing an enemy, Demons gain <b>" + rnd((x - 1)/100, 4) + "</b> moving speed (stacks).<br/><b>Note:</b> These values are unconfirmed as they have not yet been found in the code.";
+            // TODO
+        case "Power of Demons":
+            x = rnd(x, 2);
+            return "Heroes and soldiers' attack is multiplied by <b>" + x + "</b> against enemies that have over <b>90%</b> of their max health.<br/><b>Note:</b> This effect and its values are unconfirmed as they have not yet been found in the code.";
+            // TODO
         default:
             return "[Error] Please report the following code to pie3636: getEffect(" + names.indexOf(id) + ", " + lv + ")";
     }
+}
+
+function magicLampCalc(floor, value) {
+    if (floor < 100) {
+        return [0];
+    }
+    min = value * 0.01 * (1 + floor * 0.001);
+    max = value * 0.01 * floor * 0.009;
+    if (max < min) {
+        max = min;
+    }
+    fx = [[min, max, 1]];
+    if (floor > 200) {
+        if (min <= 2 && max >= 2) {
+            fx = [[min, 2, 0, 2], [2, max, 1]];
+        } else if (min <= 2) {
+            fx = [[min, max, 0, 2]];
+        }
+        min = 2;
+    }
+    if (max > 9) {
+        max = 9;
+        fx[fx.length - 1][1] = 9;
+        fx[fx.length - 1][4] = 9;
+        fx.push([max, 9, 0, 9]);
+    }
+    newFx = []
+    min = Math.floor(min);
+    max = Math.floor(max);
+    for (segment of fx) {
+        if (segment[2] == 0) { // Flat: no changes
+            newFx.push(segment);
+        } else if (segment[2] == 1) { // Linear: subdivision
+            i0 = Math.ceil(segment[0]);
+            i1 = Math.floor(segment[1]);
+            for (j = i0; j < i1; j++) {
+                newFx.push([j, j + 1, 0, j]);
+            }
+            if (i1 >= i0) {
+                newFx.push([segment[0], i0, 0, Math.floor(segment[0])]);
+                newFx.push([i1, segment[1], 0, i1]);
+            } else {
+                newFx.push([segment[0], segment[i1], 0, Math.floor(segment[0])]);
+            }
+        } else {
+        }
+    }
+    return [rnd(min, 2), rnd(quickIntegral(newFx), 2), rnd(max, 2)];
+}
+
+function quickIntegral(arr) { // computes average value of a function
+    area = 0;
+    maxX = arr[0][0];
+    minX = maxX;
+    for (i of arr) { // x0, x1, type, values
+        minX = Math.min(minX, i[0]);
+        maxX = Math.max(maxX, i[1]);
+        if (maxX < minX) {
+            continue;
+        }
+        switch (i[2]) {
+            case 0: // Flat
+                area += (i[1] - i[0]) * i[3];
+                break;
+            case 1: // Linear
+                area += (i[1] - i[0]) * (i[1] + i[0]) / 2
+                break;
+            default:
+                console.log("Unknown function type " + i);
+                break;
+        }
+    }
+    if (minX == maxX && arr.length == 1) {
+        return arr[0][3];
+    }
+    return area / (maxX - minX);
 }
 
 Object.defineProperties(Array.prototype, {
@@ -2098,16 +2419,16 @@ function simulateChestProba(lv, claymoreLv, resets, endFloor) {
     
     chests[10] = [[1, 1]];
     currentProb.push(1/3);
-    chests[12].probSet(([1, currentProb.collapseSimple()]]);
-    chests[13].probSet(([1, currentProb.collapseSimple()]]);
-    chests[14].probSet(([1, currentProb.collapseSimple()]]);
+    chests[12].probSet([[1, currentProb.collapseSimple()]]);
+    chests[13].probSet([[1, currentProb.collapseSimple()]]);
+    chests[14].probSet([[1, currentProb.collapseSimple()]]);
     currentProb.pop();
     chests[15] = [[1, 1]];
     currentProb.push(1/4);
-    chests[16].probSet(([1, currentProb.collapseSimple()]]);
-    chests[17].probSet(([1, currentProb.collapseSimple()]]);
-    chests[18].probSet(([1, currentProb.collapseSimple()]]);
-    chests[19].probSet(([1, currentProb.collapseSimple()]]);
+    chests[16].probSet([[1, currentProb.collapseSimple()]]);
+    chests[17].probSet([[1, currentProb.collapseSimple()]]);
+    chests[18].probSet([[1, currentProb.collapseSimple()]]);
+    chests[19].probSet([[1, currentProb.collapseSimple()]]);
     currentProb.pop();
     
     if (curItems[39] == 0) {
@@ -2133,21 +2454,22 @@ function simulateChestProba(lv, claymoreLv, resets, endFloor) {
             num3 = 0.42;
         }
         currentProb.push(num3);
-        chests[cur].probSet(([1, currentProb.collapseSimple()]]);
-        num4.probSet(([num4 + 1, currentProb.collapseSimple()]]);
+        chests[cur].probSet([[1, currentProb.collapseSimple()]]);
+        num4.probSet([[num4 + 1, currentProb.collapseSimple()]]);
         currentProb.pop();
         if (cur % 5 == 0) {
             chests[cur] = [[1, 1]];
             if (cur % 10 == 0) {
                 currentProb.push(0.25);
-                chests[cur].probSet(([2, currentProb.collapseSimple]));
+            chests[cur].probSet([[2, currentProb.collapseSimple]]);
                 currentProb.invertLastProb();
                     if (cur % 50 == 0) {
                     currentProb.push(0.22);
-                    chests[cur].probSet(([3, currentProb.collapseSimple]));
+                    chests[cur].probSet([[3, currentProb.collapseSimple]]);
                     currentProb.pop();
                 }
                 currentProb.pop();
+            }
         }
         if (cur % 10 == 0 && cur >= 30) {
             if (num4 == 0) { // TODO
@@ -2231,7 +2553,7 @@ function getPara(tid, lv) {
             f = 40 + f * 0.5;
         }
     } else if (id == 36) {
-        for (i in [10, 50, 100, 500, 1000, 5000, 10000, 50000, 100000]) {
+        for (i of [10, 50, 100, 500, 1000, 5000, 10000, 50000, 100000]) {
             if (lv >= i) {
                 f *= 4;
             }
@@ -2247,10 +2569,22 @@ function nameCleanup(i) {
     return i.toLowerCase().replace(/ /g, "_").replace(/'/g, "").replace(/\+/g, "");
 }
 
-function updateItemEffect(i) {
+function updateItemEffect(i, propagate) {
     sel = $("#" + nameCleanup(i) + "_i");
     val = Number(sel[0].value);
     sel.css("color", val == itemObjs[i].cap ? "#c00" : "#000");
     sel.parent().prev().css("color", val == itemObjs[i].cap ? "#c00" : "#000");
     sel.parent().next().html(getEffect(i, val));
+    if (propagate) {
+        if (i == "Gate") {
+            updateItemEffect("Dark Gate", false);
+        } else if (i == "Dark Gate") {
+            updateItemEffect("Gate", false);
+        }
+        if (i == "Freyr's Sword") {
+            updateItemEffect("Freyr's Sword 2", false);
+        } else if (i == "Freyr's Sword 2") {
+            updateItemEffect("Freyr's Sword", false);
+        }
+    }
 }
