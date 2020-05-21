@@ -399,6 +399,12 @@ function doubleRefSort(target1, target2, refData) {
     return [t1, t2, t3];
 }
 
+function Hosei1OR2(itemID) {
+    if (itemID != 1 && itemID != 2)
+        return itemID;
+    return random75Bool(engine) ? 2 : 1;
+}
+
 function getRanks(curItems) {
     numArray1 = new Array(itemCount);
     numArray2 = new Array(itemCount);
