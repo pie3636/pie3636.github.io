@@ -2278,6 +2278,9 @@ function magicLampCalc(floor, value) {
             fx = [[min, max, 0, 2]];
         }
         min = 2;
+        if (max <= min) {
+            max = min;
+        }
     }
     if (max > 9) {
         max = 9;
