@@ -1921,7 +1921,7 @@ function doSavePreset() {
 function updatePresets() {
     $("#presetEdit option:gt(0)").remove();
     for (var i = 0; i < localStorage.length; i++) {
-        if (localStorage.key(i) != "_autosave") {
+        if (localStorage.key(i) != "_autosave" && localStorage.key(i) != "initValues") {
             $("#presetEdit").append($("<option></option>").attr("value", localStorage[localStorage.key(i)]).text(localStorage.key(i).substr(5)));
         }
     }
