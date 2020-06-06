@@ -2215,7 +2215,7 @@ function getEffect(id, lv = 0) {
             x = getPara(id, lv);
             return "When a quest is starting through " + getAnchor("Guild Hat") + ", there is a <b>" + x + "%</b> chance it will be a special quest, which will yield additional rewards." + (x != 30 ? " If you have never encountered a special quest so far, this chance is set to <b>30%</b> instead." : "");
         case "Blue Crystal":
-            return "Watching an ad will reward crystals and chests with the following probabilities:</br>" + getTable("Number received", ["Chests", "Crystals"], 0, 3, i => i + 1, [i => bc_items[lv - 1][i], i => bc_crystals[lv - 1][i]], "w50");
+            return "Watching an ad will reward crystals and chests with the following probabilities:</br>" + getTable("Number received", ["Chests", "Crystals"], 0, 3, i => i, [i => bc_items[lv - 1][i], i => bc_crystals[lv - 1][i]], "w50");
         case "Freyr's Sword 2":
             x = getPara(id, lv);
             x2 = getPara("Freyr's Sword", Number($("#freyrs_sword_i")[0].value));
