@@ -206,10 +206,11 @@ $(function () {
         $("#itemLevels").append(
             "<tr id=tr_" + cleanName(i) + " class='item_tr'>"
             + "<td class='handle'><span class='glyphicon glyphicon-option-vertical' aria-hidden='true'></span></td>"
+            + "<td><img src='img/item" + itemObjs[i].id + ".png'/>"
             + "<td>" + i + "</td>"
             + "<td><input type='number' id='" + cleanName(i) + "' name='quantity' min='0' max='" + itemObjs[i].cap + "' value='" + itemObjs[i].value + "'></td>"
             + "<tr/>");
-        $("#itemLevels2").append("<tr><td class='left-pad5'>" + i + "</td><td><a class='anchor' id='" + nameCleanup(i) + "_l'></a><input type='number' id='" + nameCleanup(i) + "_i' name='quantity' min='0'" + (itemObjs[i].cap != Infinity ? " max='" + itemObjs[i].cap + "'" : "") + "value='0'></td><td>" + getEffect() + "</td></tr>");
+        $("#itemLevels2").append("<tr><td><img src='img/item" + itemObjs[i].id + ".png'/></td><td class='left-pad5'>" + i + "</td><td><a class='anchor' id='" + nameCleanup(i) + "_l'></a><input type='number' id='" + nameCleanup(i) + "_i' name='quantity' min='0'" + (itemObjs[i].cap != Infinity ? " max='" + itemObjs[i].cap + "'" : "") + "value='0'></td><td>" + getEffect() + "</td></tr>");
     }
     $("#itemLevels").sortable({
         item: "> tr",
@@ -950,7 +951,7 @@ function simulateChest(curItems, floor, noBuy) {
         itemID1 += 28;
     }
     if ((itemID1 == 1 || itemID1 == 2 || itemID1 == 29 || itemID1 == 30) && floor >= (randomBool(engine) ? 850 : 900)) {
-        itemID1 = 32 - itemID1 % 2;
+        itemID1 += 30;
     }
     if (floor >= 200
         && (itemID1 == 1 || itemID1 == 2)

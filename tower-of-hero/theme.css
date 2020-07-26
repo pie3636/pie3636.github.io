@@ -82,6 +82,10 @@ th {
     padding: 8px 8px 8px 2px; /* Fix horizontal alignment */
 }
 
+tr.no-left>th {
+    padding: 8px 8px 8px 2px !important; /* Fix horizontal alignment */
+}
+
 #itemLevels td, #results td {
     padding: 2px;
     vertical-align: middle;
