@@ -1752,7 +1752,7 @@ function displayResults() {
         if (caps[itemID]) {
             x = 160 * (curItems[itemID] / caps[itemID]);
         }
-        var str = "<tr>+<td>" + setColor(tabs[1][i], x) + "</td><td>" + setColor(curItems[itemID], x) + "</td><td>";
+        var str = "<tr><td><img src='img/item" + itemID + ".png'/></td><td>" + setColor(tabs[1][i], x) + "</td><td>" + setColor(curItems[itemID], x) + "</td><td>";
         var hidden = hideCapped;
         if (!isntMaxed(curItems, itemID)) {
             str += "<span class='red'>Capped</span></td><td>";
