@@ -5,7 +5,7 @@ $(function () {
     // TODO add total stats on top, for [v] unit at level ___ and [x] skill 1 (level ___) -> HP, Atk, Spd, ClimbSpd, nextCost, [spawn time] + gold find, skill effects etc, top floor calculator
     // TODO add a king's crown ("quantum" distribution), demon's mask, power of demons
     // TODO Alphab sort, +1/+10, guide next to it
-    // TODO MERGE: ordering items and saving that in the preset/localstorage
+    // TOH change time tooltip (page may freeze...) OR add simulation status update
     // MAX: Summon (5+2x) 100   Seal 5   Growth Speed 52   Power Up 200   Warp 16   Ultimate Summon 80   Fame 150   New Dungeon   Auto-Seal 8
 
     itemObjs = {
