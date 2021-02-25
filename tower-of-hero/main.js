@@ -1,5 +1,5 @@
 $(function () {
-    versionStr = "2.0.4";
+    versionStr = "2.0.7";
     saveInterval = undefined;
 
     // TODO add total stats on top, for [v] unit at level ___ and [x] skill 1 (level ___) -> HP, Atk, Spd, ClimbSpd, nextCost, [spawn time] + gold find, skill effects etc, top floor calculator
