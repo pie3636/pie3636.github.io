@@ -2239,7 +2239,7 @@ function getEffect(id, lv = 0) {
             + "<br/>³ +1 for every 10 completed 15-day cycle, up to +5"
             + "<br/>This table loops after 15 days.";
         case "Ancient Magic Stone":
-            return "Picks <b>" + (lv == 2 ? "two</b> random items" : "one</b> random item") + " after resetting the Tower. The selected item" + (lv == 2 ? "s are" : " is") + " upgraded with bonus levels for the next reset.</b>The list of items that can be upgraded, their possible bonus levels and their weight (chance of being picked) are available <a href='https://i.imgur.com/YtXJc7m.png'><b>here</b></a>.";
+            return "Picks <b>" + (lv > 1 ? ((lv == 2 ? "two" : "three") + "</b> random items") : "one</b> random item") + " after resetting the Tower. The selected item" + (lv == 2 ? "s are" : " is") + " upgraded with bonus levels for the next reset.</b>The list of items that can be upgraded, their possible bonus levels and their weight (chance of being picked) are available <a href='https://i.imgur.com/YtXJc7m.png'><b>here</b></a>.";
         case "Mass prod Gáe Bolg":
             x = rnd(getPara(id, lv), 2);
             return "Soldiers have a <b>" + x + "%</b> chance of being summoned in groups of two at a time instead of one.";
