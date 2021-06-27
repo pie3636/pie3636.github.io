@@ -919,6 +919,14 @@ function simulateChest(curItems, floor, noBuy) {
             break;
     }
     
+    if (itemID1 == 31 && floor <= 600) {
+        itemID1 = 29;
+    }
+
+    if (itemID1 == 32 && floor <= 600) {
+        itemID1 = 30;
+    }
+	
     if (itemID1 == 2 && curItems[1] < curItems[2] * 0.5 && random40Bool(engine)) {
         itemID1 = 1;
     }
