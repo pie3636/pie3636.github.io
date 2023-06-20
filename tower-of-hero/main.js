@@ -1,5 +1,5 @@
 $(function () {
-    versionStr = "2.0.7";
+    versionStr = "2.0.8";
     saveInterval = undefined;
 
     // TODO add total stats on top, for [v] unit at level ___ and [x] skill 1 (level ___) -> HP, Atk, Spd, ClimbSpd, nextCost, [spawn time] + gold find, skill effects etc, top floor calculator
@@ -2272,19 +2272,19 @@ function getEffect(id, lv = 0) {
             // TODO
     	case "Golden Mysterious Key":
 	    x = rnd(getPara(id, lv), 2);
-	    return "Upon killing a treasure chest, gold collection is increased by <b>" + x + "%</b>.";
+	    return "Upon killing a treasure chest, gold collection is temporarily increased by <b>" + x + "%</b>.";
     	case "Red Mysterious Key":
 	    x = rnd(getPara(id, lv), 2);
 	    return "Upon killing a treasure chest, attack is temporarily increased by <b>" + x + "%</b>.";
     	case "Mysterious Vault":
 	    x = 1 + rnd(getPara(id, lv), 1);
-    	    return "The effect of " + getAnchor("Golden Mysterious Key") + " and " + getAnchor("Red Mysterious Key") + " lasts <b>" + x + "seconds</b>."
+    	    return "The effect of " + getAnchor("Golden Mysterious Key") + " and " + getAnchor("Red Mysterious Key") + " lasts <b>" + x + " seconds</b>."
     	case "Ancestor's Book":
 	    x = rnd(getPara(id, lv), 2);
 	    return "Decreases HP of enemies outside of the top floor by <b>" + x + "%</b>."
     	case "Spirit Ring":
-	    x = 1 + rnd(getPara(id, lv), 2);
-	    return "The power of enemy knockback is divided by <b>" + x + "</b>."
+	    x = rnd(getPara(id, lv), 2);
+	    return "The power of enemy knockback is reduced by <b>" + x + "%</b>."
         default:
             return "[Error] Please report the following code to pie3636: getEffect(" + names.indexOf(id) + ", " + lv + ")";
     }
