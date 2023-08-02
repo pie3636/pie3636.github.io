@@ -2272,10 +2272,10 @@ function getEffect(id, lv = 0) {
             // TODO
     	case "Golden Mysterious Key":
 	    x = rnd(getPara(id, lv), 2);
-	    return "Upon killing a treasure chest, gold collection is temporarily increased by <b>" + x + "%</b>.";
+	    return "Upon opening an item chest, gold collection is temporarily increased by <b>" + x + "%</b>.";
     	case "Red Mysterious Key":
 	    x = rnd(getPara(id, lv), 2);
-	    return "Upon killing a treasure chest, attack is temporarily increased by <b>" + x + "%</b>.";
+	    return "Upon opening an chest, attack is temporarily increased by <b>" + x + "%</b>.";
     	case "Mysterious Vault":
 	    x = 1 + rnd(getPara(id, lv), 1);
     	    return "The effect of " + getAnchor("Golden Mysterious Key") + " and " + getAnchor("Red Mysterious Key") + " lasts <b>" + x + " seconds</b>."
