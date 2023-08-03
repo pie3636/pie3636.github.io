@@ -2160,11 +2160,11 @@ function getEffect(id, lv = 0) {
         case "Gate":
             x = rnd(getPara(id, lv), 2);
             x2 = getPara("Dark Gate", Number($("#dark_gate_i")[0].value));
-            return "Units have a <b>" + x + "%</b> chance of teleporting to the next enemy after killing one.<br/>For Demons, this chance compounds with " + getAnchor("Dark Gate") + " for a total chance of <b>" + rnd(x + x2, 2) + "%</b>.";
+            return "Units have a <b>" + x + "%</b> chance of teleporting to the next enemy after defeating one.<br/>For Demons, this chance compounds with " + getAnchor("Dark Gate") + " for a total chance of <b>" + rnd(x + x2, 2) + "%</b>.";
         case "Dark Gate":
             x = rnd(getPara(id, lv), 2);
             x2 = getPara("Gate", Number($("#gate_i")[0].value));
-            return "Demons have an additional <b>" + x + "%</b> chance of teleporting to the next enemy after killing one.<br/>This chance compounds with " + getAnchor("Gate") + " for a total chance of <b>" + rnd(x + x2, 2) + "</b>%.";
+            return "Demons have an additional <b>" + x + "%</b> chance of teleporting to the next enemy after defeating one.<br/>This chance compounds with " + getAnchor("Gate") + " for a total chance of <b>" + rnd(x + x2, 2) + "</b>%.";
         case "Magic Lamp":
             x = getPara(id, lv);
             return "Resetting the Tower grants additional item chests.<br/>"
@@ -2264,7 +2264,7 @@ function getEffect(id, lv = 0) {
             x = rnd(getPara(id, lv), 2);
             return "Soldiers have a <b>" + x + "%</b> chance of being summoned in groups of two at a time instead of one.";
         case "Demon's Mask":
-            return "Upon killing an enemy, Demons gain <b>" + rnd((x - 1)/100, 4) + "</b> moving speed (stacks).<br/><b>Note:</b> These values are unconfirmed as they have not yet been found in the code.";
+            return "Upon defeating an enemy, Demons gain <b>" + rnd((x - 1)/100, 4) + "</b> moving speed (stacks).<br/><b>Note:</b> These values are unconfirmed as they have not yet been found in the code.";
             // TODO
         case "Power of Demons":
             x = rnd(x, 2);
@@ -2272,10 +2272,10 @@ function getEffect(id, lv = 0) {
             // TODO
     	case "Golden Mysterious Key":
 	    x = rnd(getPara(id, lv), 2);
-	    return "Upon opening an item chest, gold collection is temporarily increased by <b>" + x + "%</b>.";
+	    return "Upon picking up an item chest, gold collection is temporarily increased by <b>" + x + "%</b>.";
     	case "Red Mysterious Key":
 	    x = rnd(getPara(id, lv), 2);
-	    return "Upon opening an chest, attack is temporarily increased by <b>" + x + "%</b>.";
+	    return "Upon picking up an item chest, attack is temporarily increased by <b>" + x + "%</b>.";
     	case "Mysterious Vault":
 	    x = 1 + rnd(getPara(id, lv), 1);
     	    return "The effect of " + getAnchor("Golden Mysterious Key") + " and " + getAnchor("Red Mysterious Key") + " lasts <b>" + x + " seconds</b>."
