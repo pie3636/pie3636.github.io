@@ -125,6 +125,20 @@ table.table-data td {
     width: auto;
 }
 
+#globalStats {
+    margin-bottom: -2px;
+    display: table;
+    border: 2px solid #88f;
+    width: auto;
+}
+
+#unitData {
+    margin-bottom: -2px;
+    display: table;
+    border: 2px solid #88f;
+    width: auto;
+}
+
 #itemLevels2 .table-data tr:hover {
     background-color: #eeeeff;
     color: #000099;

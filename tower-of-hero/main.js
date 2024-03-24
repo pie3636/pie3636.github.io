@@ -2,7 +2,8 @@ $(function () {
     versionStr = "2.0.8";
     saveInterval = undefined;
 
-    // TODO add total stats on top, for [v] unit at level ___ and [x] skill 1 (level ___) -> HP, Atk, Spd, ClimbSpd, nextCost, [spawn time] + gold find, skill effects etc, top floor calculator
+    // TODO Fill in skill effect tables and stat calculations (fix ids etc)
+    // Add anchors for skills, also next cost, add skill duration and cooldown in object
     // TODO add a king's crown ("quantum" distribution), demon's mask, power of demons
     // TODO Alphab sort, +1/+10, guide next to it
     // TOH change time tooltip (page may freeze...) OR add simulation status update
@@ -78,21 +79,37 @@ $(function () {
         "Mass prod Gáe Bolg":    new Item(59,      26,    400,   200,  0.5,   0,  0.1,   1),
         "Demon's Mask":          new Item(60,      11,    300,   250,   25,   0,    1,   1),
         "Power of Demons":       new Item(61,      26,    500,   200,   10,   0,    1,   1),
-	"Golden Mysterious Key": new Item(62,     251,     71,    35,    5,   0,  0.1,   1),
-	"Red Mysterious Key":    new Item(63,     151,     69,    42,    5,   0,  0.1,   1),
-	"Mysterious Vault":      new Item(64,      15,    200,  1200,  0.1,   0,    0,   0),
+        "Golden Mysterious Key": new Item(62,     251,     71,    35,    5,   0,  0.1,   1),
+        "Red Mysterious Key":    new Item(63,     151,     69,    42,    5,   0,  0.1,   1),
+        "Mysterious Vault":      new Item(64,      15,    200,  1200,  0.1,   0,    0,   0),
         "Ancestor's Book":       new Item(65,     201,     72,    38,    5,   0,  0.1,   1),
         "Spirit Ring":           new Item(66,     201,     72,    36,    5,   0,  0.1,   1)
     };
-    
-    
+
+    skills = {
+        //                             id  cap  active gameID
+        "Summon":            new Skill( 0, 100, false,  1),
+        "Monster Seal":      new Skill( 1,   5, false,  2),
+        "Monster Auto-Seal": new Skill( 2,   8, false, 12),
+        "Heroic Berserker":  new Skill( 3,  30, false,  3),
+        "Growth Speed":      new Skill( 4,  52, false,  4),
+        "Power Up":          new Skill( 5, 200, false,  5),
+        "Fame":              new Skill( 6, 150, false, 10),
+        "Doping":            new Skill( 7,  20, true,   6),
+        "Golden Rain":       new Skill( 8, 120, true,   7),
+        "Warp":              new Skill( 9,  16, true,   8),
+        "Ultimate Summon":   new Skill(10,  80, true,   9),
+        "New Dungeon":       new Skill(11,   1, true,  11)
+    }
+
+
     names = ["Lance", "Earth Armour", "Claymore", "Wing Boots", "Training Book", "Golden Gloves", "Rapier", "Halberd", "Red Elixir", "Gold Vessels", "Blue Elixir", "Green Elixir", "Golden Coat", "Golden Rod", "Solomon's Staff",
         "Solomon's Key", "Excalibur", "Aegis", "Caduceus", "Philosopher's Stone", "Hydra's Poison Arrow", "Durandal", "Mistilteinn", "Royal Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour",
         "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor 2", "Awakening Sword 2", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate",
         "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand", "Veteran's Hat", "Blue Crystal", "Freyr's Sword 2",
         "Book of Prophecy", "Ancient Magic Stone", "Mass prod Gáe Bolg", "Demon's Mask", "Power of Demons", "Golden Mysterious Key", "Red Mysterious Key", "Mysterious Vault", "Ancestor's Book", "Spirit Ring"
     ];
-    
+
     bc_items = [[0.89, 0.10, 0.01, "-"],
                 [0.86, 0.12, 0.02, "-"],
                 [0.82, 0.15, 0.03, "-"],
@@ -120,7 +137,7 @@ $(function () {
                    ["-", 0.25, 0.60, 0.15],
                    ["-", 0.20, 0.60, 0.20],
                    ["-", 0.10, 0.65, 0.25]];
-   
+
     bop_rewards = [[["8",   "-",  "-"],
                     ["8",   "-",  "-"],
                     ["8",   "-",  "-"],
@@ -166,19 +183,19 @@ $(function () {
                     ["15",  "-",  "-"],
                     ["20",  "-",  "-"],
                     ["20²", "-",  "3"]]]
-    
+
     caps = names.map(function(index) {
         return itemObjs[index].cap;
     });
-    
+
     droprank = names.map(function(index) {
         return itemObjs[index].droprank;
     });
-    
+
     droprank2 = names.map(function(index) {
         return itemObjs[index].droprank2;
     });
-        
+
     $('[data-toggle="tooltip"]').tooltip();
     $("#version").append(versionStr);
 
@@ -204,7 +221,7 @@ $(function () {
     for (var i in itemObjs) {
         itemCount++;
     }
-    
+
     items = new Array(itemCount).fill(0);
 
     for (var i in itemObjs) {
@@ -222,7 +239,7 @@ $(function () {
         cursor: "move",
         revert: true
     });
-    
+
     // Event listeners (must be done before loading autosave)
     $("#full-run").click(function() {
         $("#run-form").show();
@@ -241,12 +258,12 @@ $(function () {
     $("#normal-quest, #always-quest").click(function() {
         $("#quest-form").show();
     });
-    
+
     var autosave = localStorage.getItem("_autosave");
     if (autosave) {
         doImportPreset(decodePreset(autosave));
     }
-    
+
     for (var i in itemObjs) {
         updateItemEffect(i, false);
     }
@@ -254,7 +271,7 @@ $(function () {
     updatePresets();
 
     presetLoading = false;
-    
+
     currentTab = 'loot';
     changeTab('loot');
 
@@ -293,11 +310,11 @@ $(function () {
             };
         }(i));
     }
-    
+
     saveInterval = setInterval(function() {
         localStorage.setItem("_autosave", getExportData());
     }, 1000);
-    
+
     //debugCur();
 });
 
@@ -310,6 +327,12 @@ function Item(id, cap, droprank, droprank2, i1, i2, limitI1, limitLine) {
     this.i2 = i2;
     this.limitI1 = limitI1;
     this.limitLine = limitLine;
+}
+
+function Skill(id, cap, active) {
+    this.id = id;
+    this.cap = cap;
+    this.active = active;
 }
 
 function centerModal() {
@@ -923,7 +946,7 @@ function simulateChest(curItems, floor, noBuy) {
                 itemID1 = 2;
             break;
     }
-    
+
     if (itemID1 == 31 && floor <= 600) {
         itemID1 = 29;
     }
@@ -931,7 +954,15 @@ function simulateChest(curItems, floor, noBuy) {
     if (itemID1 == 32 && floor <= 600) {
         itemID1 = 30;
     }
-	
+
+    if (itemID1 == 31 && floor <= 600) {
+        itemID1 = 29;
+    }
+
+    if (itemID1 == 32 && floor <= 600) {
+        itemID1 = 30;
+    }
+
     if (itemID1 == 2 && curItems[1] < curItems[2] * 0.5 && random40Bool(engine)) {
         itemID1 = 1;
     }
@@ -2053,14 +2084,14 @@ function getEffect(id, lv = 0) {
         case "Claymore":
             return "Heroes' and soldiers' attack is multiplied by <b>" + x.toLocaleString() + "</b>. This factor stacks <b>additively</b> with " + getAnchor("Flamberge") + " and " + getAnchor("Tomahawk") + ", and <b>multiplicatively</b> with <samp>Power Up</samp>, <samp>Fame</samp> and other attack bonuses.";
         case "Wing Boots":
-            return "Heroes' moving speed is multiplied by <b>" + x.toLocaleString() + "</b>. Soldiers' moving speed is increased by <b>" + (x - 1).toLocaleString() + "</b>. This stacks <b>multiplicatively</b> with <samp>Doping</samp>."; 
+            return "Heroes' moving speed is multiplied by <b>" + x.toLocaleString() + "</b>. Soldiers' moving speed is increased by <b>" + (x - 1).toLocaleString() + "</b>. This stacks <b>multiplicatively</b> with <samp>Doping</samp>.";
         case "Training Book":
             x = getPara(id, lv);
             return "Soldiers spawn <b>" + x + "%</b> faster. This stacks <b>multiplicatively</b> with <samp>Growth Speed</samp> and <samp>Doping</samp>.";
         case "Golden Gloves":
-            return "Multiplies enemy gold found by <b>" + x.toLocaleString() + "</b>. This stacks <b>multiplicatively</b> with <samp>Rain of Gold</samp> and " + getAnchor("Golden Pot") + ".";
+            return "Multiplies enemy gold found by <b>" + x.toLocaleString() + "</b>. This stacks <b>multiplicatively</b> with <samp>Golden Rain</samp> and " + getAnchor("Golden Pot") + ".";
         case "Rapier":
-            return "Heroes' and soldiers' climbing speed is multiplied by <b>" + x.toLocaleString() + "</b>."; 
+            return "Heroes' and soldiers' climbing speed is multiplied by <b>" + x.toLocaleString() + "</b>.";
         case "Halberd":
             y = 32 + 0.18 * getPara(id, lv);
             z = 15 + 0.1 * getPara(id, lv);
@@ -2069,21 +2100,21 @@ function getEffect(id, lv = 0) {
             return (lv == 0 ? "No effect." : "Increases the moving speed and spawning speed of units affected by <samp>Doping</samp>.") + "<br/>"
             + getTable("Doping's level", ["Moving speed multiplier", "Spawn speed multiplier"], 1, 20, i => i, [i => rnd(1 + Math.min((27 + i * 3) * x, 60) * 0.01, 2), i => rnd(1 + (40 + i * 10) * x * 0.01, 2)], "w50") + "<div class='bottom10'/>";
         case "Gold Vessels":
-            return (lv == 0 ? "No effect." : "Increases the gold from enemies when using <samp>Rain of Gold</samp>.") + "<br/>"
-            + getTable("Rain of Gold's level", ["Gold multiplier"], 1, 20, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50")
-            + getTable("Rain of Gold's level", ["Gold multiplier"], 21, 40, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50")
-            + getTable("Rain of Gold's level", ["Gold multiplier"], 41, 60, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50")
-            + getTable("Rain of Gold's level", ["Gold multiplier"], 61, 80, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50")
-            + getTable("Rain of Gold's level", ["Gold multiplier"], 81, 100, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50")
-            + getTable("Rain of Gold's level", ["Gold multiplier"], 101, 120, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50") + "<div class='bottom10'/>";
+            return (lv == 0 ? "No effect." : "Increases the gold from enemies when using <samp>Golden Rain</samp>.") + "<br/>"
+            + getTable("Golden Rain's level", ["Gold multiplier"], 1, 20, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50")
+            + getTable("Golden Rain's level", ["Gold multiplier"], 21, 40, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50")
+            + getTable("Golden Rain's level", ["Gold multiplier"], 41, 60, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50")
+            + getTable("Golden Rain's level", ["Gold multiplier"], 61, 80, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50")
+            + getTable("Golden Rain's level", ["Gold multiplier"], 81, 100, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50")
+            + getTable("Golden Rain's level", ["Gold multiplier"], 101, 120, i => i, [i => rnd((90 + i * 10) * x * 0.01, 2)], "w50") + "<div class='bottom10'/>";
         case "Blue Elixir":
             return getSkillDuration("Doping", x, lv);
         case "Green Elixir":
             return getSkillCooldown("Doping", id, lv, 600);
         case "Golden Coat":
-            return getSkillDuration("Rain of Gold", x, lv);
+            return getSkillDuration("Golden Rain", x, lv);
         case "Golden Rod":
-            return getSkillCooldown("Rain of Gold", id, lv, 900);
+            return getSkillCooldown("Golden Rain", id, lv, 900);
         case "Solomon's Staff":
             return getSkillDuration("Warp", x, lv);
         case "Solomon's Key":
@@ -2095,7 +2126,7 @@ function getEffect(id, lv = 0) {
         case "Caduceus":
             return "<b>" + (0.25 + 1.75 * x).toLocaleString() + "%</b> of all non-boss enemies above floor 25 are treasure chests."
         case "Philosopher's Stone":
-            return "Treasure chests contain <b>" + (x*10).toLocaleString() + " times</b> more gold than normal monsters, which are themselves affected by <samp>Rain of Gold</samp> and " + getAnchor("Golden Pot") + ".";
+            return "Treasure chests contain <b>" + (x*10).toLocaleString() + " times</b> more gold than normal monsters, which are themselves affected by <samp>Golden Rain</samp> and " + getAnchor("Golden Pot") + ".";
         case "Hydra's Poison Arrow":
             x = getPara(id, lv);
             return "Enemies' HP regeneration is decreased by <b>" + x + "%</b>.";
@@ -2464,7 +2495,7 @@ function simulateChestProba(lv, claymoreLv, resets, endFloor) {
         currentProb.pop();
         currentProb.pop();
     }
-    
+
     chests[10] = [[1, 1]];
     currentProb.push(1/3);
     chests[12].probSet([[1, currentProb.collapseSimple()]]);
@@ -2478,11 +2509,11 @@ function simulateChestProba(lv, claymoreLv, resets, endFloor) {
     chests[18].probSet([[1, currentProb.collapseSimple()]]);
     chests[19].probSet([[1, currentProb.collapseSimple()]]);
     currentProb.pop();
-    
+
     if (curItems[39] == 0) {
         chests[17] = [[1, 1]];
     }
-    
+
     var num4 = [[0, 1]];
     var cur = 20;
     while (cur*10 <= Math.min(endFloor, 2405)) {

@@ -34,7 +34,8 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-left">
                 <li class="active"><a id="nav_loot" href="#" onclick="changeTab('loot')">Loot</a></li>
-                <li><a href="#" id="nav_items" onclick="changeTab('items')">Items</a></li>
+                <li><a href="#" id="nav_items" onclick="changeTab('items')">Items/Skills</a></li>
+                <li><a href="#" id="nav_stats" onclick="changeTab('stats')">Stats</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <!-- -->
@@ -394,7 +395,7 @@
     
     <div id="items" style="display:none">
         <div class="panel panel-info panel-body">
-            Use this page to find out how leveling equippable items affects your runs in various ways. <br />
+            Use this page to find out how leveling equippable items and skills affects your runs in various ways. <br />
             Please be aware that some of the item effects displayed in-game, such as "+5%", are simplified and do not accurately reflect the truth. This page contains actual values that have been either calculated or simulated from thousands of runs, and should therefore be a lot more precise.<br/>
         </div>
         <div class="panel panel-info panel-body">
@@ -418,9 +419,129 @@
                 </table>
             </div>
         </div>
+        <div class="panel panel-info panel-body">
+            <div class="col-md-12">
+                <div class="row float-right left-pad">
+                    <h3 style="float:left; margin-top: 0">Current skill levels</h3>
+                </div>
+                Note: Capped skills appear <span style="color: #c00">in red</span>.<br/>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width:50px">Icon</th>
+                            <th style="width:175px">Skill</th>
+                            <th style="width:125px">Level</th>
+                            <th>Effect</th>
+                        </tr>
+                    </thead>
+                    <tbody id="skillLevels">
+                    <tr><td><img src='img/skill0.png'/></td><td class='left-pad5'>Summon</td><td><a class='anchor' id='summon_l'></a><input type='number' id='summon_i' name='quantity' min='0' max='16' value='0'></td><td>Something</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="stats" style="display:none">
+        <div class="panel panel-info panel-body">
+            On this page, you can find your save's statistics, as well as the stats your units have at a given level.<br/>
+            <b>Note:</b> The statistics in this section are based on item and skill levels given in the <a href="#" id="nav_items" onclick="changeTab('items')">Items/Skills</a> tab.
+        </div>
+        <div class="panel panel-info panel-body">
+            <div class="col-md-12">
+                <div class="row float-right left-pad">
+                    <h3 style="margin-top: 0">General statistics</h3>
+                </div>
+                <table class="table table-data" style="max-width:800px" id="globalStats">
+                    <thead>
+                        <tr>
+                            <td>Gold find</td>
+                            <td>Atk bonus</td>
+                            <td>Atk bonus (lv 1,000+)</td>
+                            <td>Atk bonus (lv 10,000+)</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>+4585%</b></td>
+                            <td><b>+175k%</b></td>
+                            <td><b>+230k%</b></td>
+                            <td><b>+255k%</b></td>
+                        </tr>
+                    </tbody>
+                </table><br/><hr/>
+                <div class="row float-right left-pad">
+                    <h3 style="margin-top: 0">Power scores</h3>
+                </div>
+                The following scores are indicative measures of your progression in the game. They are logarithmic - meaning that gaining 1 point means multiplying your overall power by 10.<br/>
+                <table class="table table-data" style="max-width:800px" id="globalStats">
+                    <thead>
+                        <tr>
+                            <td>Offensive score (<span data-toggle="tooltip" title="This score measures the capacity of your units to defeat strong enemies. It is mostly tied to attack and gold items." class="tooltip-text" data-placement="right">?</span>)</td>
+                            <td>Defensive score (<span data-toggle="tooltip" title="This score measures the overall resistance of your units. It is mostly tied to HP and gold items." class="tooltip-text" data-placement="right">?</span>)</td>
+                            <td>Speed score (<span data-toggle="tooltip" title="This score measures your ability to climb the Tower quickly. It is mostly tied to speed and gold items." class="tooltip-text" data-placement="right">?</span>)</td>
+                            <td><b>Final score</b> (<span data-toggle="tooltip" title="This score is the weighted sum of all previous three scores." class="tooltip-text" data-placement="right">?</span>)</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>7.456</b></td>
+                            <td><b>7.456</b></td>
+                            <td><b>7.456</b></td>
+                            <td><b>7.456</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </br>
+                With a
+                <select>
+                    <option value="test1">short</option>
+                    <option value="test2">average</option>
+                    <option value="test2">long</option>
+                    <option value="test2">pushing (a few hours)</option>
+                    <option value="test2">long push (a few days)</option>
+                </select>
+                run, you can expect to reach floor <b>850</b>.<br/>
+                Your recommended floor for resetting is <b>650</b>.
+                <br/><hr/>
+                <div class="row float-right left-pad">
+                    <h3 style="margin-top: 0">Unit statistics</h3>
+                </div>
+                Active skills to include in statistics:<br/>
+                <span class="left-pad"></span><span class="left-pad"></span><input type="checkbox"/> Doping<span class="left-pad"></span>
+                <input type="checkbox"/> Golden Rain<span class="left-pad"></span>
+                <input type="checkbox"/> Warp<span class="left-pad"></span>
+                <input type="checkbox"> Ultimate Summon<br/>
+                The unit
+                <select>
+                    <option value="test1">Celestial Maiden</option>
+                    <option value="test2">Test2</option>
+                </select>
+                at level <input type='number'/> has the following statistics:<br/>
+                <table class="table table-data" style="max-width:800px" id="unitData">
+                    <thead>
+                        <tr>
+                            <td>Atk</td>
+                            <td>HP</td>
+                            <td>Speed</td>
+                            <td>Spawning time</td>
+                            <td>Next cost</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>1.45 ac</b></td>
+                            <td><b>983 ab</b></td>
+                            <td><b>2.23</b></td>
+                            <td><b>3.4s</b></td>
+                            <td><b>7.38 aa</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
-
 
 <script src="../lib/js/jquery.min.js"></script>
 <script src="../lib/js/jquery-ui.min.js"></script>
