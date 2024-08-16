@@ -83,7 +83,8 @@ $(function () {
         "Red Mysterious Key":    new Item(63,     151,     69,    42,    5,   0,  0.1,   1),
         "Mysterious Vault":      new Item(64,      15,    200,  1200,  0.1,   0,    0,   0),
         "Ancestor's Book":       new Item(65,     201,     72,    38,    5,   0,  0.1,   1),
-        "Spirit Ring":           new Item(66,     201,     72,    36,    5,   0,  0.1,   1)
+        "Spirit Ring":           new Item(66,     201,     72,    36,    5,   0,  0.1,   1),
+		"Flash Orb":             new Item(67,      15;     30,    30,    1,   0,    0,   0)
     };
 
     skills = {
@@ -107,7 +108,7 @@ $(function () {
         "Solomon's Key", "Excalibur", "Aegis", "Caduceus", "Philosopher's Stone", "Hydra's Poison Arrow", "Durandal", "Mistilteinn", "Royal Crown", "Gungnir", "Lævateinn", "Gáe Bolg", "Mithril Sword", "Mithril Armour",
         "Full Plate", "Flamberge", "Full Helmet", "Tomahawk", "Summoning letter", "Awakening Armor", "Awakening Sword", "Gold Box", "Awakening Armor 2", "Awakening Sword 2", "Guild Hat", "Mjolnir", "Dark Knight Armor", "Gate",
         "Dark Gate", "Magic Lamp", "Dark Boots", "Fire Sword", "Freyr's Sword", "Flame Pot", "Ice Pot", "Golden Pot", "Black Essence", "Demon Eye", "Red Hand", "Veteran's Hat", "Blue Crystal", "Freyr's Sword 2",
-        "Book of Prophecy", "Ancient Magic Stone", "Mass prod Gáe Bolg", "Demon's Mask", "Power of Demons", "Golden Mysterious Key", "Red Mysterious Key", "Mysterious Vault", "Ancestor's Book", "Spirit Ring"
+        "Book of Prophecy", "Ancient Magic Stone", "Mass prod Gáe Bolg", "Demon's Mask", "Power of Demons", "Golden Mysterious Key", "Red Mysterious Key", "Mysterious Vault", "Ancestor's Book", "Spirit Ring", "Flash Orb"
     ];
 
     bc_items = [[0.89, 0.10, 0.01, "-"],
@@ -2302,20 +2303,23 @@ function getEffect(id, lv = 0) {
             return "Heroes and soldiers' attack is multiplied by <b>" + x + "</b> against enemies that have over <b>90%</b> of their max health.<br/><b>Note:</b> This effect and its values are unconfirmed as they have not yet been found in the code.";
             // TODO
     	case "Golden Mysterious Key":
-	    x = rnd(getPara(id, lv), 2);
-	    return "Upon picking up an item chest, gold collection is temporarily increased by <b>" + x + "%</b>.";
+	        x = rnd(getPara(id, lv), 2);
+	        return "Upon picking up an item chest, gold collection is temporarily increased by <b>" + x + "%</b>.";
     	case "Red Mysterious Key":
-	    x = rnd(getPara(id, lv), 2);
-	    return "Upon picking up an item chest, attack is temporarily increased by <b>" + x + "%</b>.";
+	        x = rnd(getPara(id, lv), 2);
+	        return "Upon picking up an item chest, attack is temporarily increased by <b>" + x + "%</b>.";
     	case "Mysterious Vault":
-	    x = 1 + rnd(getPara(id, lv), 1);
+	        x = 1 + rnd(getPara(id, lv), 1);
     	    return "The effect of " + getAnchor("Golden Mysterious Key") + " and " + getAnchor("Red Mysterious Key") + " lasts <b>" + x + " seconds</b>."
     	case "Ancestor's Book":
-	    x = rnd(getPara(id, lv), 2);
-	    return "Decreases HP of enemies outside of the top floor by <b>" + x + "%</b>."
+	        x = rnd(getPara(id, lv), 2);
+	        return "Decreases HP of enemies outside of the top floor by <b>" + x + "%</b>."
     	case "Spirit Ring":
-	    x = rnd(getPara(id, lv), 2);
-	    return "The power of enemy knockback is reduced by <b>" + x + "%</b>."
+	        x = rnd(getPara(id, lv), 2);
+	        return "The power of enemy knockback is reduced by <b>" + x + "%</b>."
+		case "Flash Orb":
+		    x = getPara(id, lv);
+	        return "Movement speed is increased by up to <b>" + x + "%</b> based on the average damage of soldier skills (details TBD)."
         default:
             return "[Error] Please report the following code to pie3636: getEffect(" + names.indexOf(id) + ", " + lv + ")";
     }
