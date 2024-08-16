@@ -35,7 +35,7 @@
             <ul class="nav navbar-nav navbar-left">
                 <li class="active"><a id="nav_loot" href="#" onclick="changeTab('loot')">Loot</a></li>
                 <li><a href="#" id="nav_items" onclick="changeTab('items')">Items/Skills</a></li>
-                <li><a href="#" id="nav_stats" onclick="changeTab('stats')">Stats</a></li>
+                <li style="display: none"><a href="#" id="nav_stats" onclick="changeTab('stats')">Stats</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <!-- -->
@@ -48,7 +48,7 @@
     <div id="loot" style="display:none">
         <div class="alert alert-warning">
             If you notice any discrepancy, bug or wrong value, please message me (<a href="http://reddit.com/user/pie3636">/u/pie3636</a>, Discord: Anfasa#6822) so I can fix it.<br/><span class="glyphicon glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
-            <b>Warning:</b> The gold chest simulation is currenly not working on this page.
+            <b>Warning:</b> The gold chest simulation is currenly not working on this page. In addition, the drop rates are known to be wrong for Flash Orb. This should be fixed in a later update.
         </div>
         
         <div class="panel panel-info panel-body">
@@ -419,7 +419,7 @@
                 </table>
             </div>
         </div>
-        <div class="panel panel-info panel-body">
+        <div class="panel panel-info panel-body" style="display: none">
             <div class="col-md-12">
                 <div class="row float-right left-pad">
                     <h3 style="float:left; margin-top: 0">Current skill levels</h3>

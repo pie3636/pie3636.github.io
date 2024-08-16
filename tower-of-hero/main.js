@@ -1,11 +1,12 @@
 $(function () {
-    versionStr = "2.0.8";
+    versionStr = "2.1.0";
     saveInterval = undefined;
 
     // TODO Fill in skill effect tables and stat calculations (fix ids etc)
     // Add anchors for skills, also next cost, add skill duration and cooldown in object
-    // TODO add a king's crown ("quantum" distribution), demon's mask, power of demons
+    // TODO add a king's crown (correct distribution), demon's mask, power of demons
     // TODO Alphab sort, +1/+10, guide next to it
+    // TODO Include soldier skills in calculations and displays
     // TOH change time tooltip (page may freeze...) OR add simulation status update
     // MAX: Summon (5+2x) 100   Seal 5   Growth Speed 52   Power Up 200   Warp 16   Ultimate Summon 80   Fame 150   New Dungeon   Auto-Seal 8
 
@@ -84,7 +85,7 @@ $(function () {
         "Mysterious Vault":      new Item(64,      15,    200,  1200,  0.1,   0,    0,   0),
         "Ancestor's Book":       new Item(65,     201,     72,    38,    5,   0,  0.1,   1),
         "Spirit Ring":           new Item(66,     201,     72,    36,    5,   0,  0.1,   1),
-		"Flash Orb":             new Item(67,      15;     30,    30,    1,   0,    0,   0)
+        "Flash Orb":             new Item(67,      15,     30,    30,    1,   0,    0,   0)
     };
 
     skills = {
@@ -430,7 +431,7 @@ function doubleRefSort(target1, target2, refData) {
 }
 
 function Hosei1OR2(itemID) {
-    if (itemID != 1 && itemID != 2)
+    if (itemID > 2)
         return itemID;
     return random75Bool(engine) ? 2 : 1;
 }
@@ -504,7 +505,7 @@ function simulateChest(curItems, floor, noBuy) {
     if ((itemID1 == 1 || itemID1 == 2) && lv >= 400 && random75Bool(engine) && curItems[36] <= lv * 0.65) {
         itemID1 = 36;
     }
-    if (curItems[39] == 0 && random85Bool(engine) && floor > 146 + randomRangeInt(0, randomRangeInt(10, 110))) {
+    if (curItems[39] == 0 && random85Bool(engine) && floor > 146 + randomRangeInt(0, 110)) {
         itemID1 = 39;
     }
     num2 = random01(engine);
@@ -565,9 +566,9 @@ function simulateChest(curItems, floor, noBuy) {
                 itemID1 = 1;
             if (lv2 >= 21 && random40Bool(engine))
                 itemID1 = 1;
-            if (lv2 >= 24 && random30Bool(engine))
+            if (lv2 >= 24 && random70Bool(engine))
                 itemID1 = 1;
-            if (lv2 >= 27 && random30Bool(engine))
+            if (lv2 >= 27 && random60Bool(engine))
                 itemID1 = 1;
             break;
         case 4:
@@ -606,8 +607,13 @@ function simulateChest(curItems, floor, noBuy) {
             }
             if (lv2 >= 25 && random30Bool(engine)) {
                 itemID1 = 2;
-                break;
             }
+            if (lv2 >= 105 && random95Bool(engine)) {
+                itemID1 = 2;
+            }
+            if (lv2 >= 110 && random95Bool(engine)) {
+                itemID1 = 2;
+            }    
             break;
         case 23:
             if (flag1 || flag3 || lv2 <= 0 && floor < 251 || lv2 == 1 && floor < 301 || lv2 >= 2 && floor < 351 + lv2 * 35 + (lv2 < 6 ? 0 : 100)) {
@@ -662,13 +668,17 @@ function simulateChest(curItems, floor, noBuy) {
         case 27:
         case 28:
             num3 = 132 + 33 * lv2 + (lv2 < 3 ? 0 : 100) + (lv2 < 5 ? 0 : 80) + (lv2 < 10 ? 0 : 90) + (lv2 < 25 ? 0 : 90) + (lv2 < 35 ? 0 : 80);
-            if (flag1 || flag2 || floor < num3 + 1) {
-                itemID1 = 2;
-                break;
+            if (lv2 > 44) {
+                num3 = 900;
             }
             if (lv2 >= 25 && random30Bool(engine)) {
                 itemID1 = 2;
-                break;
+            }
+            if (lv2 >= 45 && random95Bool(engine)) {
+                itemID1 = 2;
+            }
+            if (lv2 >= 48 && random95Bool(engine)) {
+                itemID1 = 2;
             }
             break;
         case 33:
@@ -692,18 +702,22 @@ function simulateChest(curItems, floor, noBuy) {
             else if (lv2 >= 45 && random01(engine) < 0.50005 - floor * 0.00005)
                 itemID1 = 2;
             else if (floor < 901) {
-                if (lv2 >= 48 && random40Bool(engine))
-                    itemID1 = 2;
-                else if (lv2 >= 58 && random40Bool(engine))
-                    itemID1 = 2;
-                else if (lv2 >= 68 && random40Bool(engine))
-                    itemID1 = 2;
-            } else if (floor < 1101) {
                 if (lv2 >= 48 && random30Bool(engine))
                     itemID1 = 2;
                 else if (lv2 >= 58 && random30Bool(engine))
                     itemID1 = 2;
                 else if (lv2 >= 68 && random30Bool(engine))
+                    itemID1 = 2;
+                else if (lv2 >= 72 && random30Bool(engine))
+                    itemID1 = 2;
+            } else if (floor < 1101) {
+                if (lv2 >= 48 && random20Bool(engine))
+                    itemID1 = 2;
+                else if (lv2 >= 58 && random20Bool(engine))
+                    itemID1 = 2;
+                else if (lv2 >= 68 && random20Bool(engine))
+                    itemID1 = 2;
+                else if (lv2 >= 72 && random20Bool(engine))
                     itemID1 = 2;
             }
             break;
@@ -727,19 +741,37 @@ function simulateChest(curItems, floor, noBuy) {
                 itemID1 = 1;
             else if (lv2 >= 28 && random25Bool(engine))
                 itemID1 = 1;
-            else if (floor < 1401) {
-                if (lv2 >= 22 && random40Bool(engine))
+            else if (lv2 >= 50 && random25Bool(engine))
+                itemID1 = 1;
+            else if (lv2 >= 55 && random25Bool(engine))
+                itemID1 = 1;
+            else if (lv2 >= 60 && random25Bool(engine))
+                itemID1 = 1;
+            else if (lv2 >= 65 && random25Bool(engine))
+                itemID1 = 1;
+            else if (lv2 >= 70 && random25Bool(engine))
+                itemID1 = 1;
+            else {
+                fn = random40Bool;
+                if (floor > 1400)
+                    fn = random30Bool;
+                if (floor > 1600)
+                    fn = random20Bool;
+                if (floor > 2000)
+                    fn = random10Bool;
+                if (lv2 >= 22 && fn(engine))
                     itemID1 = 2;
-                else if (lv2 >= 24 && random40Bool(engine))
+                else if (lv2 >= 24 && fn(engine))
                     itemID1 = 2;
-                else if (lv2 >= 26 && random40Bool(engine))
+                else if (lv2 >= 26 && fn(engine))
                     itemID1 = 2;
-            } else if (floor < 1601) {
-                if (lv2 >= 22 && random30Bool(engine))
+                else if (lv2 >= 50 && fn(engine))
                     itemID1 = 2;
-                else if (lv2 >= 24 && random30Bool(engine))
+                else if (lv2 >= 55 && fn(engine))
                     itemID1 = 2;
-                else if (lv2 >= 26 && random30Bool(engine))
+                else if (lv2 >= 60 && fn(engine))
+                    itemID1 = 2;
+                else if (lv2 >= 70 && fn(engine))
                     itemID1 = 2;
             }
             break;
@@ -843,7 +875,7 @@ function simulateChest(curItems, floor, noBuy) {
                 itemID1 = 2;
             if (lv2 >= 50 && random30Bool(engine))
                 itemID1 = 2;
-            if (lv2 >= 75 && random40Bool(engine))
+            if (lv2 >= 75 && randomBool(engine))
                 itemID1 = 2;
             break;
         case 53:
@@ -893,6 +925,8 @@ function simulateChest(curItems, floor, noBuy) {
                 itemID1 = 1;
             if (lv2 >= 7 && random90Bool(engine))
                 itemID1 = 1;
+            if (lv2 >= 9 && random90Bool(engine))
+                itemID1 = 1;
             if (flag3)
                 itemID1 = 1;
             itemID1 = Hosei1OR2(itemID1);
@@ -923,9 +957,11 @@ function simulateChest(curItems, floor, noBuy) {
         case 59:
             if (flag2 || floor < 1151 + 150 * lv2)
                 itemID1 = 2;
-            else if (lv2 >= 1 && randomBool(engine))
-                itemID1 = 2;
             else if (lv2 >= 5 && random40Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 10 && random40Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 20 && randomBool(engine))
                 itemID1 = 2;
             break;
         case 60:
@@ -946,8 +982,113 @@ function simulateChest(curItems, floor, noBuy) {
             else if (lv2 >= 20 && random25Bool(engine))
                 itemID1 = 2;
             break;
+        case 62:
+            if (flag3 || floor < 1001 + 5 * lv2)
+                itemID1 = 2;
+            else if (lv2 >= 2 && random20Bool(engine))
+                itemID1 = 3;
+            else if (lv2 >= 3 && randomBool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 10 && random30Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 40 && random30Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 70 && random30Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 90 && random90Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 140 && random70Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 180 && random70Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 220 && randomBool(engine))
+                itemID1 = 2;
+            break;
+        case 63:
+            lv2 = curItems[44];
+            if (flag3 || floor < 801 + 7 * lv2)
+                itemID1 = 2;
+            if (random80Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 3 && randomBool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 10 && random30Bool(engine))
+                itemID1 = 1;
+            else if (lv2 >= 40 && random30Bool(engine))
+                itemID1 = 1;
+            else if (lv2 >= 70 && random30Bool(engine))
+                itemID1 = 1;
+            else if (lv2 >= 90 && random10Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 140 && random10Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 180 && random30Bool(engine))
+                itemID1 = 2;
+            break;
+        case 64:
+            lv3 = curItems[62];
+            lv6 = curItems[63];
+            if (lv3 + lv6 < 3)
+                itemID1 = 2;
+            if (flag2 || floor < 501 + 270*lv2)
+                itemID1 = 2;
+            else if (lv2 >= 3 && random25Bool(engine))
+                itemID1 = 3;
+            else if (lv2 >= 4 && random30Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 5 && randomBool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 7 && random30Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 8 && random70Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 9 && random10Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 12 && random10Bool(engine))
+                itemID1 = 2;
+            break;
+        case 65:
+            if (flag3 || floor < 1001 + 5 * lv2)
+                itemID1 = 2;
+            else if (lv2 >= 2 && random20Bool(engine))
+                itemID1 = 3;
+            else if (lv2 >= 3 && randomBool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 10 && random30Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 40 && randomBool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 70 && random90Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 90 && random70Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 140 && random60Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 190 && randomBool(engine))
+                itemID1 = 2;
+            break;
+        case 66:
+            if (flag3 && floor <= lv2 * 15 + 601 || !flag3 && floor > 40 * lv2 + 751)
+                itemID1 = 2;
+            else if (lv2 >= 2 && random10Bool(engine))
+                itemID1 = 3;
+            else if (lv2 >= 3 && random20Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 10 && random30Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 40 && randomBool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 70 && random90Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 90 && random90Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 140 && random90Bool(engine))
+                itemID1 = 2;
+            else if (lv2 >= 190 && random70Bool(engine))
+                itemID1 = 2;
+            break;
     }
-
+    
     if (itemID1 == 31 && floor <= 600) {
         itemID1 = 29;
     }
@@ -972,7 +1113,9 @@ function simulateChest(curItems, floor, noBuy) {
             itemID1 = random20Bool(engine) ? ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, num1 * 0.6))] : 29;
         }
     } else if (itemID1 == 2 && flag4 && floor >= 500) {
+        
         itemID1 = random20Bool(engine) ? ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, num1 * 0.6))] : 30;
+    
     }
     if (itemID1 == 26) {
         lv2 = curItems[itemID1];
@@ -996,7 +1139,10 @@ function simulateChest(curItems, floor, noBuy) {
         itemID1 += 28;
     }
     if ((itemID1 == 1 || itemID1 == 2 || itemID1 == 29 || itemID1 == 30) && floor >= (randomBool(engine) ? 850 : 900)) {
-        itemID1 += 30;
+        if (itemID1 < 3)
+            itemID1 += 30;
+        else
+            itemID1 += 2;
     }
     if (floor >= 200
         && (itemID1 == 1 || itemID1 == 2)
@@ -1365,7 +1511,7 @@ function itemDowngrade(curitems, itemID, t2) {
         itemID = t2;
     else if (lv >= 15750 && random25Bool(engine))
         itemID = t2;
-    else if (lv >= 16000 && random85Bool(engine))
+    else if (lv >= 16000 && random40Bool(engine))
         itemID = t2;
     else if (lv >= 16500 && random30Bool(engine))
         itemID = t2;
@@ -1792,9 +1938,9 @@ function displayResults() {
     }
     curItems = items.slice();
     for (var i = 0; i < itemCount; i++) {
-        var x = 0;
+        var x = -1;
         itemID = itemObjs[tabs[1][i]].id;
-        if (caps[itemID]) {
+        if (caps[itemID] !== Infinity) {
             x = 160 * (curItems[itemID] / caps[itemID]);
         }
         var str = "<tr><td><img src='img/item" + itemID + ".png'/></td><td>" + setColor(tabs[1][i], x) + "</td><td>" + setColor(curItems[itemID], x) + "</td><td>";
@@ -1816,6 +1962,8 @@ function displayResults() {
 }
 
 function setColor(txt, capProgression) {
+    if (capProgression == -1)
+        return txt;
     return "<span style='color:rgb(" + capProgression + ", " + (160 - capProgression) + ", 0)'>" + txt + "</span>";
 }
 
@@ -2127,13 +2275,13 @@ function getEffect(id, lv = 0) {
         case "Caduceus":
             return "<b>" + (0.25 + 1.75 * x).toLocaleString() + "%</b> of all non-boss enemies above floor 25 are treasure chests."
         case "Philosopher's Stone":
-            return "Treasure chests contain <b>" + (x*10).toLocaleString() + " times</b> more gold than normal monsters, which are themselves affected by <samp>Golden Rain</samp> and " + getAnchor("Golden Pot") + ".";
+            return "Treasure chests contain <b>" + (x*10).toLocaleString() + " times</b> more gold than normal monsters, which stacks with the effect of <samp>Golden Rain</samp> and " + getAnchor("Golden Pot") + ".";
         case "Hydra's Poison Arrow":
             x = getPara(id, lv);
             return "Enemies' HP regeneration is decreased by <b>" + x + "%</b>.";
         case "Durandal":
             x = getPara(id, lv);
-            return "Heroes' are <b>" + x + "%</b> cheaper.";
+            return "Heroes are <b>" + x + "%</b> cheaper.";
         case "Mistilteinn":
             x = getPara(id, lv);
             return "Soldiers are <b>" + x + "%</b> cheaper.";
@@ -2183,7 +2331,7 @@ function getEffect(id, lv = 0) {
             return "Multiplies the attack of soldiers above level 10000 by <b>" + x.toLocaleString() + "</b>. This stacks <b> multiplicatively</b> with other attack bonuses.";
         case "Guild Hat":
             x = getPara(id, lv);
-            return "Upon resetting the Tower, there is a <b>" + rnd(x * 0.85 + 7.5, 2) + "%</b> chance of starting a quest.";
+            return "Upon resetting the Tower, there is a <b>" + rnd((x * 0.85 + 7.5) / 1.1, 2) + "%</b> chance of starting a quest.";
         case "Mjolnir":
             x = rnd(getPara(id, lv), 2);
             return "Tapping the screen has a <b>" + x + "%</b> chance of summoning a demon.";
@@ -2310,16 +2458,16 @@ function getEffect(id, lv = 0) {
 	        return "Upon picking up an item chest, attack is temporarily increased by <b>" + x + "%</b>.";
     	case "Mysterious Vault":
 	        x = 1 + rnd(getPara(id, lv), 1);
-    	    return "The effect of " + getAnchor("Golden Mysterious Key") + " and " + getAnchor("Red Mysterious Key") + " lasts <b>" + x + " seconds</b>."
+    	        return "The effect of " + getAnchor("Golden Mysterious Key") + " and " + getAnchor("Red Mysterious Key") + " lasts <b>" + x + " seconds</b>."
     	case "Ancestor's Book":
 	        x = rnd(getPara(id, lv), 2);
 	        return "Decreases HP of enemies outside of the top floor by <b>" + x + "%</b>."
     	case "Spirit Ring":
 	        x = rnd(getPara(id, lv), 2);
-	        return "The power of enemy knockback is reduced by <b>" + x + "%</b>."
-		case "Flash Orb":
-		    x = getPara(id, lv);
-	        return "Movement speed is increased by up to <b>" + x + "%</b> based on the average damage of soldier skills (details TBD)."
+             return "The power of enemy knockback is reduced by <b>" + x + "%</b>."
+        case "Flash Orb":
+            x = getPara(id, lv);
+            return "Movement speed is increased by up to <b>" + x + "%</b> based on the average damage of soldier skills (details TBD)."
         default:
             return "[Error] Please report the following code to pie3636: getEffect(" + names.indexOf(id) + ", " + lv + ")";
     }
