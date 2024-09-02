@@ -431,8 +431,9 @@ function doubleRefSort(target1, target2, refData) {
 }
 
 function Hosei1OR2(itemID) {
-    if (itemID > 2)
+    if (itemID > 2) {
         return itemID;
+    }
     return random75Bool(engine) ? 2 : 1;
 }
 
@@ -564,11 +565,11 @@ function simulateChest(curItems, floor, noBuy) {
         case 3:
             if (lv2 >= 15 && randomBool(engine))
                 itemID1 = 1;
-            if (lv2 >= 21 && random40Bool(engine))
+            else if (lv2 >= 21 && random40Bool(engine))
                 itemID1 = 1;
-            if (lv2 >= 24 && random70Bool(engine))
+            else if (lv2 >= 24 && random70Bool(engine))
                 itemID1 = 1;
-            if (lv2 >= 27 && random60Bool(engine))
+            else if (lv2 >= 27 && random60Bool(engine))
                 itemID1 = 1;
             break;
         case 4:
@@ -580,9 +581,9 @@ function simulateChest(curItems, floor, noBuy) {
             itemID1 = 1;
             if (lv2 >= 15 && randomBool(engine))
                 itemID1 = 1;
-            if (lv2 >= 18 && randomBool(engine))
+            else if (lv2 >= 18 && randomBool(engine))
                 itemID1 = 1;
-            if (lv2 >= 22 && randomBool(engine))
+            else if (lv2 >= 22 && randomBool(engine))
                 itemID1 = 1;
             break;
         case 10:
@@ -601,69 +602,46 @@ function simulateChest(curItems, floor, noBuy) {
                 num3 = num3 * 0.5 + 749.5;
             if (num3 > 1899)
                 num3 = num3 * 0.5 + 949.5;
-            if (flag1 || flag2 || floor < num3 + 1) {
+            if (flag1 || flag2 || floor < num3 + 1)
                 itemID1 = 2;
-                break;
-            }
-            if (lv2 >= 25 && random30Bool(engine)) {
+            else if (lv2 >= 25 && random30Bool(engine))
                 itemID1 = 2;
-            }
-            if (lv2 >= 105 && random95Bool(engine)) {
+            else if (lv2 >= 105 && random95Bool(engine))
                 itemID1 = 2;
-            }
-            if (lv2 >= 110 && random95Bool(engine)) {
+            else if (lv2 >= 110 && random95Bool(engine))
                 itemID1 = 2;
-            }    
             break;
         case 23:
-            if (flag1 || flag3 || lv2 <= 0 && floor < 251 || lv2 == 1 && floor < 301 || lv2 >= 2 && floor < 351 + lv2 * 35 + (lv2 < 6 ? 0 : 100)) {
+            if (flag1 || flag3 || lv2 <= 0 && floor < 251 || lv2 == 1 && floor < 301 || lv2 >= 2 && floor < 351 + lv2 * 35 + (lv2 < 6 ? 0 : 100))
                 itemID1 = 2;
-            }
-            if (lv2 >= 91 && random80Bool(engine)) {
+            else if (lv2 >= 91 && random80Bool(engine))
                 itemID1 = 2;
-            }
-            if (lv2 >= 20 && random01(engine) > 0.09994 + floor * 0.00006) {
+            else if (lv2 >= 20 && random01(engine) > 0.09994 + floor * 0.00006)
                 itemID1 = 2;
-            }
-            if (lv2 >= 16 && random01(engine) > 0.19992 + floor * 0.00008) {
+            else if (lv2 >= 16 && random01(engine) > 0.19992 + floor * 0.00008)
                 itemID1 = 2;
-                break;
-            }
-            if (lv2 >= 12 && random01(engine) > 0.2999 + floor * 0.0001) {
+            else if (lv2 >= 12 && random01(engine) > 0.2999 + floor * 0.0001)
                 itemID1 = 2;
-            }
-            if (lv2 >= 8 && random01(engine) > 0.4999 + floor * 0.0001) {
+            else if (lv2 >= 8 && random01(engine) > 0.4999 + floor * 0.0001)
                 itemID1 = 2;
-            }
-            if (lv2 >= 5 && random01(engine) > 0.7999 + floor * 0.0001) {
+            else if (lv2 >= 5 && random01(engine) > 0.7999 + floor * 0.0001)
                 itemID1 = 2;
-                break;
-            }
-            if (floor < 1000) {
-                if (lv2 >= 20 && random30Bool(engine)) {
+            else if (floor < 1000) {
+                if (lv2 >= 20 && random30Bool(engine))
                     itemID1 = 2;
-                    break;
-                }
-                if (lv2 >= 40 && random30Bool(engine)) {
+                else if (lv2 >= 40 && random30Bool(engine))
                     itemID1 = 2;
-                    break;
-                }
-                if (lv2 >= 60 && random30Bool(engine)) {
+                else if (lv2 >= 60 && random30Bool(engine))
                     itemID1 = 2;
-                    break;
-                }
-                if (lv2 >= 80 && random30Bool(engine)) {
+                else if (lv2 >= 80 && random30Bool(engine))
                     itemID1 = 2;
-                }
             }
             break;
         case 25:
-            if (flag1 || flag3 || floor < (111 + 90 * lv2 + lv2 * lv2 * 6 + (lv2 < 7 ? 0 : 150)) + (lv2 < 9 ? 0 : 90 + (lv2 * lv2) * 0.5)) {
+            if (flag1 || flag3 || floor < (111 + 90 * lv2 + lv2 * lv2 * 6 + (lv2 < 7 ? 0 : 150)) + (lv2 < 9 ? 0 : 90 + (lv2 * lv2) * 0.5))
                 itemID1 = 2;
-            }
-            if (lv2 >= 9 && randomBool(engine) < 0.5) {
+            else if (lv2 >= 9 && randomBool(engine) < 0.5)
                 itemID1 = 2;
-            }
             break;
         case 27:
         case 28:
@@ -671,15 +649,14 @@ function simulateChest(curItems, floor, noBuy) {
             if (lv2 > 44) {
                 num3 = 900;
             }
-            if (lv2 >= 25 && random30Bool(engine)) {
+            if (flag1 || flag3 || floor < num3)
                 itemID1 = 2;
-            }
-            if (lv2 >= 45 && random95Bool(engine)) {
+            else if (lv2 >= 25 && random30Bool(engine))
                 itemID1 = 2;
-            }
-            if (lv2 >= 48 && random95Bool(engine)) {
+            else if (lv2 >= 45 && random95Bool(engine))
                 itemID1 = 2;
-            }
+            else if (lv2 >= 48 && random95Bool(engine))
+                itemID1 = 2;
             break;
         case 33:
             if (floor < 20 * lv2 * (lv2 - 1) - 99)
@@ -780,15 +757,15 @@ function simulateChest(curItems, floor, noBuy) {
                 num2 = 0;
                 if (lv2 >= 10)
                     num2 = 201 + lv2 * 44;
-                if (lv2 >= 5)
+                else if (lv2 >= 5)
                     num2 = 20 + lv2 * 8;
                 if (floor < 181 + lv2 * 36 + num2)
                     itemID1 = 2;
-                if (lv2 >= 10 && random45Bool(engine))
+                else if (lv2 >= 10 && random45Bool(engine))
                     itemID1 = 2;
-                if (lv2 >= 12 && random45Bool(engine))
+                else if (lv2 >= 12 && random45Bool(engine))
                     itemID1 = 2;
-                if (lv2 >= 14 && random45Bool(engine))
+                else if (lv2 >= 14 && random45Bool(engine))
                     itemID1 = 2;
             }
             break;
@@ -800,9 +777,8 @@ function simulateChest(curItems, floor, noBuy) {
             lv3 = curItems[40];
             if (lv3 == 0 || floor < 291 + 190 * lv2)
                 itemID1 = 1;
-            if (lv2 >= 3 && randomBool(engine)) {
+            else if (lv2 >= 3 && randomBool(engine))
                 itemID1 = 1;
-            }
             break;
         case 42:
             lv3 = curItems[40];
@@ -810,9 +786,9 @@ function simulateChest(curItems, floor, noBuy) {
                 itemID1 = 1;
             if (lv2 >= 350 && random30Bool(engine))
                 itemID1 = 2;
-            if (lv2 >= 500 && random40Bool(engine))
+            else if (lv2 >= 500 && random40Bool(engine))
                 itemID1 = 2;
-            if (lv2 >= 600 && randomBool(engine))
+            else if (lv2 >= 600 && randomBool(engine))
                 itemID1 = 2;
             break;
         case 43:
@@ -822,7 +798,7 @@ function simulateChest(curItems, floor, noBuy) {
                 itemID1 = 1;
             if (lv2 >= 200 && random40Bool(engine))
                 itemID1 = 2;
-            if (lv2 >= 300 && randomBool(engine))
+            else if (lv2 >= 300 && randomBool(engine))
                 itemID1 = 2;
             break;
         case 44:
@@ -861,9 +837,9 @@ function simulateChest(curItems, floor, noBuy) {
                     itemID1 = 2;
             } else if (floor < 161)
                 itemID1 = 2;
-            if (lv2 >= 24 && random30Bool(engine))
+            else if (lv2 >= 24 && random30Bool(engine))
                 itemID1 = 2;
-            if (lv2 >= 26 && random30Bool(engine))
+            else if (lv2 >= 26 && random30Bool(engine))
                 itemID1 = 2;
             break;
         case 52:
@@ -873,9 +849,9 @@ function simulateChest(curItems, floor, noBuy) {
                 itemID1 = 1;
             if (lv2 >= 25 && random40Bool(engine))
                 itemID1 = 2;
-            if (lv2 >= 50 && random30Bool(engine))
+            else if (lv2 >= 50 && random30Bool(engine))
                 itemID1 = 2;
-            if (lv2 >= 75 && randomBool(engine))
+            else if (lv2 >= 75 && randomBool(engine))
                 itemID1 = 2;
             break;
         case 53:
@@ -883,12 +859,12 @@ function simulateChest(curItems, floor, noBuy) {
                 itemID1 = 2;
             else if (lv2 >= 2 && random10Bool(engine))
                 itemID1 = 2;
-            else if (lv2 >= 3 && random30Bool(engine))
-                itemID1 = 2;
+            if (lv2 >= 3 && random30Bool(engine))
+                itemID1 = 1;
             else if (lv2 >= 10 && random15Bool(engine))
                 itemID1 = 1;
-            else if (lv2 >= 50 && random25Bool(engine))
-                itemID1 = 1;
+            if (lv2 >= 50 && random25Bool(engine))
+                itemID1 = 2;
             else if (lv2 >= 80 && random25Bool(engine))
                 itemID1 = 2;
             break;
@@ -906,11 +882,11 @@ function simulateChest(curItems, floor, noBuy) {
                 itemID1 = 2;
             else if (lv2 >= 3 && random60Bool(engine))
                 itemID1 = 2;
-            else if (lv2 >= 5 && random40Bool(engine))
+            if (lv2 >= 5 && random40Bool(engine))
                 itemID1 = 1;
             else if (lv2 >= 6 && random90Bool(engine))
                 itemID1 = 1;
-            else if (lv2 >= 7 && random40Bool(engine))
+            if (lv2 >= 7 && random40Bool(engine))
                 itemID1 = 2;
             else if (lv2 >= 9 && random90Bool(engine))
                 itemID1 = 2;
@@ -919,15 +895,15 @@ function simulateChest(curItems, floor, noBuy) {
         case 55:
             if (lv2 >= 2 && random30Bool(engine))
                 itemID1 = 1;
-            if (lv2 >= 4 && random70Bool(engine))
+            else if (lv2 >= 4 && random70Bool(engine))
                 itemID1 = 1;
-            if (lv2 >= 5 && random90Bool(engine))
+            else if (lv2 >= 5 && random90Bool(engine))
                 itemID1 = 1;
-            if (lv2 >= 7 && random90Bool(engine))
+            else if (lv2 >= 7 && random90Bool(engine))
                 itemID1 = 1;
-            if (lv2 >= 9 && random90Bool(engine))
+            else if (lv2 >= 9 && random90Bool(engine))
                 itemID1 = 1;
-            if (flag3)
+            else if (flag3)
                 itemID1 = 1;
             itemID1 = Hosei1OR2(itemID1);
             break;
@@ -935,9 +911,9 @@ function simulateChest(curItems, floor, noBuy) {
             lv3 = curItems[47];
             if (lv3 < 500)
                 itemID1 = 2;
-            if (lv3 < lv2 * 500)
+            else if (lv3 < lv2 * 500)
                 itemID1 = 2;
-            if (flag3 && random30Bool(engine) || floor < 201)
+            else if (flag3 && random30Bool(engine) || floor < 201)
                 itemID1 = 2;
             break;
         case 57:
@@ -1089,25 +1065,15 @@ function simulateChest(curItems, floor, noBuy) {
             break;
     }
     
-    if (itemID1 == 31 && floor <= 600) {
+    if (itemID1 == 31 && floor <= 600)
         itemID1 = 29;
-    }
-
-    if (itemID1 == 32 && floor <= 600) {
+    
+    if (itemID1 == 32 && floor <= 600)
         itemID1 = 30;
-    }
-
-    if (itemID1 == 31 && floor <= 600) {
-        itemID1 = 29;
-    }
-
-    if (itemID1 == 32 && floor <= 600) {
-        itemID1 = 30;
-    }
-
-    if (itemID1 == 2 && curItems[1] < curItems[2] * 0.5 && random40Bool(engine)) {
+    
+    if (itemID1 == 2 && curItems[1] < curItems[2] * 0.5 && random40Bool(engine))
         itemID1 = 1;
-    }
+    
     if (itemID1 == 1) {
         if (flag4 && floor >= 500) {
             itemID1 = random20Bool(engine) ? ranks[maxedItems + Math.trunc((itemCount - maxedItems) * randomRangeFloat(0, num1 * 0.6))] : 29;
