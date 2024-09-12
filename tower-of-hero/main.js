@@ -925,7 +925,7 @@ function simulateChest(curItems, floor, noBuy) {
                 itemID1 = 2;
             break;
         case 58:
-            if (flag2 || floor < 1651 + 200 * lv2)
+            if (flag2 || floor < 1641 + 180 * lv2)
                 itemID1 = 2;
             else if (lv2 >= 1 && random01(engine) < 0.334)
                 itemID1 = 2;
