@@ -217,6 +217,7 @@ $(function () {
     random80Bool = Random.bool(.8);
     random85Bool = Random.bool(.85);
     random90Bool = Random.bool(.9);
+    random95Bool = Random.bool(.95);
 
     itemCount = 0;
 
