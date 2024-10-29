@@ -8,6 +8,7 @@ $(function () {
     // TODO Alphab sort, +1/+10, guide next to it
     // TODO Include soldier skills in calculations and displays
     // TOH change time tooltip (page may freeze...) OR add simulation status update
+    // TODO Toggle button for x3.56 vs +256% values
     // MAX: Summon (5+2x) 100   Seal 5   Growth Speed 52   Power Up 200   Warp 16   Ultimate Summon 80   Fame 150   New Dungeon   Auto-Seal 8
 
     itemObjs = {
